@@ -10,6 +10,4 @@
         - num2: second number
         - operation: plus, minus, or multiple (focus on plus first)
     - alignment of the numbers, operation symbol, and line is important. it must be perfectly align.
-- [ ] set paper size to A4
-
 
