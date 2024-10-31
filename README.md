@@ -1,8 +1,10 @@
 # To Do 
 
+## page
+- margins, probably need to make it smaller
+
 ## drawColumnMethod function
-1. add question number on top left
-2. determine the best height for the block
+- determine the best height for the block
 
 # Abbreviation
-1. cm - column method
+- cm : column method

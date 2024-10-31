@@ -42,16 +42,17 @@ export const GET: RequestHandler = async ({ url }) => {
 	const row_height = page_content_height/row; // each column width
 
 	let tempCMW:number = column_width - 10; // temporary column method width
+	let counter = 0;
 	for (let index = 0; index < 5; index++) {
 
 	// calculate x shift
 	let x_shift:number = ( column_width - tempCMW ) / 2;
-
-	drawColumnMethod(doc, origin_x + x_shift, 				 origin_y + index*row_height, 999, 111, '+', tempCMW);
-	drawColumnMethod(doc, origin_x + x_shift + 1*column_width, origin_y + index*row_height, 999, 111, '+', tempCMW);
-	drawColumnMethod(doc, origin_x + x_shift + 2*column_width, origin_y + index*row_height, 999, 111, '+', tempCMW); 
-	drawColumnMethod(doc, origin_x + x_shift + 3*column_width, origin_y + index*row_height, 999, 119, '+', tempCMW);
-	drawColumnMethod(doc, origin_x + x_shift + 4*column_width, origin_y + index*row_height, 999, 111, '+', tempCMW);
+	
+	drawColumnMethod(doc, origin_x + x_shift, 				   origin_y + index*row_height, 999, 111, '+', tempCMW, ++counter);
+	drawColumnMethod(doc, origin_x + x_shift + 1*column_width, origin_y + index*row_height, 999, 111, '+', tempCMW, ++counter);
+	drawColumnMethod(doc, origin_x + x_shift + 2*column_width, origin_y + index*row_height, 999, 111, '+', tempCMW, ++counter); 
+	drawColumnMethod(doc, origin_x + x_shift + 3*column_width, origin_y + index*row_height, 999, 119, '+', tempCMW, ++counter);
+	drawColumnMethod(doc, origin_x + x_shift + 4*column_width, origin_y + index*row_height, 999, 111, '+', tempCMW, ++counter);
 
 	}
 
@@ -95,11 +96,18 @@ function drawColumnMethod(
 	num2: number,
 	operation: string,
 	width: number,
+	questionNumber: number,
 	padding: number = 5,
 ) {
 	const content_width = width - padding - padding;
 	const content_x = x + padding;
 	const content_y = y + padding;
+
+	// Draw question number
+	doc.text(questionNumber.toString() + ')' , content_x, content_y, {
+		width: width,
+		align: 'left'
+	});
 
 	// Draw first number
 	doc.text(num1.toString(), content_x, content_y, {
@@ -108,7 +116,7 @@ function drawColumnMethod(
 	});
 	 
 	// Draw operation sign
-	doc.text(operation, content_x, content_y + 15, {
+	doc.text(operation, content_x + 20, content_y + 15, {
 		width: content_width,
 		align: 'left'
 	});
@@ -122,21 +130,21 @@ function drawColumnMethod(
 	// Draw line
 	const lineY = content_y + 35;
 
-	doc.rect(x, y, width, 70) // temporary
+	// doc.rect(x, y, width, 70) // temporary
 
 	doc
-		.moveTo(content_x, lineY)
+		.moveTo(content_x + 20, lineY)
 		.lineTo(content_x + content_width, lineY)
 		.stroke();
 
 	doc
-		.moveTo(content_x, lineY + 20)
+		.moveTo(content_x + 20, lineY + 20)
 		.lineTo(content_x + content_width, lineY + 20)
 		.stroke();
 
 	// Calculate and write the answer
 	// const result = operation === '+' ? num1 + num2 : num1 - num2;
 	// doc.text(result.toString(), x+30, lineY + 10);
-	console.dir(lineY);
+	// console.dir(lineY);
 	
 }
