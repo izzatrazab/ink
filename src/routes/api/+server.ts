@@ -29,10 +29,10 @@ export const GET: RequestHandler = async ({ url }) => {
 
 
 	drawColumnAddition(doc, tempX, origin_y, 999, 111, '+',  50);
-	drawColumnAddition(doc, tempX += 60,  origin_y, 999, 111, '+', 50);
-	drawColumnAddition(doc, tempX += 60, origin_y, 999, 111, '+', 50); 
-	drawColumnAddition(doc, tempX += 60, origin_y, 999, 111, '+', 50);
-	drawColumnAddition(doc, tempX += 60, origin_y, 999, 111, '+', 50);
+	drawColumnAddition(doc, tempX += 70,  origin_y, 999, 111, '+', 60);
+	drawColumnAddition(doc, tempX += 70, origin_y, 999, 111, '+', 60); 
+	drawColumnAddition(doc, tempX += 70, origin_y, 999, 1191, '+', 60);
+	drawColumnAddition(doc, tempX += 70, origin_y, 999, 111, '+', 200);
 
 	/** end add content to the PDF */
 
@@ -74,38 +74,48 @@ function drawColumnAddition(
 	num2: number,
 	operation: string,
 	width: number,
+	padding: number = 5,
 ) {
+	const content_width = width - padding - padding;
+	const content_x = x + padding;
+	const content_y = y + padding;
 
 	// Draw first number
-	doc.text(num1.toString(), x, y, {
-		width: width,
+	doc.text(num1.toString(), content_x, content_y, {
+		width: content_width,
 		align: 'right'
 	});
+	 
 	// Draw operation sign
-	doc.text(operation, x, y + 20, {
-		width: width,
+	doc.text(operation, content_x, content_y + 15, {
+		width: content_width,
 		align: 'left'
 	});
+
 	// Draw second number
-	doc.text(num2.toString(), x, y + 20, {
-		width: width,
+	doc.text(num2.toString(), content_x, content_y + 15, {
+		width: content_width,
 		align: 'right'
 	});
 
 	// Draw line
-	const lineY = y + 35;
+	const lineY = content_y + 35;
+
+	doc.rect(x, y, width, lineY + 20 -72 + padding) // temporary
+
 	doc
-		.moveTo(x, lineY)
-		.lineTo(x + width, lineY)
+		.moveTo(content_x, lineY)
+		.lineTo(content_x + content_width, lineY)
 		.stroke();
+
 	doc
-		.moveTo(x, lineY + 20)
-		.lineTo(x + 50, lineY + 20)
+		.moveTo(content_x, lineY + 20)
+		.lineTo(content_x + content_width, lineY + 20)
 		.stroke();
 
 	// Calculate and write the answer
 	// const result = operation === '+' ? num1 + num2 : num1 - num2;
 	// doc.text(result.toString(), x+30, lineY + 10);
-	console.dir(y);
+	// console.dir(y);
 	
 }
