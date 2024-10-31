@@ -23,16 +23,37 @@ export const GET: RequestHandler = async ({ url }) => {
 
 	const origin_x = 72;
 	const origin_y = 72
-
+	const page_content_width = doc.page.width - doc.page.margins.left - doc.page.margins.right
+	const page_content_height = doc.page.height - doc.page.margins.top - doc.page.margins.bottom
 	let tempX:number = origin_x;
-	let tempY:number = origin_x;
+	let tempY:number = origin_y;
 
 
-	drawColumnAddition(doc, tempX, origin_y, 999, 111, '+',  50);
-	drawColumnAddition(doc, tempX += 70,  origin_y, 999, 111, '+', 60);
-	drawColumnAddition(doc, tempX += 70, origin_y, 999, 111, '+', 60); 
-	drawColumnAddition(doc, tempX += 70, origin_y, 999, 1191, '+', 60);
-	drawColumnAddition(doc, tempX += 70, origin_y, 999, 111, '+', 200);
+	const column = 5; // for now 5
+	/**
+	 * @var column_width - width of each column
+	 */
+	const column_width = page_content_width/column; // each column width
+
+	const row = 5; // for now 5
+	/**
+	 * @var row_height width of each column
+	 */
+	const row_height = page_content_height/row; // each column width
+
+	let tempCMW:number = column_width - 10; // temporary column method width
+	for (let index = 0; index < 5; index++) {
+
+	// calculate x shift
+	let x_shift:number = ( column_width - tempCMW ) / 2;
+
+	drawColumnMethod(doc, origin_x + x_shift, 				 origin_y + index*row_height, 999, 111, '+', tempCMW);
+	drawColumnMethod(doc, origin_x + x_shift + 1*column_width, origin_y + index*row_height, 999, 111, '+', tempCMW);
+	drawColumnMethod(doc, origin_x + x_shift + 2*column_width, origin_y + index*row_height, 999, 111, '+', tempCMW); 
+	drawColumnMethod(doc, origin_x + x_shift + 3*column_width, origin_y + index*row_height, 999, 119, '+', tempCMW);
+	drawColumnMethod(doc, origin_x + x_shift + 4*column_width, origin_y + index*row_height, 999, 111, '+', tempCMW);
+
+	}
 
 	/** end add content to the PDF */
 
@@ -66,7 +87,7 @@ export const GET: RequestHandler = async ({ url }) => {
  * @param width width of the column method (box ??, ibarat mcm kotak).
  */
 
-function drawColumnAddition(
+function drawColumnMethod(
 	doc: typeof PDFDocument,
 	x: number,
 	y: number,
@@ -101,7 +122,7 @@ function drawColumnAddition(
 	// Draw line
 	const lineY = content_y + 35;
 
-	doc.rect(x, y, width, lineY + 20 -72 + padding) // temporary
+	doc.rect(x, y, width, 70) // temporary
 
 	doc
 		.moveTo(content_x, lineY)
@@ -116,6 +137,6 @@ function drawColumnAddition(
 	// Calculate and write the answer
 	// const result = operation === '+' ? num1 + num2 : num1 - num2;
 	// doc.text(result.toString(), x+30, lineY + 10);
-	// console.dir(y);
+	console.dir(lineY);
 	
 }
