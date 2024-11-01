@@ -1,3 +1,8 @@
+Leeda boleh edit kalau ade silap/nak tambah ok. Izzat saje buat ni, bagi clear sikit project.
+
+# Objectives
+1. Reduce time taken to prepare math drills with random variation of questions.
+
 # To Do 
 
 ## page
