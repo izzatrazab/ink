@@ -5,11 +5,21 @@ Leeda boleh edit kalau ade silap/nak tambah ok. Izzat saje buat ni, bagi clear s
 
 # To Do 
 
+## home page
+- create home page, 2x2 navigation, navigate to another page.
+
 ## page
 - margins, probably need to make it smaller
 
 ## drawColumnMethod function
-- determine the best height for the block
+- determine the best height for the cm block
+
+## generate random question (numbers for the question)
+- addition: randomly generate numbers for the question.
+
+## answer sheet
+- create new page for the answers of the questions.
+
 
 # Abbreviation
 - cm : column method
