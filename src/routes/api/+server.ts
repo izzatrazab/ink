@@ -48,11 +48,49 @@ export const GET: RequestHandler = async ({ url }) => {
 	// calculate x shift
 	let x_shift:number = ( column_width - tempCMW ) / 2;
 	
-	drawColumnMethod(doc, origin_x + x_shift, 				   origin_y + index*row_height, 999, 111, '+', tempCMW, ++counter);
-	drawColumnMethod(doc, origin_x + x_shift + 1*column_width, origin_y + index*row_height, 999, 111, '+', tempCMW, ++counter);
-	drawColumnMethod(doc, origin_x + x_shift + 2*column_width, origin_y + index*row_height, 999, 111, '+', tempCMW, ++counter); 
-	drawColumnMethod(doc, origin_x + x_shift + 3*column_width, origin_y + index*row_height, 999, 119, '+', tempCMW, ++counter);
-	drawColumnMethod(doc, origin_x + x_shift + 4*column_width, origin_y + index*row_height, 999, 111, '+', tempCMW, ++counter);
+	for(let j=0; j<5; j++) {
+
+		/** start generating random questions */
+		let firstNumDigit = 3; // for now 3 (boleh tukar samada 1/2/3)
+		let secondNumDigit = 3; // for now 3 (boleh tukar samada 1/2/3)
+
+		var firstNum = 0;
+		var secondNum = 0;
+		
+		switch(firstNumDigit) {
+			case 1:  
+				firstNum = randomQuestionsMethod(1, 9);
+				break;
+			case 2: 
+				firstNum = randomQuestionsMethod(10, 99);
+				break;
+			case 3:
+				firstNum = randomQuestionsMethod(100, 999);
+				break;
+			default:
+				break;
+		}
+	
+		switch(secondNumDigit) {
+			case 1:  
+				secondNum = randomQuestionsMethod(1, 9);
+				break;
+			case 2: 
+				secondNum = randomQuestionsMethod(10, 99);
+				break;
+			case 3:
+				secondNum = randomQuestionsMethod(100, 999);
+				break;
+			default:
+				break;
+		}
+		
+		/** end of generating random questions */
+
+		// var firstNum = randomQuestionsMethod(100, 999);
+		// var secondNum = randomQuestionsMethod(100, 999);
+		drawColumnMethod(doc, origin_y + j*column_width, origin_x + x_shift + index*row_height, firstNum, secondNum, '+', tempCMW, ++counter);
+	}
 
 	}
 
@@ -147,4 +185,16 @@ function drawColumnMethod(
 	// doc.text(result.toString(), x+30, lineY + 10);
 	// console.dir(lineY);
 	
+}
+
+/**
+* @param min first number in the equation
+* @param max second number in the equation
+*/
+
+function randomQuestionsMethod(
+	min: number,
+	max: number,
+) : number {
+	return Math.floor(Math.random() * (max - min + 1) + min)
 }
