@@ -7,7 +7,7 @@ export const GET: RequestHandler = async ({ url }) => {
 	const doc = new PDFDocument({ size: 'A4' });
 	/**
 	 * size: 'A4',
-	 * width: 595.28, height: 841.89, (izzat x tahu metric dia pakai apa, dan value ni dah include margin)
+	 * width: 595.28, height: 841.89, (izzat x tahu metric dia pakai apa, dan value ni dah include margin) - mungkin guna PostScript point (tp x tahu betul ke x)
 	 * default margin: margins: { top: 72, left: 72, bottom: 72, right: 72 },
 	 */
 
@@ -43,56 +43,97 @@ export const GET: RequestHandler = async ({ url }) => {
 
 	let tempCMW:number = column_width - 10; // temporary column method width
 	let counter = 0;
-	for (let index = 0; index < 5; index++) {
 
 	// calculate x shift
 	let x_shift:number = ( column_width - tempCMW ) / 2;
-	
-	for(let j=0; j<5; j++) {
 
-		/** start generating random questions */
-		let firstNumDigit = 3; // for now 3 (boleh tukar samada 1/2/3)
-		let secondNumDigit = 3; // for now 3 (boleh tukar samada 1/2/3)
+	// Declare set for the first and second number to generate unique numbers 
+	const firstNumSet = new Set<number>();
+	const secondNumSet = new Set<number>();
 
-		var firstNum = 0;
-		var secondNum = 0;
-		
-		switch(firstNumDigit) {
-			case 1:  
-				firstNum = randomQuestionsMethod(1, 9);
-				break;
-			case 2: 
-				firstNum = randomQuestionsMethod(10, 99);
-				break;
-			case 3:
-				firstNum = randomQuestionsMethod(100, 999);
-				break;
-			default:
-				break;
+	// To assign all elements in the set into the arrays respectively
+    let array1: any[] = [];
+	let array2: any[] = [];
+
+	let answerSheet: boolean = false;
+
+	for (let index = 0; index < 5; index++) {
+		for(let j=0; j<5; j++) {
+
+			/** start generating random questions */
+			let firstNumDigit = 3; // for now 3 (boleh tukar samada 1/2/3)
+			let secondNumDigit = 3; // for now 3 (boleh tukar samada 1/2/3)
+
+			var firstNum = 0;
+			var secondNum = 0;
+			
+			while (firstNumSet.size < counter + 1) { // to generate unique numbers
+				// options to choose the number of digit for the first number
+				switch(firstNumDigit) {
+					case 1:  
+						firstNum = randomQuestionsMethod(1, 9);
+						break;
+					case 2: 
+						firstNum = randomQuestionsMethod(10, 99);
+						break;
+					case 3:
+						firstNum = randomQuestionsMethod(100, 999);
+						break;
+					default:
+						break;
+				}
+
+				firstNumSet.add(firstNum); // Only adds if it's unique
+			}
+			
+			while (secondNumSet.size < counter + 1) { // to generate unique numbers
+				// options to choose the number of digit for the second number
+				switch(secondNumDigit) {
+					case 1:  
+						secondNum = randomQuestionsMethod(1, 9);
+						break;
+					case 2: 
+						secondNum = randomQuestionsMethod(10, 99);
+						break;
+					case 3:
+						secondNum = randomQuestionsMethod(100, 999);
+						break;
+					default:
+						break;
+				}
+
+				secondNumSet.add(secondNum); // Only adds if it's unique
+			}
+			
+			array1 = Array.from(firstNumSet);
+			array2 = Array.from(secondNumSet);
+
+			/** end of generating random questions */
+
+			// var firstNum = randomQuestionsMethod(100, 999);
+			// var secondNum = randomQuestionsMethod(100, 999);
+			drawColumnMethod(doc, origin_x + x_shift + j*column_width, origin_y + index*row_height, array1[counter], array2[counter], '+', tempCMW, ++counter, answerSheet);
 		}
-	
-		switch(secondNumDigit) {
-			case 1:  
-				secondNum = randomQuestionsMethod(1, 9);
-				break;
-			case 2: 
-				secondNum = randomQuestionsMethod(10, 99);
-				break;
-			case 3:
-				secondNum = randomQuestionsMethod(100, 999);
-				break;
-			default:
-				break;
-		}
-		
-		/** end of generating random questions */
-
-		// var firstNum = randomQuestionsMethod(100, 999);
-		// var secondNum = randomQuestionsMethod(100, 999);
-		drawColumnMethod(doc, origin_y + j*column_width, origin_x + x_shift + index*row_height, firstNum, secondNum, '+', tempCMW, ++counter);
 	}
 
-	}
+	//new page (Answer Sheet)
+	doc
+		.addPage()
+		.text('Answer Sheet', origin_y + 5, origin_x + x_shift + 5, {
+			align: 'left'
+		})
+		.underline(76, 90, 76, 5);
+		// .registerFont('GoodDog','fonts/GoodDog.ttf')
+		// .font('fonts/GoodDog.ttf');
+
+		counter = 0; // reset counter to zero
+		answerSheet = true;
+
+		for (let index = 0; index < 5; index++) {
+			for (let j = 0; j < 5; j++) {
+				drawColumnMethod(doc, origin_x + x_shift + j*column_width, (origin_y + index*row_height) + 30, array1[counter], array2[counter], '+', tempCMW, ++counter, answerSheet);
+			}
+		}
 
 	/** end add content to the PDF */
 
@@ -135,6 +176,7 @@ function drawColumnMethod(
 	operation: string,
 	width: number,
 	questionNumber: number,
+	answer: boolean,
 	padding: number = 5,
 ) {
 	const content_width = width - padding - padding;
@@ -148,25 +190,25 @@ function drawColumnMethod(
 	});
 
 	// Draw first number
-	doc.text(num1.toString(), content_x, content_y, {
+	doc.text(num1.toString(), content_x, content_y + 15, {
 		width: content_width,
 		align: 'right'
 	});
 	 
 	// Draw operation sign
-	doc.text(operation, content_x + 20, content_y + 15, {
+	doc.text(operation, content_x + 20, content_y + 30, {
 		width: content_width,
 		align: 'left'
 	});
 
 	// Draw second number
-	doc.text(num2.toString(), content_x, content_y + 15, {
+	doc.text(num2.toString(), content_x, content_y + 30, {
 		width: content_width,
 		align: 'right'
 	});
 
 	// Draw line
-	const lineY = content_y + 35;
+	const lineY = content_y + 50;
 
 	// doc.rect(x, y, width, 70) // temporary
 
@@ -181,6 +223,15 @@ function drawColumnMethod(
 		.stroke();
 
 	// Calculate and write the answer
+	if (answer) {
+		// Calculate and write the answer
+		const result = operation === '+' ? num1 + num2 : num1 - num2;
+		doc.text(result.toString(), content_x, content_y + 55, {
+			width: content_width,
+			align: 'right'
+		});
+		// console.dir(lineY);
+	}
 	// const result = operation === '+' ? num1 + num2 : num1 - num2;
 	// doc.text(result.toString(), x+30, lineY + 10);
 	// console.dir(lineY);
