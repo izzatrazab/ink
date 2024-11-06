@@ -47,13 +47,9 @@ export const GET: RequestHandler = async ({ url }) => {
 	// calculate x shift
 	let x_shift:number = ( column_width - tempCMW ) / 2;
 
-	// Declare set for the first and second number to generate unique numbers 
-	const firstNumSet = new Set<number>();
-	const secondNumSet = new Set<number>();
-
-	// To assign all elements in the set into the arrays respectively
-    let array1: any[] = [];
-	let array2: any[] = [];
+	// To assign the random numbers generated into the arrays
+    let array1: number[] = [];
+	let array2: number[] = [];
 
 	let answerSheet: boolean = false;
 
@@ -67,7 +63,6 @@ export const GET: RequestHandler = async ({ url }) => {
 			var firstNum = 0;
 			var secondNum = 0;
 			
-			while (firstNumSet.size < counter + 1) { // to generate unique numbers
 				// options to choose the number of digit for the first number
 				switch(firstNumDigit) {
 					case 1:  
@@ -82,11 +77,7 @@ export const GET: RequestHandler = async ({ url }) => {
 					default:
 						break;
 				}
-
-				firstNumSet.add(firstNum); // Only adds if it's unique
-			}
-			
-			while (secondNumSet.size < counter + 1) { // to generate unique numbers
+						
 				// options to choose the number of digit for the second number
 				switch(secondNumDigit) {
 					case 1:  
@@ -102,11 +93,8 @@ export const GET: RequestHandler = async ({ url }) => {
 						break;
 				}
 
-				secondNumSet.add(secondNum); // Only adds if it's unique
-			}
-			
-			array1 = Array.from(firstNumSet);
-			array2 = Array.from(secondNumSet);
+				array1.push(firstNum);
+				array2.push(secondNum);
 
 			/** end of generating random questions */
 
