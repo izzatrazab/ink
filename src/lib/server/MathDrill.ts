@@ -4,12 +4,12 @@ import PDFDocument from 'pdfkit';
  * custom class extending PDFDocument with additional mathematical drawings.
  */
 export default class MathDrill extends PDFDocument {
-	constructor(constructor:any) {
+	constructor(constructor: any) {
 		super(constructor);
 	}
 
 	/**
-     * rindu org tu 💕
+	 * rindu org tu 💕
 	 * @param x coordinate x
 	 * @param y coordinate y
 	 * @param num1 first number in the equation
@@ -61,20 +61,21 @@ export default class MathDrill extends PDFDocument {
 
 		// this.rect(x, y, width, 70) // temporary
 
-		this
-			.moveTo(content_x + 20, lineY)
+		this.moveTo(content_x + 20, lineY)
 			.lineTo(content_x + content_width, lineY)
 			.stroke();
 
-		this
-			.moveTo(content_x + 20, lineY + 20)
+		this.moveTo(content_x + 20, lineY + 20)
 			.lineTo(content_x + content_width, lineY + 20)
 			.stroke();
 
 		// Calculate and write the answer
 		if (answer) {
 			// Calculate and write the answer
-			const result = operation === '+' ? num1 + num2 : num1 - num2;
+			const result =
+				operation === '+' ? num1 + num2 : 
+				operation === '-' ? num1 - num2 : num1 * num2;
+
 			this.text(result.toString(), content_x, content_y + 55, {
 				width: content_width,
 				align: 'right'

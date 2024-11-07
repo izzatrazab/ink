@@ -2,13 +2,10 @@ import MathDrill from '$lib/server/MathDrill';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ url }) => {
-	// const min = Number(url.searchParams.get('min') ?? '0');
-	// const max = Number(url.searchParams.get('max') ?? '1');
 	const doc = new MathDrill({ size: 'A4' });
 	/**
 	 * size: 'A4',
-	 * width: 595.28, height: 841.89, (izzat x tahu metric dia pakai apa, dan value ni dah include margin)
-	 * - mungkin guna PostScript point (tp x tahu betul ke x)
+	 * width: 595.28, height: 841.89, (izzat x tahu metric dia pakai apa, dan value ni dah include margin) - mungkin guna PostScript point (tp x tahu betul ke x)
 	 * default margin: margins: { top: 72, left: 72, bottom: 72, right: 72 },
 	 */
 
@@ -31,7 +28,7 @@ export const GET: RequestHandler = async ({ url }) => {
 
 	const column = 5; // for now 5
 	/**
-	 * @var column_width - width of each column
+	 *  @var column_width - width of each column
 	 */
 	const column_width = page_content_width / column; // each column width
 
@@ -62,35 +59,37 @@ export const GET: RequestHandler = async ({ url }) => {
 			var firstNum = 0;
 			var secondNum = 0;
 
-			// options to choose the number of digit for the first number
-			switch (firstNumDigit) {
-				case 1:
-					firstNum = randomQuestionsMethod(1, 9);
-					break;
-				case 2:
-					firstNum = randomQuestionsMethod(10, 99);
-					break;
-				case 3:
-					firstNum = randomQuestionsMethod(100, 999);
-					break;
-				default:
-					break;
-			}
+			do { // to ensure that the first number is bigger than the second number
+				// options to choose the number of digit for the first number
+				switch (firstNumDigit) {
+					case 1:
+						firstNum = randomQuestionsMethod(1, 9);
+						break;
+					case 2:
+						firstNum = randomQuestionsMethod(10, 99);
+						break;
+					case 3:
+						firstNum = randomQuestionsMethod(100, 999);
+						break;
+					default:
+						break;
+				}
 
-			// options to choose the number of digit for the second number
-			switch (secondNumDigit) {
-				case 1:
-					secondNum = randomQuestionsMethod(1, 9);
-					break;
-				case 2:
-					secondNum = randomQuestionsMethod(10, 99);
-					break;
-				case 3:
-					secondNum = randomQuestionsMethod(100, 999);
-					break;
-				default:
-					break;
-			}
+				// options to choose the number of digit for the second number
+				switch (secondNumDigit) {
+					case 1:
+						secondNum = randomQuestionsMethod(1, 9);
+						break;
+					case 2:
+						secondNum = randomQuestionsMethod(10, 99);
+						break;
+					case 3:
+						secondNum = randomQuestionsMethod(100, 999);
+						break;
+					default:
+						break;
+				}
+			} while (firstNum <= secondNum);
 
 			array1.push(firstNum);
 			array2.push(secondNum);
@@ -104,7 +103,7 @@ export const GET: RequestHandler = async ({ url }) => {
 				origin_y + index * row_height,
 				array1[counter],
 				array2[counter],
-				'+',
+				'-',
 				tempCMW,
 				++counter,
 				answerSheet
@@ -132,7 +131,7 @@ export const GET: RequestHandler = async ({ url }) => {
 				origin_y + index * row_height + 30,
 				array1[counter],
 				array2[counter],
-				'+',
+				'-',
 				tempCMW,
 				++counter,
 				answerSheet
@@ -142,7 +141,7 @@ export const GET: RequestHandler = async ({ url }) => {
 
 	/** end add content to the PDF */
 
-	// Return a Promise that resolves when the PDF is fully generated
+	// Return a promise that resolves when the PDF is fully generated
 	await new Promise((resolve) => {
 		doc.on('end', resolve);
 		doc.end();
