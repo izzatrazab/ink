@@ -1,5 +1,4 @@
 import PDFDocument from 'pdfkit';
-
 /**
  * custom class extending PDFDocument with additional mathematical drawings.
  */
@@ -85,5 +84,9 @@ export default class MathDrill extends PDFDocument {
 		// const result = operation === '+' ? num1 + num2 : num1 - num2;
 		// this.text(result.toString(), x+30, lineY + 10);
 		// console.dir(lineY);
+	}
+
+	async drawAnimal() {
+		this.image("src/lib/assets/animals/hard/bear.png", 0, 15, { width: 300 });
 	}
 }
