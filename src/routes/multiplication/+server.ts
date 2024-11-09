@@ -2,27 +2,19 @@ import MathDrill from '$lib/server/MathDrill';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ url }) => {
-	const doc = new MathDrill({ size: 'A4' });
-	/**
-	 * size: 'A4',
-	 * width: 595.28, height: 841.89, (izzat x tahu metric dia pakai apa, dan value ni dah include margin) - mungkin guna PostScript point (tp x tahu betul ke x)
-	 * default margin: margins: { top: 72, left: 72, bottom: 72, right: 72 },
-	 */
+	const doc = new MathDrill();
 
 	let buffers: any[] = [];
 
 	// Collect data as the PDF is being generated
 	doc.on('data', (chunk) => buffers.push(chunk));
 
-	// console.dir(doc.page);
-
 	/** start add content to the PDF */
-	// here is where we need to RnD
 
-	const origin_x = 72;
-	const origin_y = 72;
-	const page_content_width = doc.page.width - doc.page.margins.left - doc.page.margins.right;
-	const page_content_height = doc.page.height - doc.page.margins.top - doc.page.margins.bottom;
+	const origin_x = doc.origin_x;
+	const origin_y = doc.y;
+	const page_content_width = doc.content_width;
+	const page_content_height = doc.content_height + doc.page.margins.top - origin_y;
 	let tempX: number = origin_x;
 	let tempY: number = origin_y;
 
@@ -126,7 +118,7 @@ export const GET: RequestHandler = async ({ url }) => {
 		for (let j = 0; j < 5; j++) {
 			doc.drawColumnMethod(
 				origin_x + x_shift + j * column_width,
-				origin_y + index * row_height + 30,
+				doc.origin_y + index * row_height + 30,
 				array1[counter],
 				array2[counter],
 				'x',
