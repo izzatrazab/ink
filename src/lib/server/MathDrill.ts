@@ -45,27 +45,60 @@ export default class MathDrill extends PDFDocument {
 
 	/** header includes name, and score */
 	addHeader(x: number, y: number) {
+		this.registerFont('Chilanka','src/lib/assets/fonts/Chilanka-Regular.ttf');
+		this.font('Chilanka').fontSize(14);
 		this.text('Nama: ___________________________________________', { align: 'left' });
-		this.text('Markah: _______', x, y, { align: 'right' });
+		this.text('Markah: _______/25', x, y, { align: 'right' });
 		this.moveDown(1);
 	}
 
 	/** title includes cartoon image, and title */
 	addTitle(x: number, y: number) {
 		let width: number = 90;
-		this.image('src/lib/assets/animals/easy/butterfly.png', x, y, { align: 'right', width: width });
+		this.image('src/lib/assets/animals/easy/chipmunk.png', x, y, { align: 'right', width: width });
 		let gap: number = 10;
 		let xTitle: number = x + width + gap;
 		let wTitle: number = this.content_width - width - gap;
 		let hTitle: number = 70;
+		this.strokeColor('#737373').lineWidth(2);
 		this.rect(xTitle, y, wTitle, hTitle).stroke();
 
-		this.text('latihan level 1', xTitle, y, { align: 'center', height: hTitle });
-		this.moveDown(7);
+		this.registerFont('DynaPuff','src/lib/assets/fonts/DynaPuff-VariableFont.ttf');
+		this.font('DynaPuff').fontSize(16);
+		this.fillColor('#2acf90').text('latihan level 1', xTitle, y + 5, { align: 'center', height: hTitle });
+
+		// Reset the font colour
+		this.fillColor('black');
+
+		this.font('Chilanka').fontSize(14);
+		this.text('Solve the following questions by adding the numbers given.', x, y + 85, { align: 'center' })
+
+		this.font('Helvetica').fontSize(12);
+		
+		this.moveDown(2);
+
+		// Set the stroke color and line width for the border
+		this.strokeColor('orange').lineWidth(3);
+
+		// Draw a rounded rectangle
+		const xAxis = 60;
+		const yAxis = 190;
+		const widthRect = 475;
+		const heightRect = 590;
+		const radius = 10;
+		this.roundedRect(xAxis, yAxis, widthRect, heightRect, radius).stroke();
+
+		// Reset the stroke color and line width
+		this.strokeColor('black').lineWidth(1);
+
+		this.image('src/lib/assets/stars/star-2.png', 540, 665, { align: 'right', width: 30 });
+		this.image('src/lib/assets/stars/star-7.png', 540, 705, { align: 'right', width: 30 });
+		this.image('src/lib/assets/stars/star-1.png', 540, 745, { align: 'right', width: 30 });
+
 	}
 
 	/**
-	 * rindu org tu 💕, aloo takde reply
+	 * rindu org tu 💕, aloo takde reply - AHAHAHA kita perasan, hihihi 🥰 haa tu lah haritu main2 lagi tanya apa maksud emoji 
 	 * @param x coordinate x
 	 * @param y coordinate y
 	 * @param num1 first number in the equation

@@ -105,15 +105,18 @@ export const GET: RequestHandler = async ({ url }) => {
 	}
 
 	//new page (Answer Sheet)
+	doc.registerFont('Chilanka','src/lib/assets/fonts/Chilanka-Regular.ttf');
+	doc.font('Chilanka');
 	doc
 		.addPage({ size: 'A4' })
-		.text('Answer Sheet', origin_y + 5, origin_x + x_shift + 5, {
+		.text('Answer Sheet', {
 			align: 'left'
 		})
-		.underline(76, 90, 76, 5);
-	// .registerFont('GoodDog','fonts/GoodDog.ttf')
-	// .font('fonts/GoodDog.ttf');
+		.underline(72, 80, 76, 5);
+	doc.moveDown(10).text('testing');
 
+	doc.font('Helvetica');
+	
 	counter = 0; // reset counter to zero
 	answerSheet = true;
 
@@ -121,7 +124,7 @@ export const GET: RequestHandler = async ({ url }) => {
 		for (let j = 0; j < 5; j++) {
 			doc.drawColumnMethod(
 				origin_x + x_shift + j * column_width,
-				doc.origin_y + index * row_height + 30,
+				origin_y + index * row_height - 80,
 				array1[counter],
 				array2[counter],
 				'+',
