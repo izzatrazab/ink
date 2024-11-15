@@ -40,7 +40,10 @@ export default class MathDrill extends PDFDocument {
 		this.content_width = this.page.width - this.page.margins.left - this.page.margins.right;
 
 		if (hasHeader) this.addHeader(this.x, this.y);
-		if (hasTitle) this.addTitle(this.x, this.y);
+		if (hasTitle){
+			this.addTitle(this.x, this.y);
+			this.displayCartoonImage();
+		}
 	}
 
 	/** header includes name, and score */

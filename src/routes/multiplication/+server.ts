@@ -30,8 +30,6 @@ export const GET: RequestHandler = async ({ url }) => {
 	 */
 	const row_height = page_content_height / row; // each column width
 
-	doc.displayCartoonImage(); // to display random cartoon image
-
 	let tempCMW: number = column_width - 10; // temporary column method width
 	let counter = 0;
 
