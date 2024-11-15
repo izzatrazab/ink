@@ -1,3 +1,4 @@
+import { generateRandomNumber } from '$lib/helper';
 import MathDrill from '$lib/server/MathDrill';
 import type { RequestHandler } from './$types';
 
@@ -52,35 +53,11 @@ export const GET: RequestHandler = async ({ url }) => {
 			var firstNum = 0;
 			var secondNum = 0;
 
-			// options to choose the number of digit for the first number
-			switch (firstNumDigit) {
-				case 1:
-					firstNum = randomQuestionsMethod(1, 9);
-					break;
-				case 2:
-					firstNum = randomQuestionsMethod(10, 99);
-					break;
-				case 3:
-					firstNum = randomQuestionsMethod(100, 999);
-					break;
-				default:
-					break;
-			}
-
-			// options to choose the number of digit for the second number
-			switch (secondNumDigit) {
-				case 1:
-					secondNum = randomQuestionsMethod(1, 9);
-					break;
-				case 2:
-					secondNum = randomQuestionsMethod(10, 99);
-					break;
-				case 3:
-					secondNum = randomQuestionsMethod(100, 999);
-					break;
-				default:
-					break;
-			}
+			do {
+				// to ensure that the first number is bigger than the second number
+				firstNum = generateRandomNumber(firstNumDigit);
+				secondNum = generateRandomNumber(firstNumDigit);
+			} while (firstNum <= secondNum);
 
 			array1.push(firstNum);
 			array2.push(secondNum);
@@ -174,12 +151,3 @@ export const GET: RequestHandler = async ({ url }) => {
 		}
 	});
 };
-
-/**
- * @param min first number in the equation
- * @param max second number in the equation
- */
-
-function randomQuestionsMethod(min: number, max: number): number {
-	return Math.floor(Math.random() * (max - min + 1) + min);
-}
