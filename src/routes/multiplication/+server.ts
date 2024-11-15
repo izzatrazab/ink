@@ -30,6 +30,8 @@ export const GET: RequestHandler = async ({ url }) => {
 	 */
 	const row_height = page_content_height / row; // each column width
 
+	doc.displayCartoonImage(); // to display random cartoon image
+
 	let tempCMW: number = column_width - 10; // temporary column method width
 	let counter = 0;
 
@@ -39,8 +41,6 @@ export const GET: RequestHandler = async ({ url }) => {
 	// To assign the random numbers generated into the arrays
 	let array1: number[] = [];
 	let array2: number[] = [];
-
-	let answerSheet: boolean = false;
 
 	for (let index = 0; index < 5; index++) {
 		for (let j = 0; j < 5; j++) {
@@ -95,36 +95,59 @@ export const GET: RequestHandler = async ({ url }) => {
 				array2[counter],
 				'x',
 				tempCMW,
-				++counter,
-				answerSheet
+				++counter
 			);
 		}
 	}
 
 	//new page (Answer Sheet)
+	doc.font('Chilanka');
 	doc
 		.addPage({ size: 'A4' })
 		.text('Answer Sheet', {
 			align: 'left'
 		})
-		.underline(72, 80, 76, 5);
-	// .registerFont('GoodDog','fonts/GoodDog.ttf')
-	// .font('fonts/GoodDog.ttf');
+		.underline(72, 80, 76, 5)
+		.fontSize(9).fillColor('grey').text('Kertas Jawapan', 72, 88);		
+
+	doc.font('Helvetica').fontSize(12).fillColor('black');
 
 	counter = 0; // reset counter to zero
-	answerSheet = true;
+	// answerSheet = true;
+
+	// Set the stroke color and line width for the border
+	doc.strokeColor('orange').lineWidth(3);
+
+	// Draw a rounded rectangle
+	const xAxis = 60;
+	const yAxis = 109;
+	const widthRect = 475;
+	// const heightRect = origin_y + row * (row_height - 70) - 200;
+	const heightRect = 665;
+	const radius = 10;
+	doc.roundedRect(xAxis, yAxis, widthRect, heightRect, radius).stroke();
 
 	for (let index = 0; index < 5; index++) {
 		for (let j = 0; j < 5; j++) {
-			doc.drawColumnMethod(
+			// doc.drawColumnMethod(
+			// 	origin_x + x_shift + j * column_width,
+			// 	origin_y + index * row_height - 80,
+			// 	array1[counter],
+			// 	array2[counter],
+			// 	'x',
+			// 	tempCMW,
+			// 	++counter,
+			// 	answerSheet
+			// );
+
+			doc.printAnswers(
 				origin_x + x_shift + j * column_width,
-				origin_y + index * row_height - 80,
+				origin_y + index * (row_height - 70) - 90,
 				array1[counter],
 				array2[counter],
 				'x',
 				tempCMW,
-				++counter,
-				answerSheet
+				++counter
 			);
 		}
 	}
