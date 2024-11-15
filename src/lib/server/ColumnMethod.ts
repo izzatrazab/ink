@@ -18,6 +18,10 @@ export default class ColumnMethod extends PDFDocument {
 	public content_height: number = 0;
 	/** page width minus left margin and right margin */
 	public content_width: number = 0;
+	/** array containing first number in the column method */
+	public array_num_1: Array<number> = [];
+	/** array containing second number in the column method */
+	public array_num_2: Array<number> = [];
 
 	constructor(hasHeader: boolean = true, hasTitle: boolean = true) {
 		super({

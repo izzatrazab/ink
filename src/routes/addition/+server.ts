@@ -17,8 +17,8 @@ export const GET: RequestHandler = async ({ url }) => {
 	const origin_y = doc.y;
 	const page_content_width = doc.content_width;
 	const page_content_height = doc.content_height + doc.page.margins.top - origin_y;
-	let tempX: number = origin_x;
-	let tempY: number = origin_y;
+	// let tempX: number = origin_x;
+	// let tempY: number = origin_y;
 
 	const column = 5; // for now 5
 	/**
@@ -38,10 +38,6 @@ export const GET: RequestHandler = async ({ url }) => {
 	// calculate x shift
 	let x_shift: number = (column_width - tempCMW) / 2;
 
-	// To assign the random numbers generated into the arrays
-	let array1: number[] = [];
-	let array2: number[] = [];
-
 	for (let index = 0; index < 5; index++) {
 		for (let j = 0; j < 5; j++) {
 			/** start generating random questions */
@@ -57,8 +53,8 @@ export const GET: RequestHandler = async ({ url }) => {
 				secondNum = generateRandomNumber(firstNumDigit);
 			} while (firstNum <= secondNum);
 
-			array1.push(firstNum);
-			array2.push(secondNum);
+			doc.array_num_1.push(firstNum);
+			doc.array_num_2.push(secondNum);
 
 			/** end of generating random questions */
 
@@ -67,8 +63,8 @@ export const GET: RequestHandler = async ({ url }) => {
 			doc.drawColumnMethod(
 				origin_x + x_shift + j * column_width,
 				origin_y + index * row_height,
-				array1[counter],
-				array2[counter],
+				doc.array_num_1[counter],
+				doc.array_num_2[counter],
 				'+',
 				tempCMW,
 				++counter
@@ -120,8 +116,8 @@ export const GET: RequestHandler = async ({ url }) => {
 			doc.printAnswers(
 				origin_x + x_shift + j * column_width,
 				origin_y + index * (row_height - 70) - 90,
-				array1[counter],
-				array2[counter],
+				doc.array_num_1[counter],
+				doc.array_num_2[counter],
 				'+',
 				tempCMW,
 				++counter
