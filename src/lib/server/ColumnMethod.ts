@@ -9,7 +9,7 @@ enum DrillTypes {
 /**
  * custom class extending PDFDocument with additional mathematical drawings.
  */
-export default class MathDrill extends PDFDocument {
+export default class ColumnMethod extends PDFDocument {
 	/** x coordinate after the left margin */
 	public origin_x: number = 0;
 	/** y coordinate after the top margin */

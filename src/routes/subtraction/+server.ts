@@ -1,9 +1,9 @@
 import { generateRandomNumber } from '$lib/helper';
-import MathDrill from '$lib/server/MathDrill';
+import ColumnMethod from '$lib/server/ColumnMethod';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ url }) => {
-	const doc = new MathDrill();
+	const doc = new ColumnMethod();
 
 	let buffers: any[] = [];
 
