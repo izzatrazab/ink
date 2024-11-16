@@ -40,7 +40,7 @@ export default class ColumnMethod extends PDFDocument {
 		columnWidth: 0
 	};
 
-	constructor(operation_symbol: string, hasHeader: boolean = true, hasTitle: boolean = true) {
+	constructor(operation_symbol: string) {
 		super({
 			size: 'A4',
 			margins: {
@@ -61,11 +61,11 @@ export default class ColumnMethod extends PDFDocument {
 		this.content_width = this.page.width - this.page.margins.left - this.page.margins.right;
 		this.operation_symbol = operation_symbol;
 
-		if (hasHeader) this.addHeader(this.x, this.y);
-		if (hasTitle) this.addTitle(this.x, this.y);
-
+		this.addHeader(this.x, this.y);
+		this.addTitle(this.x, this.y);
 		this.initDrillLayout();
 		this.drawAllQuestions();
+		this.createAnswerSheet();
 	}
 
 	/** header includes name, and score */
@@ -74,7 +74,7 @@ export default class ColumnMethod extends PDFDocument {
 		this.font('Chilanka')
 			.fontSize(14)
 			.text('Name: ___________________________________________________', { align: 'left' });
-		this.fontSize(9).fillColor('grey').text('Nama:', { align: 'left' });
+		this.fontSize(9).fillColor('grey').text('Nama:');
 
 		this.font('Chilanka')
 			.fontSize(14)
@@ -148,7 +148,6 @@ export default class ColumnMethod extends PDFDocument {
 	}
 
 	private drawAllQuestions() {
-		console.dir(this.y);
 		let counter = 0;
 		let columnMethodWidth: number = this.layout.columnWidth - 10;
 		let x_shift: number = (this.layout.columnWidth - columnMethodWidth) / 2;
@@ -245,6 +244,52 @@ export default class ColumnMethod extends PDFDocument {
 		this.moveTo(content_x + 20, lineY + 20)
 			.lineTo(content_x + content_width, lineY + 20)
 			.stroke();
+	}
+
+	createAnswerSheet() {
+		this.addPage();
+
+		this.font('Chilanka')
+			.fontSize(14)
+			.text('Answer Sheet', {
+				align: 'left'
+			})
+			.fontSize(9)
+			.fillColor('grey')
+			.text('Kertas Jawapan');
+
+		this.font('Helvetica').fontSize(12).fillColor('black');
+
+		this.strokeColor('orange').lineWidth(3);
+
+		let counter = 0;
+		let columnMethodWidth: number = this.layout.columnWidth - 10;
+		let x_shift: number = (this.layout.columnWidth - columnMethodWidth) / 2;
+
+		// Draw a rounded rectangle
+		const xAxis = 60;
+		const yAxis = 109;
+		const widthRect = 475;
+		const heightRect = 665;
+		const radius = 10;
+		this.roundedRect(xAxis, yAxis, widthRect, heightRect, radius).stroke();
+
+		this.y = yAxis + 10;
+		for (let index = 0; index < this.layout.row; index++) {
+			let y = this.y;
+			for (let j = 0; j < this.layout.column; j++) {
+				this.printAnswers(
+					this.origin_x + x_shift + j * this.layout.columnWidth,
+					y,
+					this.array_num_1[counter],
+					this.array_num_2[counter],
+					this.operation_symbol,
+					columnMethodWidth,
+					++counter
+				);
+			}
+			this.moveDown(2);
+		}
 	}
 
 	/**
