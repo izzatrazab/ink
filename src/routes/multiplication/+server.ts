@@ -14,28 +14,12 @@ export const GET: RequestHandler = async ({ url }) => {
 
 	const origin_x = doc.origin_x;
 	const origin_y = doc.y;
-	const page_content_width = doc.content_width;
-	const page_content_height = doc.content_height + doc.page.margins.top - origin_y;
-	// let tempX: number = origin_x;
-	// let tempY: number = origin_y;
 
-	const column = 5; // for now 5
-	/**
-	 *  @var column_width - width of each column
-	 */
-	const column_width = page_content_width / column; // each column width
-
-	const row = 5; // for now 5
-	/**
-	 * @var row_height width of each column
-	 */
-	const row_height = page_content_height / row; // each column width
-
-	let tempCMW: number = column_width - 10; // temporary column method width
+	let tempCMW: number = doc.layout.columnWidth - 10; // temporary column method width
 	let counter = 0;
 
 	// calculate x shift
-	let x_shift: number = (column_width - tempCMW) / 2;
+	let x_shift: number = (doc.layout.columnWidth - tempCMW) / 2;
 
 	for (let index = 0; index < 5; index++) {
 		for (let j = 0; j < 5; j++) {
@@ -57,11 +41,9 @@ export const GET: RequestHandler = async ({ url }) => {
 
 			/** end of generating random questions */
 
-			// var firstNum = randomQuestionsMethod(100, 999);
-			// var secondNum = randomQuestionsMethod(100, 999);
 			doc.drawColumnMethod(
-				origin_x + x_shift + j * column_width,
-				origin_y + index * row_height,
+				origin_x + x_shift + j * doc.layout.columnWidth,
+				origin_y + index * doc.layout.rowHeight,
 				doc.array_num_1[counter],
 				doc.array_num_2[counter],
 				'x',
@@ -93,27 +75,16 @@ export const GET: RequestHandler = async ({ url }) => {
 	const xAxis = 60;
 	const yAxis = 109;
 	const widthRect = 475;
-	// const heightRect = origin_y + row * (row_height - 70) - 200;
+	// const heightRect = origin_y + row * (doc.layout.rowHeight - 70) - 200;
 	const heightRect = 665;
 	const radius = 10;
 	doc.roundedRect(xAxis, yAxis, widthRect, heightRect, radius).stroke();
 
 	for (let index = 0; index < 5; index++) {
 		for (let j = 0; j < 5; j++) {
-			// doc.drawColumnMethod(
-			// 	origin_x + x_shift + j * column_width,
-			// 	origin_y + index * row_height - 80,
-			// 	array1[counter],
-			// 	array2[counter],
-			// 	'x',
-			// 	tempCMW,
-			// 	++counter,
-			// 	answerSheet
-			// );
-
 			doc.printAnswers(
-				origin_x + x_shift + j * column_width,
-				origin_y + index * (row_height - 70) - 90,
+				origin_x + x_shift + j * doc.layout.columnWidth,
+				origin_y + index * (doc.layout.rowHeight - 70) - 90,
 				doc.array_num_1[counter],
 				doc.array_num_2[counter],
 				'x',

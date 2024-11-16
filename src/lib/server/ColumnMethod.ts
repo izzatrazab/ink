@@ -6,6 +6,13 @@ enum DrillTypes {
 	Multiplication = '*'
 }
 
+interface DrillLayout {
+	row: number,
+	column: number,
+	rowHeight: number,
+	columnWidth: number
+}
+
 /**
  * custom class extending PDFDocument with additional mathematical drawings.
  */
@@ -22,6 +29,14 @@ export default class ColumnMethod extends PDFDocument {
 	public array_num_1: Array<number> = [];
 	/** array containing second number in the column method */
 	public array_num_2: Array<number> = [];
+	/** drills layout information */
+	public layout: DrillLayout = {
+		row: 5,
+		column: 5,
+		rowHeight: 0,
+		columnWidth: 0
+	}
+	
 
 	constructor(hasHeader: boolean = true, hasTitle: boolean = true) {
 		super({
@@ -45,6 +60,8 @@ export default class ColumnMethod extends PDFDocument {
 
 		if (hasHeader) this.addHeader(this.x, this.y);
 		if (hasTitle) this.addTitle(this.x, this.y);
+
+		this.initDrillLayout();
 	}
 
 	/** header includes name, and score */
@@ -235,4 +252,13 @@ export default class ColumnMethod extends PDFDocument {
 
 		this.image(selectedImage, this.x, this.y - 136, { align: 'right', height: 90 });
 	}
+
+	/** LAYOUT SECTION */
+
+	private initDrillLayout(){
+		this.layout.columnWidth = this.content_width / this.layout.column;
+		this.layout.rowHeight = (this.content_height - this.y) / this.layout.row;
+	}
+
+	/** END LAYOUT SECTION */
 }
