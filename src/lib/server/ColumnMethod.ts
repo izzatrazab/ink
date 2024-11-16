@@ -44,23 +44,21 @@ export default class ColumnMethod extends PDFDocument {
 		this.content_width = this.page.width - this.page.margins.left - this.page.margins.right;
 
 		if (hasHeader) this.addHeader(this.x, this.y);
-		if (hasTitle){
-			this.addTitle(this.x, this.y);
-			this.displayCartoonImage();
-		}
+		if (hasTitle) this.addTitle(this.x, this.y);
 	}
 
 	/** header includes name, and score */
 	addHeader(x: number, y: number) {
-
-		this.registerFont('Chilanka','src/lib/assets/fonts/Chilanka-Regular.ttf');
+		this.registerFont('Chilanka', 'src/lib/assets/fonts/Chilanka-Regular.ttf');
 		this.font('Chilanka').fontSize(14);
 		this.text('Name: ___________________________________________________', { align: 'left' });
 		this.fontSize(9).fillColor('grey').text('Nama:', { align: 'left' });
 
 		this.font('Chilanka').fontSize(14).fillColor('black');
 		this.text('Marks: _______/25', x, y, { align: 'right' });
-		this.fontSize(9).fillColor('grey').text('Markah:', 423, y+15.5);
+		this.fontSize(9)
+			.fillColor('grey')
+			.text('Markah:', 423, y + 15.5);
 
 		this.font('Chilanka').fontSize(14).fillColor('black');
 
@@ -72,26 +70,36 @@ export default class ColumnMethod extends PDFDocument {
 
 	/** title includes cartoon image, and title */
 	addTitle(x: number, y: number) {
-
-		let width: number = 90;		
+		let width: number = 90;
 		let gap: number = 10;
-		let xTitle: number = x + width + 3*(gap);
-		let wTitle: number = this.content_width - width - 3*(gap);
+		let xTitle: number = x + width + 3 * gap;
+		let wTitle: number = this.content_width - width - 3 * gap;
 		let hTitle: number = 70;
 		this.strokeColor('#737373').lineWidth(2);
 		this.rect(xTitle, y, wTitle, hTitle).stroke();
 
-		this.registerFont('DynaPuff','src/lib/assets/fonts/DynaPuff-VariableFont.ttf');
+		this.registerFont('DynaPuff', 'src/lib/assets/fonts/DynaPuff-VariableFont.ttf');
 		this.font('DynaPuff').fontSize(16);
-		this.fillColor('#2acf90').text('Latihan: Tahap 1', xTitle, y + 5, { align: 'center', height: hTitle });
-		this.fontSize(9).fillColor('grey').text('Worksheet: Level 1', xTitle, y+23, { align: 'center', height: hTitle });
+		this.fillColor('#2acf90').text('Latihan: Tahap 1', xTitle, y + 5, {
+			align: 'center',
+			height: hTitle
+		});
+		this.fontSize(9)
+			.fillColor('grey')
+			.text('Worksheet: Level 1', xTitle, y + 23, { align: 'center', height: hTitle });
 
 		this.font('Chilanka').fontSize(14).fillColor('black');
-		this.text('Solve the following questions using the addition function.', x, y + 85, { align: 'center' })
-		this.fontSize(10).fillColor('grey').text('Selesaikan soalan-soalan berikut dengan menggunakan fungsi tambah.', x, y + 100.5, { align: 'center' })
+		this.text('Solve the following questions using the addition function.', x, y + 85, {
+			align: 'center'
+		});
+		this.fontSize(10)
+			.fillColor('grey')
+			.text('Selesaikan soalan-soalan berikut dengan menggunakan fungsi tambah.', x, y + 100.5, {
+				align: 'center'
+			});
 
 		this.font('Helvetica').fontSize(12).fillColor('black');
-		
+
 		this.moveDown(1);
 
 		// Set the stroke color and line width for the border
@@ -113,6 +121,7 @@ export default class ColumnMethod extends PDFDocument {
 		this.image('src/lib/assets/stars/star-9.png', 540, 705, { align: 'right', width: 30 });
 		this.image('src/lib/assets/stars/star-10.png', 540, 745, { align: 'right', width: 30 });
 
+		this.displayCartoonImage();
 	}
 
 	/**
@@ -181,7 +190,7 @@ export default class ColumnMethod extends PDFDocument {
 	 * @param operation the operation symbol (+, -, x)
 	 * @param width width of the column method (box ??, ibarat mcm kotak).
 	 */
-	printAnswers (
+	printAnswers(
 		x: number,
 		y: number,
 		num1: number,
@@ -191,7 +200,6 @@ export default class ColumnMethod extends PDFDocument {
 		questionNumber: number,
 		padding: number = 5
 	) {
-
 		const content_width = width - padding - padding;
 		const content_x = x + padding;
 		const content_y = y + padding;
@@ -203,22 +211,21 @@ export default class ColumnMethod extends PDFDocument {
 		});
 
 		// Calculate and write the answer
-		const result =
-			operation === '+' ? num1 + num2 : operation === '-' ? num1 - num2 : num1 * num2;
+		const result = operation === '+' ? num1 + num2 : operation === '-' ? num1 - num2 : num1 * num2;
 
 		this.text(result.toString(), content_x + 30, content_y, {
-				width: content_width,
-				align: 'left'
+			width: content_width,
+			align: 'left'
 		});
 	}
 
 	displayCartoonImage() {
 		let images: string[] = [];
 		let selectedImage: string | null = null;
-		
+
 		const allImagesPath = import.meta.glob('/src/lib/assets/animals/easy/*.png');
 
-		for(const path in allImagesPath) {
+		for (const path in allImagesPath) {
 			images.push(path.replace(/^\/src/, 'src')); // replace: to remove the '/' in front
 		}
 
@@ -227,7 +234,5 @@ export default class ColumnMethod extends PDFDocument {
 		console.log('path selected image:', selectedImage);
 
 		this.image(selectedImage, this.x, this.y - 136, { align: 'right', height: 90 });
-
 	}
-
 }
