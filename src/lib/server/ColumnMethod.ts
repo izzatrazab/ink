@@ -1,3 +1,4 @@
+import { generateRandomNumber } from '$lib/helper';
 import PDFDocument from 'pdfkit';
 
 enum DrillTypes {
@@ -7,10 +8,10 @@ enum DrillTypes {
 }
 
 interface DrillLayout {
-	row: number,
-	column: number,
-	rowHeight: number,
-	columnWidth: number
+	row: number;
+	column: number;
+	rowHeight: number;
+	columnWidth: number;
 }
 
 /**
@@ -25,6 +26,8 @@ export default class ColumnMethod extends PDFDocument {
 	public content_height: number = 0;
 	/** page width minus left margin and right margin */
 	public content_width: number = 0;
+	/** operation symbol */
+	public operation_symbol: string = '';
 	/** array containing first number in the column method */
 	public array_num_1: Array<number> = [];
 	/** array containing second number in the column method */
@@ -35,10 +38,9 @@ export default class ColumnMethod extends PDFDocument {
 		column: 5,
 		rowHeight: 0,
 		columnWidth: 0
-	}
-	
+	};
 
-	constructor(hasHeader: boolean = true, hasTitle: boolean = true) {
+	constructor(operation_symbol: string, hasHeader: boolean = true, hasTitle: boolean = true) {
 		super({
 			size: 'A4',
 			margins: {
@@ -57,22 +59,27 @@ export default class ColumnMethod extends PDFDocument {
 		this.origin_y = this.y;
 		this.content_height = this.page.height - this.page.margins.top - this.page.margins.bottom;
 		this.content_width = this.page.width - this.page.margins.left - this.page.margins.right;
+		this.operation_symbol = operation_symbol;
 
 		if (hasHeader) this.addHeader(this.x, this.y);
 		if (hasTitle) this.addTitle(this.x, this.y);
 
 		this.initDrillLayout();
+		this.drawAllQuestions();
 	}
 
 	/** header includes name, and score */
 	addHeader(x: number, y: number) {
 		this.registerFont('Chilanka', 'src/lib/assets/fonts/Chilanka-Regular.ttf');
-		this.font('Chilanka').fontSize(14);
-		this.text('Name: ___________________________________________________', { align: 'left' });
+		this.font('Chilanka')
+			.fontSize(14)
+			.text('Name: ___________________________________________________', { align: 'left' });
 		this.fontSize(9).fillColor('grey').text('Nama:', { align: 'left' });
 
-		this.font('Chilanka').fontSize(14).fillColor('black');
-		this.text('Marks: _______/25', x, y, { align: 'right' });
+		this.font('Chilanka')
+			.fontSize(14)
+			.fillColor('black')
+			.text('Marks: _______/25', x, y, { align: 'right' });
 		this.fontSize(9)
 			.fillColor('grey')
 			.text('Markah:', 423, y + 15.5);
@@ -116,7 +123,6 @@ export default class ColumnMethod extends PDFDocument {
 			});
 
 		this.font('Helvetica').fontSize(12).fillColor('black');
-
 		this.moveDown(1);
 
 		// Set the stroke color and line width for the border
@@ -139,6 +145,48 @@ export default class ColumnMethod extends PDFDocument {
 		this.image('src/lib/assets/stars/star-10.png', 540, 745, { align: 'right', width: 30 });
 
 		this.displayCartoonImage();
+	}
+
+	private drawAllQuestions() {
+		console.dir(this.y);
+		let counter = 0;
+		let columnMethodWidth: number = this.layout.columnWidth - 10;
+		let x_shift: number = (this.layout.columnWidth - columnMethodWidth) / 2;
+
+		let origin_x: number = this.origin_x;
+		let origin_y: number = this.y;
+
+		for (let index = 0; index < this.layout.row; index++) {
+			for (let j = 0; j < this.layout.column; j++) {
+				/** start generating random questions */
+				let firstNumDigit = 3; // for now 3 (boleh tukar samada 1/2/3)
+				let secondNumDigit = 3; // for now 3 (boleh tukar samada 1/2/3)
+
+				var firstNum = 0;
+				var secondNum = 0;
+
+				do {
+					// to ensure that the first number is bigger than the second number
+					firstNum = generateRandomNumber(firstNumDigit);
+					secondNum = generateRandomNumber(secondNumDigit);
+				} while (firstNum <= secondNum);
+
+				this.array_num_1.push(firstNum);
+				this.array_num_2.push(secondNum);
+
+				/** end of generating random questions */
+
+				this.drawColumnMethod(
+					origin_x + x_shift + j * this.layout.columnWidth,
+					origin_y + index * this.layout.rowHeight,
+					this.array_num_1[counter],
+					this.array_num_2[counter],
+					this.operation_symbol,
+					columnMethodWidth,
+					++counter
+				);
+			}
+		}
 	}
 
 	/**
@@ -253,12 +301,8 @@ export default class ColumnMethod extends PDFDocument {
 		this.image(selectedImage, this.x, this.y - 136, { align: 'right', height: 90 });
 	}
 
-	/** LAYOUT SECTION */
-
-	private initDrillLayout(){
+	private initDrillLayout() {
 		this.layout.columnWidth = this.content_width / this.layout.column;
 		this.layout.rowHeight = (this.content_height - this.y) / this.layout.row;
 	}
-
-	/** END LAYOUT SECTION */
 }
