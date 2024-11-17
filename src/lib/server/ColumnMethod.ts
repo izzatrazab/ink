@@ -40,7 +40,7 @@ export default class ColumnMethod extends PDFDocument {
 		columnWidth: 0
 	};
 
-	constructor(operation_symbol: string) {
+	constructor(operation: string, difficulty: string) {
 		super({
 			size: 'A4',
 			margins: {
@@ -59,7 +59,7 @@ export default class ColumnMethod extends PDFDocument {
 		this.origin_y = this.y;
 		this.content_height = this.page.height - this.page.margins.top - this.page.margins.bottom;
 		this.content_width = this.page.width - this.page.margins.left - this.page.margins.right;
-		this.operation_symbol = operation_symbol;
+		this.operation_symbol = this.getSymbol(operation);
 
 		this.addHeader(this.x, this.y);
 		this.addTitle(this.x, this.y);
@@ -349,5 +349,17 @@ export default class ColumnMethod extends PDFDocument {
 	private initDrillLayout() {
 		this.layout.columnWidth = this.content_width / this.layout.column;
 		this.layout.rowHeight = (this.content_height - this.y) / this.layout.row;
+	}
+
+	private getSymbol(operation:string): string{
+		switch (operation) {
+			default:
+			case 'addition':
+				return '+'
+			case 'subtraction':
+				return '-'
+			case 'multiplication':
+				return 'x'
+		}
 	}
 }

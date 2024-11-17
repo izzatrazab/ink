@@ -1,9 +1,9 @@
 <div class="flex h-full flex-col items-center justify-center text-center">
 	<p class="font-bold">Math Drill Home Page</p>
 	<div class="grid grid-cols-2 gap-4">
-		<a role="button" href="./addition" target="_blank">tambah</a>
-		<a role="button" href="./subtraction" target="_blank">tolak</a>
-		<a role="button" href="./multiplication" target="_blank">darab</a>
+		<a role="button" href="./column-method?operation=addition&difficulty=easy" target="_blank">tambah</a>
+		<a role="button" href="./column-method?operation=subtraction&difficulty=easy" target="_blank">tolak</a>
+		<a role="button" href="./column-method?operation=multiplication&difficulty=easy" target="_blank">darab</a>
 		
 	</div>
 		<br>
