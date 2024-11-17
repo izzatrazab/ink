@@ -23,6 +23,10 @@ export function generateRandomNumber(digits: number): number {
 			min = 100;
 			max = 999;
 			break;
+		case 4:
+			min = 1000;
+			max = 9999;
+			break;
 	}
 
 	return Math.floor(Math.random() * (max - min + 1) + min);

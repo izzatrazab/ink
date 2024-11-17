@@ -1,11 +1,6 @@
 import { generateRandomNumber } from '$lib/helper';
+import { difficultyList } from '$lib/difficulty';
 import PDFDocument from 'pdfkit';
-
-enum DrillTypes {
-	Addition = '+',
-	Subtraction = '-',
-	Multiplication = '*'
-}
 
 interface DrillLayout {
 	row: number;
@@ -28,6 +23,10 @@ export default class ColumnMethod extends PDFDocument {
 	public content_width: number = 0;
 	/** operation symbol */
 	public operation_symbol: string = '';
+	/** number of digits of the first number in a question */
+	public first_number_of_digits: number = 1;
+	/** number of digits of the second number in a question */
+	public second_number_of_digits: number = 1;
 	/** array containing first number in the column method */
 	public array_num_1: Array<number> = [];
 	/** array containing second number in the column method */
@@ -60,6 +59,8 @@ export default class ColumnMethod extends PDFDocument {
 		this.content_height = this.page.height - this.page.margins.top - this.page.margins.bottom;
 		this.content_width = this.page.width - this.page.margins.left - this.page.margins.right;
 		this.operation_symbol = this.getSymbol(operation);
+		this.first_number_of_digits = difficultyList.get(difficulty)?.first_number_of_digits ?? 1;
+		this.second_number_of_digits = difficultyList.get(difficulty)?.second_number_of_digits ?? 1;
 
 		this.addHeader(this.x, this.y);
 		this.addTitle(this.x, this.y);
@@ -157,23 +158,18 @@ export default class ColumnMethod extends PDFDocument {
 
 		for (let index = 0; index < this.layout.row; index++) {
 			for (let j = 0; j < this.layout.column; j++) {
-				/** start generating random questions */
-				let firstNumDigit = 3; // for now 3 (boleh tukar samada 1/2/3)
-				let secondNumDigit = 3; // for now 3 (boleh tukar samada 1/2/3)
+				/** start generating random a question */
 
 				var firstNum = 0;
 				var secondNum = 0;
 
-				do {
-					// to ensure that the first number is bigger than the second number
-					firstNum = generateRandomNumber(firstNumDigit);
-					secondNum = generateRandomNumber(secondNumDigit);
-				} while (firstNum <= secondNum);
+				firstNum = generateRandomNumber(this.first_number_of_digits);
+				secondNum = generateRandomNumber(this.second_number_of_digits);
 
 				this.array_num_1.push(firstNum);
 				this.array_num_2.push(secondNum);
 
-				/** end of generating random questions */
+				/** end of generating random a question */
 
 				this.drawColumnMethod(
 					origin_x + x_shift + j * this.layout.columnWidth,
@@ -351,15 +347,15 @@ export default class ColumnMethod extends PDFDocument {
 		this.layout.rowHeight = (this.content_height - this.y) / this.layout.row;
 	}
 
-	private getSymbol(operation:string): string{
+	private getSymbol(operation: string): string {
 		switch (operation) {
 			default:
 			case 'addition':
-				return '+'
+				return '+';
 			case 'subtraction':
-				return '-'
+				return '-';
 			case 'multiplication':
-				return 'x'
+				return 'x';
 		}
 	}
 }
