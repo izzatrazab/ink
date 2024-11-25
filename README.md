@@ -6,9 +6,10 @@
     - [x] add names empty field
     - [x] score empty field
     - [ ] title/label for level of drills
-        - List down category of worksheet
+        - mungkin boleh guna nama level tu sebagai tajuk drill tu. cth "medium"
     - [x] add images
     - [x] change fonts, make it a little bit childish
+    - [ ] multiplication: add height on answer space according to the levels
 
 ## home page
 - create home page, 2x2 navigation, navigate to another page.
