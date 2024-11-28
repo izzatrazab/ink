@@ -23,6 +23,14 @@ export default class ColumnMethod extends PDFDocument {
 	public content_width: number = 0;
 	/** operation symbol */
 	public operation_symbol: string = '';
+	/** operation method in english */
+	public operation_method_eng: string = '';
+	/** operation method in malay */
+	public operation_method_malay: string = '';
+	/** label for the level of difficulty of the questions in english */
+	public label_eng: string = '';
+	/** label for the level of difficulty of the questions in malay */
+	public label_malay: string = '';
 	/** number of digits of the first number in a question */
 	public first_number_of_digits: number = 1;
 	/** number of digits of the second number in a question */
@@ -56,15 +64,25 @@ export default class ColumnMethod extends PDFDocument {
 
 		this.origin_x = this.x;
 		this.origin_y = this.y;
-		this.content_height = this.page.height - this.page.margins.top - this.page.margins.bottom;
+		if (operation === 'multiplication') {
+			this.content_height =
+				this.page.height - this.page.margins.top / 50 - this.page.margins.bottom * 2;
+		} else {
+			this.content_height = this.page.height - this.page.margins.top - this.page.margins.bottom;
+		}
+
 		this.content_width = this.page.width - this.page.margins.left - this.page.margins.right;
-		this.operation_symbol = this.getSymbol(operation);
+		this.operation_symbol = this.getSymbol(operation).symbol;
+		this.operation_method_eng = operation;
+		this.operation_method_malay = this.getSymbol(operation).operation_char;
 		this.first_number_of_digits = difficultyList.get(difficulty)?.first_number_of_digits ?? 1;
 		this.second_number_of_digits = difficultyList.get(difficulty)?.second_number_of_digits ?? 1;
+		this.label_eng = difficultyList.get(difficulty)?.level_eng ?? 'easy';
+		this.label_malay = difficultyList.get(difficulty)?.level_malay ?? 'mudah';
 
 		this.addHeader(this.x, this.y);
-		this.addTitle(this.x, this.y);
-		this.initDrillLayout();
+		this.addTitle(this.x, this.y, operation);
+		this.initDrillLayout(operation);
 		this.drawAllQuestions();
 		this.createAnswerSheet();
 	}
@@ -94,7 +112,7 @@ export default class ColumnMethod extends PDFDocument {
 	}
 
 	/** title includes cartoon image, and title */
-	addTitle(x: number, y: number) {
+	addTitle(x: number, y: number, operation: string) {
 		let width: number = 90;
 		let gap: number = 10;
 		let xTitle: number = x + width + 3 * gap;
@@ -104,24 +122,44 @@ export default class ColumnMethod extends PDFDocument {
 		this.rect(xTitle, y, wTitle, hTitle).stroke();
 
 		this.registerFont('DynaPuff', 'src/lib/assets/fonts/DynaPuff-VariableFont.ttf');
-		this.font('DynaPuff').fontSize(16);
-		this.fillColor('#2acf90').text('Latihan: Tahap 1', xTitle, y + 5, {
-			align: 'center',
-			height: hTitle
-		});
+		this.font('DynaPuff').fontSize(14);
+		this.fillColor('#2acf90').text(
+			`Worksheet: ${this.label_eng} Level (${this.first_number_of_digits} digits ${this.operation_symbol} ${this.second_number_of_digits} digit(s))`,
+			xTitle,
+			y + 10,
+			{
+				align: 'center',
+				height: hTitle
+			}
+		);
 		this.fontSize(9)
 			.fillColor('grey')
-			.text('Worksheet: Level 1', xTitle, y + 23, { align: 'center', height: hTitle });
+			.text(
+				`Latihan: Tahap ${this.label_malay} (${this.first_number_of_digits} digits ${this.operation_symbol} ${this.second_number_of_digits} digit(s))`,
+				xTitle,
+				y + 35,
+				{ align: 'center', height: hTitle }
+			);
 
 		this.font('Chilanka').fontSize(14).fillColor('black');
-		this.text('Solve the following questions using the addition function.', x, y + 85, {
-			align: 'center'
-		});
+		this.text(
+			`Solve the following questions using the ${this.operation_method_eng} function.`,
+			x,
+			y + 85,
+			{
+				align: 'center'
+			}
+		);
 		this.fontSize(10)
 			.fillColor('grey')
-			.text('Selesaikan soalan-soalan berikut dengan menggunakan fungsi tambah.', x, y + 100.5, {
-				align: 'center'
-			});
+			.text(
+				`Selesaikan soalan-soalan berikut dengan menggunakan fungsi ${this.operation_method_malay}.`,
+				x,
+				y + 100.5,
+				{
+					align: 'center'
+				}
+			);
 
 		this.font('Helvetica').fontSize(12).fillColor('black');
 		this.moveDown(1);
@@ -133,7 +171,12 @@ export default class ColumnMethod extends PDFDocument {
 		const xAxis = 60;
 		const yAxis = 209;
 		const widthRect = 475;
-		const heightRect = 565;
+		var heightRect = 0;
+		if (operation === 'multiplication') {
+			heightRect = 595;
+		} else {
+			heightRect = 565;
+		}
 		const radius = 10;
 		this.roundedRect(xAxis, yAxis, widthRect, heightRect, radius).stroke();
 
@@ -219,7 +262,7 @@ export default class ColumnMethod extends PDFDocument {
 		});
 
 		// Draw operation sign
-		this.text(operation, content_x + 20, content_y + 30, {
+		this.text(operation, content_x + 8, content_y + 30, {
 			width: content_width,
 			align: 'left'
 		});
@@ -233,13 +276,29 @@ export default class ColumnMethod extends PDFDocument {
 		// Draw line
 		const lineY = content_y + 50;
 
-		this.moveTo(content_x + 20, lineY)
-			.lineTo(content_x + content_width, lineY)
-			.stroke();
+		if (operation === 'x') {
+			this.moveTo(content_x + 15, lineY)
+				.lineTo(content_x + content_width, lineY)
+				.stroke();
+		} else {
+			this.moveTo(content_x + 20, lineY)
+				.lineTo(content_x + content_width, lineY)
+				.stroke();
+		}
 
-		this.moveTo(content_x + 20, lineY + 20)
-			.lineTo(content_x + content_width, lineY + 20)
-			.stroke();
+		if (operation === 'x') {
+			this.moveTo(content_x + 15, lineY + 35)
+				.lineTo(content_x + content_width, lineY + 35)
+				.stroke();
+
+			this.moveTo(content_x + 15, lineY + 55)
+				.lineTo(content_x + content_width, lineY + 55)
+				.stroke();
+		} else {
+			this.moveTo(content_x + 20, lineY + 20)
+				.lineTo(content_x + content_width, lineY + 20)
+				.stroke();
+		}
 	}
 
 	createAnswerSheet() {
@@ -342,20 +401,24 @@ export default class ColumnMethod extends PDFDocument {
 		this.image(selectedImage, this.x, this.y - 136, { align: 'right', height: 90 });
 	}
 
-	private initDrillLayout() {
+	private initDrillLayout(operation: string) {
 		this.layout.columnWidth = this.content_width / this.layout.column;
-		this.layout.rowHeight = (this.content_height - this.y) / this.layout.row;
+		if (operation === 'multiplication') {
+			this.layout.rowHeight = (this.content_height - 160) / this.layout.row;
+		} else {
+			this.layout.rowHeight = (this.content_height - this.y) / this.layout.row;
+		}
 	}
 
-	private getSymbol(operation: string): string {
+	private getSymbol(operation: string) {
 		switch (operation) {
 			default:
 			case 'addition':
-				return '+';
+				return { symbol: '+', operation_char: 'tambah' };
 			case 'subtraction':
-				return '-';
+				return { symbol: '-', operation_char: 'tolak' };
 			case 'multiplication':
-				return 'x';
+				return { symbol: 'x', operation_char: 'darab' };
 		}
 	}
 }
