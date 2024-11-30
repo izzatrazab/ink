@@ -133,10 +133,10 @@ export default class ColumnMethod extends PDFDocument {
 				height: hTitle
 			}
 		);
-		this.fontSize(9)
+		this.fontSize(11)
 			.fillColor('grey')
 			.text(
-				`Latihan: Tahap ${this.label_malay} (${this.first_number_of_digits} digits ${this.operation_symbol} ${this.second_number_of_digits} digit(s))`,
+				`Latihan: Tahap ${this.label_malay} (${this.first_number_of_digits} digit ${this.operation_symbol} ${this.second_number_of_digits} digit)`,
 				xTitle,
 				y + 35,
 				{ align: 'center', height: hTitle }
