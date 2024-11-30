@@ -41,8 +41,8 @@ export default class ColumnMethod extends PDFDocument {
 	public array_num_2: Array<number> = [];
 	/** drills layout information */
 	public layout: DrillLayout = {
-		row: 5,
-		column: 5,
+		row: 4,
+		column: 4,
 		rowHeight: 0,
 		columnWidth: 0
 	};
@@ -57,6 +57,7 @@ export default class ColumnMethod extends PDFDocument {
 				right: 65
 			}
 		});
+
 		/**
 		 * size: 'A4',
 		 * width: 595.28, height: 841.89, (PostScript points)
@@ -248,55 +249,68 @@ export default class ColumnMethod extends PDFDocument {
 		const content_width = width - padding - padding;
 		const content_x = x + padding;
 		const content_y = y + padding;
+		const fontSize = 14;
+		const characterSpacing = 8;
 
+		this.registerFont('Arial', 'src/lib/assets/fonts/ARIAL.TTF');
+		this.font('Arial')
 		// Draw question number
 		this.text(questionNumber.toString() + ')', content_x, content_y, {
 			width: width,
-			align: 'left'
-		});
+			align: 'left',
+		}).fontSize(fontSize);
 
 		// Draw first number
 		this.text(num1.toString(), content_x, content_y + 15, {
 			width: content_width,
-			align: 'right'
-		});
+			align: 'right',
+			characterSpacing: characterSpacing
+		}).fontSize(fontSize);
 
 		// Draw operation sign
-		this.text(operation, content_x + 8, content_y + 30, {
+		this.text(operation, content_x + 20, content_y + 30, {
 			width: content_width,
-			align: 'left'
-		});
+			align: 'left',
+		}).fontSize(fontSize);
 
 		// Draw second number
 		this.text(num2.toString(), content_x, content_y + 30, {
 			width: content_width,
-			align: 'right'
-		});
+			align: 'right',
+			characterSpacing: characterSpacing
+		}).fontSize(fontSize);
 
 		// Draw line
-		const lineY = content_y + 50;
+		const start_line_x = content_x + 15;
+		const end_line_x = content_x + content_width + 5;
 
-		if (operation === 'x') {
-			this.moveTo(content_x + 15, lineY)
-				.lineTo(content_x + content_width, lineY)
+		if (this.operation_method_eng === 'multiplication') {
+			this.moveTo(start_line_x, this.y)
+				.lineTo(end_line_x, this.y)
 				.stroke();
 		} else {
-			this.moveTo(content_x + 20, lineY)
-				.lineTo(content_x + content_width, lineY)
+			this.moveTo(start_line_x, this.y)
+				.lineTo(end_line_x, this.y)
 				.stroke();
 		}
 
-		if (operation === 'x') {
-			this.moveTo(content_x + 15, lineY + 35)
-				.lineTo(content_x + content_width, lineY + 35)
+		
+		if ((this.operation_method_eng === 'multiplication') && (this.second_number_of_digits > 1)) {
+			this.moveDown(this.second_number_of_digits * 1.25);
+			this.moveTo(start_line_x, this.y)
+				.lineTo(end_line_x, this.y)
 				.stroke();
 
-			this.moveTo(content_x + 15, lineY + 55)
-				.lineTo(content_x + content_width, lineY + 55)
+			this.moveDown(1.25)
+
+			this.moveTo(start_line_x, this.y)
+				.lineTo(end_line_x, this.y)
 				.stroke();
 		} else {
-			this.moveTo(content_x + 20, lineY + 20)
-				.lineTo(content_x + content_width, lineY + 20)
+
+			this.moveDown(1.25);
+			this.moveTo(start_line_x, this.y)
+				.lineTo(end_line_x, this.y)
 				.stroke();
 		}
 	}
@@ -416,9 +430,9 @@ export default class ColumnMethod extends PDFDocument {
 			case 'addition':
 				return { symbol: '+', operation_char: 'tambah' };
 			case 'subtraction':
-				return { symbol: '-', operation_char: 'tolak' };
+				return { symbol: '−', operation_char: 'tolak' };
 			case 'multiplication':
-				return { symbol: 'x', operation_char: 'darab' };
+				return { symbol: '×', operation_char: 'darab' };
 		}
 	}
 }
