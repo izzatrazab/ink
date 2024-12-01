@@ -162,7 +162,6 @@ export default class ColumnMethod extends PDFDocument {
 				}
 			);
 
-		this.font('Helvetica').fontSize(12).fillColor('black');
 		this.moveDown(1);
 
 		// Set the stroke color and line width for the border
@@ -199,6 +198,9 @@ export default class ColumnMethod extends PDFDocument {
 
 		let origin_x: number = this.origin_x;
 		let origin_y: number = this.y;
+
+		this.registerFont('Arial', 'src/lib/assets/fonts/ARIAL.TTF');
+		this.font('Arial').fillColor('black');
 
 		for (let index = 0; index < this.layout.row; index++) {
 			for (let j = 0; j < this.layout.column; j++) {
@@ -249,70 +251,52 @@ export default class ColumnMethod extends PDFDocument {
 		const content_width = width - padding - padding;
 		const content_x = x + padding;
 		const content_y = y + padding;
-		const fontSize = 14;
 		const characterSpacing = 8;
+		const fontSize = 14;
+		const operationSymbolSize = 18;
 
-		this.registerFont('Arial', 'src/lib/assets/fonts/ARIAL.TTF');
-		this.font('Arial')
 		// Draw question number
-		this.text(questionNumber.toString() + ')', content_x, content_y, {
+		this.fontSize(fontSize).text(questionNumber.toString() + ')', content_x, content_y, {
 			width: width,
-			align: 'left',
-		}).fontSize(fontSize);
+			align: 'left'
+		});
 
 		// Draw first number
-		this.text(num1.toString(), content_x, content_y + 15, {
+		this.fontSize(fontSize).text(num1.toString(), content_x, content_y + 15, {
 			width: content_width,
 			align: 'right',
 			characterSpacing: characterSpacing
-		}).fontSize(fontSize);
+		});
 
 		// Draw operation sign
-		this.text(operation, content_x + 20, content_y + 30, {
+		this.fontSize(operationSymbolSize).text(operation, content_x + 20, content_y + 30, {
 			width: content_width,
-			align: 'left',
-		}).fontSize(fontSize);
+			align: 'left'
+		});
 
 		// Draw second number
-		this.text(num2.toString(), content_x, content_y + 30, {
+		this.fontSize(fontSize).text(num2.toString(), content_x, content_y + 30, {
 			width: content_width,
 			align: 'right',
 			characterSpacing: characterSpacing
-		}).fontSize(fontSize);
+		});
 
-		// Draw line
+		// Draw lines for calculation and answer space
 		const start_line_x = content_x + 15;
 		const end_line_x = content_x + content_width + 5;
 
-		if (this.operation_method_eng === 'multiplication') {
-			this.moveTo(start_line_x, this.y)
-				.lineTo(end_line_x, this.y)
-				.stroke();
-		} else {
-			this.moveTo(start_line_x, this.y)
-				.lineTo(end_line_x, this.y)
-				.stroke();
-		}
+		// Draw first line
+		this.moveTo(start_line_x, this.y).lineTo(end_line_x, this.y).stroke();
 
-		
-		if ((this.operation_method_eng === 'multiplication') && (this.second_number_of_digits > 1)) {
+		// Draw middle line (for multiplication, it has additional middle line if second number has more than 1 digit)
+		if (this.operation_method_eng === 'multiplication' && this.second_number_of_digits > 1) {
 			this.moveDown(this.second_number_of_digits * 1.25);
-			this.moveTo(start_line_x, this.y)
-				.lineTo(end_line_x, this.y)
-				.stroke();
-
-			this.moveDown(1.25)
-
-			this.moveTo(start_line_x, this.y)
-				.lineTo(end_line_x, this.y)
-				.stroke();
-		} else {
-
-			this.moveDown(1.25);
-			this.moveTo(start_line_x, this.y)
-				.lineTo(end_line_x, this.y)
-				.stroke();
+			this.moveTo(start_line_x, this.y).lineTo(end_line_x, this.y).stroke();
 		}
+
+		// answer gap and draw last line
+		this.moveDown(1.5);
+		this.moveTo(start_line_x, this.y).lineTo(end_line_x, this.y).stroke();
 	}
 
 	createAnswerSheet() {
@@ -352,7 +336,6 @@ export default class ColumnMethod extends PDFDocument {
 					y,
 					this.array_num_1[counter],
 					this.array_num_2[counter],
-					this.operation_symbol,
 					columnMethodWidth,
 					++counter
 				);
@@ -374,7 +357,6 @@ export default class ColumnMethod extends PDFDocument {
 		y: number,
 		num1: number,
 		num2: number,
-		operation: string,
 		width: number,
 		questionNumber: number,
 		padding: number = 5
@@ -390,7 +372,20 @@ export default class ColumnMethod extends PDFDocument {
 		});
 
 		// Calculate and write the answer
-		const result = operation === '+' ? num1 + num2 : operation === '-' ? num1 - num2 : num1 * num2;
+		let result: number;
+
+		switch (this.operation_method_eng) {
+			default:
+			case 'addition':
+				result = num1 + num2;
+				break;
+			case 'subtraction':
+				result = num1 - num2;
+				break;
+			case 'multiplication':
+				result = num1 * num2;
+				break;
+		}
 
 		this.text(result.toString(), content_x + 30, content_y, {
 			width: content_width,

@@ -3,7 +3,7 @@ import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ url }) => {
 	
-	const operation_symbol = url.searchParams.get('operation') ?? '+';
+	const operation_symbol = url.searchParams.get('operation') ?? 'addition';
 	const difficulty = url.searchParams.get('difficulty') ?? 'easy';
 
 	const doc = new ColumnMethod(operation_symbol, difficulty);
