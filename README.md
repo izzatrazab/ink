@@ -5,11 +5,12 @@
 - pdf:
     - [x] add names empty field
     - [x] score empty field
-    - [ ] title/label for level of drills
+    - [x] title/label for level of drills
         - mungkin boleh guna nama level tu sebagai tajuk drill tu. cth "medium"
     - [x] add images
     - [x] change fonts, make it a little bit childish
-    - [ ] multiplication: add height on answer space according to the levels
+    - [x] multiplication: add height on answer space according to the levels
+    - [ ] boleh buat multiple pages
 
 ## home page
 - create home page, 2x2 navigation, navigate to another page.
