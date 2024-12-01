@@ -99,7 +99,7 @@ export default class ColumnMethod extends PDFDocument {
 		this.font('Chilanka')
 			.fontSize(14)
 			.fillColor('black')
-			.text('Marks: _______/25', x, y, { align: 'right' });
+			.text('Marks: _______/16', x, y, { align: 'right' });
 		this.fontSize(9)
 			.fillColor('grey')
 			.text('Markah:', 423, y + 15.5);
