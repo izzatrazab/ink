@@ -11,6 +11,7 @@
     - [x] change fonts, make it a little bit childish
     - [x] multiplication: add height on answer space according to the levels
     - [ ] boleh buat multiple pages
+    - [ ] perlu atau x untuk update total marks?
 
 ## home page
 - create home page, 2x2 navigation, navigate to another page.
