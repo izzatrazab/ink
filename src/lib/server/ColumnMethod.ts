@@ -13,6 +13,8 @@ interface DrillLayout {
  * custom class extending PDFDocument with additional mathematical drawings.
  */
 export default class ColumnMethod extends PDFDocument {
+	/** number of pages */
+	public num_page: number = 0;
 	/** x coordinate after the left margin */
 	public origin_x: number = 0;
 	/** y coordinate after the top margin */
@@ -21,6 +23,8 @@ export default class ColumnMethod extends PDFDocument {
 	public content_height: number = 0;
 	/** page width minus left margin and right margin */
 	public content_width: number = 0;
+	/** total number of questions */
+	public total_questions: number = 0;
 	/** operation symbol */
 	public operation_symbol: string = '';
 	/** operation method in english */
@@ -80,11 +84,16 @@ export default class ColumnMethod extends PDFDocument {
 		this.second_number_of_digits = difficultyList.get(difficulty)?.second_number_of_digits ?? 1;
 		this.label_eng = difficultyList.get(difficulty)?.level_eng ?? 'easy';
 		this.label_malay = difficultyList.get(difficulty)?.level_malay ?? 'mudah';
+		this.num_page = 9;
 
-		this.addHeader(this.x, this.y);
-		this.addTitle(this.x, this.y, operation);
-		this.initDrillLayout(operation);
-		this.drawAllQuestions();
+		/** to determine the number of worksheets created */
+		for(let i=0; i<this.num_page; i++) {
+			this.addHeader(this.x, this.y);
+			this.addTitle(this.x, this.y, operation);
+			this.initDrillLayout(operation);
+			this.drawAllQuestions();
+			this.addPage();
+		}
 		this.createAnswerSheet();
 	}
 
@@ -192,7 +201,6 @@ export default class ColumnMethod extends PDFDocument {
 	}
 
 	private drawAllQuestions() {
-		let counter = 0;
 		let columnMethodWidth: number = this.layout.columnWidth - 10;
 		let x_shift: number = (this.layout.columnWidth - columnMethodWidth) / 2;
 
@@ -220,11 +228,11 @@ export default class ColumnMethod extends PDFDocument {
 				this.drawColumnMethod(
 					origin_x + x_shift + j * this.layout.columnWidth,
 					origin_y + index * this.layout.rowHeight,
-					this.array_num_1[counter],
-					this.array_num_2[counter],
+					this.array_num_1[this.total_questions],
+					this.array_num_2[this.total_questions],
 					this.operation_symbol,
 					columnMethodWidth,
-					++counter
+					++this.total_questions
 				);
 			}
 		}
@@ -300,8 +308,6 @@ export default class ColumnMethod extends PDFDocument {
 	}
 
 	createAnswerSheet() {
-		this.addPage();
-
 		this.font('Chilanka')
 			.fontSize(14)
 			.text('Answer Sheet', {
@@ -328,7 +334,7 @@ export default class ColumnMethod extends PDFDocument {
 		this.roundedRect(xAxis, yAxis, widthRect, heightRect, radius).stroke();
 
 		this.y = yAxis + 10;
-		for (let index = 0; index < this.layout.row; index++) {
+		for (let index = 0; index < this.num_page*this.layout.row; index++) {
 			let y = this.y;
 			for (let j = 0; j < this.layout.column; j++) {
 				this.printAnswers(
@@ -341,6 +347,25 @@ export default class ColumnMethod extends PDFDocument {
 				);
 			}
 			this.moveDown(2);
+
+			if(counter%48 == 0) {
+				this.addPage();
+				this.font('Chilanka')
+					.fontSize(14)
+					.text('Answer Sheet', {
+						align: 'left'
+					})
+					.fontSize(9)
+					.fillColor('grey')
+					.text('Kertas Jawapan');
+
+				this.font('Helvetica').fontSize(12).fillColor('black');
+
+				this.strokeColor('orange').lineWidth(3);
+				this.roundedRect(xAxis, yAxis, widthRect, heightRect, radius).stroke();
+
+				this.y = yAxis + 10;
+			}
 		}
 	}
 
