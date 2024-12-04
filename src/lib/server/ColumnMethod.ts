@@ -308,32 +308,12 @@ export default class ColumnMethod extends PDFDocument {
 	}
 
 	createAnswerSheet() {
-		this.font('Chilanka')
-			.fontSize(14)
-			.text('Answer Sheet', {
-				align: 'left'
-			})
-			.fontSize(9)
-			.fillColor('grey')
-			.text('Kertas Jawapan');
-
-		this.font('Helvetica').fontSize(12).fillColor('black');
-
-		this.strokeColor('orange').lineWidth(3);
+		this.answerSheetLayout();
 
 		let counter = 0;
 		let columnMethodWidth: number = this.layout.columnWidth - 10;
 		let x_shift: number = (this.layout.columnWidth - columnMethodWidth) / 2;
 
-		// Draw a rounded rectangle
-		const xAxis = 60;
-		const yAxis = 109;
-		const widthRect = 475;
-		const heightRect = 665;
-		const radius = 10;
-		this.roundedRect(xAxis, yAxis, widthRect, heightRect, radius).stroke();
-
-		this.y = yAxis + 10;
 		for (let index = 0; index < this.num_page*this.layout.row; index++) {
 			let y = this.y;
 			for (let j = 0; j < this.layout.column; j++) {
@@ -346,26 +326,15 @@ export default class ColumnMethod extends PDFDocument {
 					++counter
 				);
 			}
-			this.moveDown(2);
-
-			if(counter%48 == 0) {
+			index++;
+			
+			if (counter % 48 == 0 && index < this.num_page * this.layout.row) {
 				this.addPage();
-				this.font('Chilanka')
-					.fontSize(14)
-					.text('Answer Sheet', {
-						align: 'left'
-					})
-					.fontSize(9)
-					.fillColor('grey')
-					.text('Kertas Jawapan');
-
-				this.font('Helvetica').fontSize(12).fillColor('black');
-
-				this.strokeColor('orange').lineWidth(3);
-				this.roundedRect(xAxis, yAxis, widthRect, heightRect, radius).stroke();
-
-				this.y = yAxis + 10;
+				this.answerSheetLayout();
 			}
+			index--;
+
+			this.moveDown(2);
 		}
 	}
 
@@ -433,6 +402,31 @@ export default class ColumnMethod extends PDFDocument {
 		console.log('path selected image:', selectedImage);
 
 		this.image(selectedImage, this.x, this.y - 136, { align: 'right', height: 90 });
+	}
+
+	answerSheetLayout() {
+		this.font('Chilanka')
+			.fontSize(14)
+			.text('Answer Sheet', {
+				align: 'left'
+			})
+			.fontSize(9)
+			.fillColor('grey')
+			.text('Kertas Jawapan');
+
+		this.font('Helvetica').fontSize(12).fillColor('black');
+
+		this.strokeColor('orange').lineWidth(3);
+
+		// Draw a rounded rectangle
+		const xAxis = 60;
+		const yAxis = 109;
+		const widthRect = 475;
+		const heightRect = 665;
+		const radius = 10;
+		this.roundedRect(xAxis, yAxis, widthRect, heightRect, radius).stroke();
+
+		this.y = yAxis + 10;
 	}
 
 	private initDrillLayout(operation: string) {
