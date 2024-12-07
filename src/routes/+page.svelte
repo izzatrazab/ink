@@ -1,24 +1,58 @@
-<div class="flex h-full flex-col items-center justify-center text-center">
-	<p class="font-bold">Math Drill Home Page</p>
-	<div class="grid grid-cols-3 gap-4">
-		<a role="button" href="./column-method?operation=addition&difficulty=easy" target="_blank">tambah easy</a>
-		<a role="button" href="./column-method?operation=addition&difficulty=medium" target="_blank">tambah medium</a>
-		<a role="button" href="./column-method?operation=addition&difficulty=hard" target="_blank">tambah hard</a>
-	</div>
-	<hr>
-	<div class="grid grid-cols-3 gap-4">
-		<a role="button" class="secondary" href="./column-method?operation=subtraction&difficulty=easy" target="_blank">tolak easy</a>
-		<a role="button" class="secondary" href="./column-method?operation=subtraction&difficulty=medium" target="_blank">tolak medium</a>
-		<a role="button" class="secondary" href="./column-method?operation=subtraction&difficulty=hard" target="_blank">tolak hard</a>
-	</div>
-	<hr>
-	<div class="grid grid-cols-3 gap-4">
-		<a role="button" href="./column-method?operation=multiplication&difficulty=easy" target="_blank">darab easy</a>
-		<a role="button" href="./column-method?operation=multiplication&difficulty=medium" target="_blank">darab medium</a>
-		<a role="button" href="./column-method?operation=multiplication&difficulty=hard" target="_blank">darab hard</a>
-	</div>
-		<br>
-	<p>
-		Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation
-	</p>
+<div class="container">
+	<hgroup>
+		<h1>Column Method</h1>
+		<p>
+			The column method is a mathematical technique for performing calculations by writing numbers
+			in columns with their place values aligned vertically. It's used for addition, subtraction,
+			and multiplication.
+		</p>
+	</hgroup>
+	<article>
+		<header>Generate Column Method Drills</header>
+		<form action="./column-method" method="GET" id="generate-drill" target="_blank">
+			<fieldset class="grid">
+				<label for="operation"
+					>Operation
+					<select name="operation" placeholder="Select operation" aria-label="Select operation">
+						<option selected value="addition">Addition</option>
+						<option value="subtraction">Subtraction</option>
+						<option value="multiplication">Multiplication</option>
+					</select>
+				</label>
+				<label for="difficulty"
+					>Difficulty
+					<select name="difficulty" placeholder="Select difficulty" aria-label="Select difficulty">
+						<option selected value="easy">Easy</option>
+						<option value="medium">Medium</option>
+						<option value="hard">Hard</option>
+					</select>
+				</label>
+			</fieldset>
+			<fieldset>
+				<label for="nop">
+					Number of Pages
+					<input
+						type="number"
+						name="nop"
+						required
+						placeholder="Provide number of pages"
+						aria-label="Number of pages"
+						min="1"
+						list="fibonacci"
+						value="1"
+					/>
+				</label>
+				<datalist id="fibonacci">
+					<option value="1"></option>
+					<option value="2"></option>
+					<option value="3"></option>
+					<option value="5"></option>
+					<option value="8"></option>
+				</datalist>
+			</fieldset>
+		</form>
+		<footer>
+			<button type="submit" form="generate-drill" aria-label="Generate">Generate Drill</button>
+		</footer>
+	</article>
 </div>

@@ -51,7 +51,7 @@ export default class ColumnMethod extends PDFDocument {
 		columnWidth: 0
 	};
 
-	constructor(operation: string, difficulty: string) {
+	constructor(operation: string, difficulty: string, num_page: any) {
 		super({
 			size: 'A4',
 			margins: {
@@ -84,7 +84,7 @@ export default class ColumnMethod extends PDFDocument {
 		this.second_number_of_digits = difficultyList.get(difficulty)?.second_number_of_digits ?? 1;
 		this.label_eng = difficultyList.get(difficulty)?.level_eng ?? 'easy';
 		this.label_malay = difficultyList.get(difficulty)?.level_malay ?? 'mudah';
-		this.num_page = 9;
+		this.num_page = num_page;
 
 		/** to determine the number of worksheets created */
 		for(let i=0; i<this.num_page; i++) {
@@ -399,7 +399,7 @@ export default class ColumnMethod extends PDFDocument {
 
 		const randomIndex = Math.floor(Math.random() * images.length);
 		selectedImage = images[randomIndex];
-		console.log('path selected image:', selectedImage);
+		// console.log('path selected image:', selectedImage);
 
 		this.image(selectedImage, this.x, this.y - 136, { align: 'right', height: 90 });
 	}
