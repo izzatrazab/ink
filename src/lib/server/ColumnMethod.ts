@@ -1,6 +1,11 @@
 import { generateRandomNumber } from '$lib/helper';
 import { difficultyList } from '$lib/difficulty';
+import fontChilankaRegular from '$lib/assets/fonts/Chilanka-Regular.ttf';
+import fontDynaPuffVariable from '$lib/assets/fonts/DynaPuff-VariableFont.ttf';
+import fontArial from '$lib/assets/fonts/Arial.ttf';
 import PDFDocument from 'pdfkit';
+
+import path from 'path';
 
 interface DrillLayout {
 	row: number;
@@ -87,7 +92,7 @@ export default class ColumnMethod extends PDFDocument {
 		this.num_page = num_page;
 
 		/** to determine the number of worksheets created */
-		for(let i=0; i<this.num_page; i++) {
+		for (let i = 0; i < this.num_page; i++) {
 			this.addHeader(this.x, this.y);
 			this.addTitle(this.x, this.y, operation);
 			this.initDrillLayout(operation);
@@ -99,7 +104,7 @@ export default class ColumnMethod extends PDFDocument {
 
 	/** header includes name, and score */
 	addHeader(x: number, y: number) {
-		this.registerFont('Chilanka', 'src/lib/assets/fonts/Chilanka-Regular.ttf');
+		this.registerFont('Chilanka', path.join(process.cwd(), fontChilankaRegular));
 		this.font('Chilanka')
 			.fontSize(14)
 			.text('Name: ___________________________________________________', { align: 'left' });
@@ -131,7 +136,7 @@ export default class ColumnMethod extends PDFDocument {
 		this.strokeColor('#737373').lineWidth(2);
 		this.rect(xTitle, y, wTitle, hTitle).stroke();
 
-		this.registerFont('DynaPuff', 'src/lib/assets/fonts/DynaPuff-VariableFont.ttf');
+		this.registerFont('DynaPuff', path.join(process.cwd(), fontDynaPuffVariable));
 		this.font('DynaPuff').fontSize(14);
 		this.fillColor('#2acf90').text(
 			`Worksheet: ${this.label_eng} Level (${this.first_number_of_digits} digits ${this.operation_symbol} ${this.second_number_of_digits} digit(s))`,
@@ -207,7 +212,7 @@ export default class ColumnMethod extends PDFDocument {
 		let origin_x: number = this.origin_x;
 		let origin_y: number = this.y;
 
-		this.registerFont('Arial', 'src/lib/assets/fonts/ARIAL.TTF');
+		this.registerFont('Arial', path.join(process.cwd(), fontArial));
 		this.font('Arial').fillColor('black');
 
 		for (let index = 0; index < this.layout.row; index++) {
@@ -314,7 +319,7 @@ export default class ColumnMethod extends PDFDocument {
 		let columnMethodWidth: number = this.layout.columnWidth - 10;
 		let x_shift: number = (this.layout.columnWidth - columnMethodWidth) / 2;
 
-		for (let index = 0; index < this.num_page*this.layout.row; index++) {
+		for (let index = 0; index < this.num_page * this.layout.row; index++) {
 			let y = this.y;
 			for (let j = 0; j < this.layout.column; j++) {
 				this.printAnswers(
@@ -327,7 +332,7 @@ export default class ColumnMethod extends PDFDocument {
 				);
 			}
 			index++;
-			
+
 			if (counter % 48 == 0 && index < this.num_page * this.layout.row) {
 				this.addPage();
 				this.answerSheetLayout();
