@@ -40,6 +40,8 @@ export default class ColumnMethod extends PDFDocument {
 	public operation_method_eng: string = '';
 	/** operation method in malay */
 	public operation_method_malay: string = '';
+	/** difficulty */
+	public difficulty: string = '';
 	/** label for the level of difficulty of the questions in english */
 	public label_eng: string = '';
 	/** label for the level of difficulty of the questions in malay */
@@ -89,6 +91,7 @@ export default class ColumnMethod extends PDFDocument {
 		this.operation_symbol = this.getSymbol(operation).symbol;
 		this.operation_method_eng = operation;
 		this.operation_method_malay = this.getSymbol(operation).operation_char;
+		this.difficulty = difficulty;
 		this.first_number_of_digits = difficultyList.get(difficulty)?.first_number_of_digits ?? 1;
 		this.second_number_of_digits = difficultyList.get(difficulty)?.second_number_of_digits ?? 1;
 		this.label_eng = difficultyList.get(difficulty)?.level_eng ?? 'easy';
@@ -399,18 +402,33 @@ export default class ColumnMethod extends PDFDocument {
 	displayCartoonImage() {
 		let images: string[] = [];
 		let selectedImage: string | null = null;
+		let allImagesPath: any;
+		switch (this.difficulty) {
+			default:
+			case 'easy':
+				allImagesPath = import.meta.glob('/src/lib/assets/animals/easy/*.png');
+				break;
+			case 'medium':
+				allImagesPath = import.meta.glob('/src/lib/assets/animals/medium/*.png');
+				break;
+			case 'hard':
+				allImagesPath = import.meta.glob('/src/lib/assets/animals/hard/*.png');
+				break;
+		}
 
-		const allImagesPath = import.meta.glob('/src/lib/assets/animals/easy/*.png');
 
 		for (const path in allImagesPath) {
-			images.push(path.replace(/^\/src/, 'src')); // replace: to remove the '/' in front
+			images.push(path);
 		}
 
 		const randomIndex = Math.floor(Math.random() * images.length);
 		selectedImage = images[randomIndex];
 		// console.log('path selected image:', selectedImage);
 
-		this.image(path.join(process.cwd(), selectedImage), this.x, this.y - 136, { align: 'right', height: 90 });
+		this.image(path.join(process.cwd(), selectedImage), this.x, this.y - 136, {
+			align: 'right',
+			height: 90
+		});
 	}
 
 	answerSheetLayout() {
