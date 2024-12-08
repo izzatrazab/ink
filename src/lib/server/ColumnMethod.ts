@@ -3,6 +3,10 @@ import { difficultyList } from '$lib/difficulty';
 import fontChilankaRegular from '$lib/assets/fonts/Chilanka-Regular.ttf';
 import fontDynaPuffVariable from '$lib/assets/fonts/DynaPuff-VariableFont.ttf';
 import fontArial from '$lib/assets/fonts/Arial.ttf';
+import imgStar8 from '$lib/assets/stars/star-8.png';
+import imgStar9 from '$lib/assets/stars/star-9.png';
+import imgStar10 from '$lib/assets/stars/star-10.png';
+
 import PDFDocument from 'pdfkit';
 
 import path from 'path';
@@ -198,9 +202,9 @@ export default class ColumnMethod extends PDFDocument {
 		this.strokeColor('black').lineWidth(1);
 
 		// star images
-		this.image('src/lib/assets/stars/star-8.png', 540, 665, { align: 'right', width: 30 });
-		this.image('src/lib/assets/stars/star-9.png', 540, 705, { align: 'right', width: 30 });
-		this.image('src/lib/assets/stars/star-10.png', 540, 745, { align: 'right', width: 30 });
+		this.image(path.join(process.cwd(), imgStar8), 540, 665, { align: 'right', width: 30 });
+		this.image(path.join(process.cwd(), imgStar9), 540, 705, { align: 'right', width: 30 });
+		this.image(path.join(process.cwd(), imgStar10), 540, 745, { align: 'right', width: 30 });
 
 		this.displayCartoonImage();
 	}
@@ -406,7 +410,7 @@ export default class ColumnMethod extends PDFDocument {
 		selectedImage = images[randomIndex];
 		// console.log('path selected image:', selectedImage);
 
-		this.image(selectedImage, this.x, this.y - 136, { align: 'right', height: 90 });
+		this.image(path.join(process.cwd(), selectedImage), this.x, this.y - 136, { align: 'right', height: 90 });
 	}
 
 	answerSheetLayout() {
