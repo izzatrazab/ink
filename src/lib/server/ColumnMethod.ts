@@ -209,7 +209,12 @@ export default class ColumnMethod extends PDFDocument {
 		this.image(path.join(process.cwd(), imgStar9), 540, 705, { align: 'right', width: 30 });
 		this.image(path.join(process.cwd(), imgStar10), 540, 745, { align: 'right', width: 30 });
 
-		this.displayCartoonImage();
+		// this.displayCartoonImage();
+			
+		// this.image("/Users/Shared/GitHub/math-drill-generator/src/lib/assets/animals/hard/t-rex.png", this.x, this.y - 136, {
+		// 	align: 'right',
+		// 	height: 90
+		// });
 	}
 
 	private drawAllQuestions() {
@@ -399,7 +404,7 @@ export default class ColumnMethod extends PDFDocument {
 		});
 	}
 
-	displayCartoonImage() {
+	async displayCartoonImage() {
 		let images: string[] = [];
 		let selectedImage: string | null = null;
 		let allImagesPath: any;
@@ -421,13 +426,26 @@ export default class ColumnMethod extends PDFDocument {
 			images.push(path);
 		}
 
-		const randomIndex = Math.floor(Math.random() * images.length);
-		selectedImage = images[randomIndex];
-		// console.log('path selected image:', selectedImage);
+		const imagePaths = Object.keys(allImagesPath);
 
-		this.image(path.join(process.cwd(), selectedImage), this.x, this.y - 136, {
-			align: 'right',
-			height: 90
+		const randomIndex = Math.floor(Math.random() * imagePaths.length);
+		const selectedImagePath = imagePaths[randomIndex];
+		const loadModule = allImagesPath[selectedImagePath];
+
+		let imagePath: string = '';
+		await loadModule().then((module: any) => {
+			imagePath = path.join(process.cwd(), module.default as string);
+			console.log(imagePath);
+			this.image(
+				imagePath,
+
+				this.x,
+				this.y - 136,
+				{
+					align: 'right',
+					height: 90
+				}
+			);
 		});
 	}
 
