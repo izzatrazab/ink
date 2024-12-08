@@ -10,7 +10,6 @@
     - [x] add names empty field
     - [x] score empty field
     - [x] title/label for level of drills
-        - mungkin boleh guna nama level tu sebagai tajuk drill tu. cth "medium"
     - [x] add images
     - [x] change fonts, make it a little bit childish
     - [x] multiplication: add height on answer space according to the levels
