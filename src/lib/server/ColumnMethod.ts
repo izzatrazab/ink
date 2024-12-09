@@ -209,12 +209,7 @@ export default class ColumnMethod extends PDFDocument {
 		this.image(path.join(process.cwd(), imgStar9), 540, 705, { align: 'right', width: 30 });
 		this.image(path.join(process.cwd(), imgStar10), 540, 745, { align: 'right', width: 30 });
 
-		// this.displayCartoonImage();
-			
-		// this.image("/Users/Shared/GitHub/math-drill-generator/src/lib/assets/animals/hard/t-rex.png", this.x, this.y - 136, {
-		// 	align: 'right',
-		// 	height: 90
-		// });
+		this.displayCartoonImage();
 	}
 
 	private drawAllQuestions() {
@@ -404,48 +399,32 @@ export default class ColumnMethod extends PDFDocument {
 		});
 	}
 
-	async displayCartoonImage() {
-		let images: string[] = [];
-		let selectedImage: string | null = null;
+	displayCartoonImage() {
 		let allImagesPath: any;
+
 		switch (this.difficulty) {
 			default:
 			case 'easy':
-				allImagesPath = import.meta.glob('/src/lib/assets/animals/easy/*.png');
+				allImagesPath = import.meta.glob('/src/lib/assets/animals/easy/*.png', { eager: true });
 				break;
 			case 'medium':
-				allImagesPath = import.meta.glob('/src/lib/assets/animals/medium/*.png');
+				allImagesPath = import.meta.glob('/src/lib/assets/animals/medium/*.png', { eager: true });
 				break;
 			case 'hard':
-				allImagesPath = import.meta.glob('/src/lib/assets/animals/hard/*.png');
+				allImagesPath = import.meta.glob('/src/lib/assets/animals/hard/*.png', { eager: true });
 				break;
-		}
-
-
-		for (const path in allImagesPath) {
-			images.push(path);
 		}
 
 		const imagePaths = Object.keys(allImagesPath);
-
 		const randomIndex = Math.floor(Math.random() * imagePaths.length);
 		const selectedImagePath = imagePaths[randomIndex];
-		const loadModule = allImagesPath[selectedImagePath];
+		const module = allImagesPath[selectedImagePath];
 
-		let imagePath: string = '';
-		await loadModule().then((module: any) => {
-			imagePath = path.join(process.cwd(), module.default as string);
-			console.log(imagePath);
-			this.image(
-				imagePath,
+		let imagePath = path.join(process.cwd(), module.default as string);
 
-				this.x,
-				this.y - 136,
-				{
-					align: 'right',
-					height: 90
-				}
-			);
+		this.image(imagePath, this.x, this.y - 136, {
+			align: 'right',
+			height: 90
 		});
 	}
 
