@@ -70,6 +70,16 @@ export default class ColumnMethod extends PDFDocument {
 				left: 65,
 				bottom: 50,
 				right: 65
+			},
+			info: {
+				// Producer?: string;
+				// Creator?: string;
+				// CreationDate?: Date;
+				Title: "Column Method: " + difficulty.charAt(0).toUpperCase() + difficulty.slice(1)
+				// Author?: string;
+				// Subject?: string;
+				// Keywords?: string;
+				// ModDate?: Date;
 			}
 		});
 

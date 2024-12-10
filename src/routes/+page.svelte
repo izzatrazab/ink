@@ -1,3 +1,7 @@
+<svelte:head>
+	<title>Column Method Drills</title>
+	<meta name="description" content="Generate column method drills." />
+</svelte:head>
 <div class="container">
 	<hgroup>
 		<h1>Column Method</h1>
