@@ -3,11 +3,11 @@ import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ url }) => {
 	
-	const operation_symbol = url.searchParams.get('operation') ?? 'addition';
+	const operation = url.searchParams.get('operation') ?? 'addition';
 	const difficulty = url.searchParams.get('difficulty') ?? 'easy';
 	const number_of_pages = Number(url.searchParams.get('nop') ?? '1');
 	
-	const doc = new ColumnMethod(operation_symbol, difficulty, number_of_pages);
+	const doc = new ColumnMethod(operation, difficulty, number_of_pages);
 	let buffers: any[] = [];
 
 	// Collect data as the PDF is being generated
@@ -21,12 +21,13 @@ export const GET: RequestHandler = async ({ url }) => {
 
 	// Concatenate all the chunks into a single buffer
 	const pdfData = Buffer.concat(buffers);
+	const fileName = `Column Method - ${operation} - ${difficulty} - ${number_of_pages} question pages.pdf`
 
 	// Return the PDF as a response
 	return new Response(pdfData, {
 		headers: {
 			'Content-Type': 'application/pdf',
-			'Content-Disposition': 'inline' // open in page
+			'Content-Disposition': 'inline ; filename="' + fileName + '"' // open in page
 			// 'Content-Disposition': 'attachment' // direct download
 		}
 	});
