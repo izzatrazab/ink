@@ -1,25 +1,9 @@
-# Objectives
-1. Reduce time taken to prepare math drills with random variation of questions.
+# Math Drill Generator
+- Generate math drills in pdf format.
+- Link: [Math Drill Generator](https://math-drill-generator.vercel.app)
+- Next Features on development (if time permits): Long Division method
 
-# Modules
-1. Column Method
-2. upcoming ideas ...
-
-# To Do 
-- pdf:
-    - [x] add names empty field
-    - [x] score empty field
-    - [x] title/label for level of drills
-    - [x] add images
-    - [x] change fonts, make it a little bit childish
-    - [x] multiplication: add height on answer space according to the levels
-    - [x] boleh buat multiple pages
-
-## home page
-- [x] form
-
-## answer sheet
-- [x] create new page for the answers of the questions.
-
-# Abbreviation
-- cm : column method
+## Features
+### Column Method
+- Basic Addition (+), Subtraction (−), and Multiplication (×).
+- Example: ![Colum Method Addition](/static/column-method-addition.png)
