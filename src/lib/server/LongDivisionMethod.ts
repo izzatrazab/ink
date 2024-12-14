@@ -32,5 +32,12 @@ export default class longDivisionMethod extends PDFKit{
 
         this.origin_x = this.x;
         addHeader(this, this.x, this.y, this.origin_x)
+		let x:number = 100;
+		let y:number = 200;
+		this.moveTo(x + 100, y)
+		.lineTo(x, y)
+		.quadraticCurveTo(x + 10, y+(20/2), x, y + 20) 
+		.stroke();  
+
     }
 }
