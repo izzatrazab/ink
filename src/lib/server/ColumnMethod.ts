@@ -1,6 +1,6 @@
 import { generateRandomNumber } from '$lib/helper';
 import { difficultyList } from '$lib/difficulty';
-import fontChilankaRegular from '$lib/assets/fonts/Chilanka-Regular.ttf';
+import { addHeader } from '$lib/server/drillvendor';
 import fontDynaPuffVariable from '$lib/assets/fonts/DynaPuff-VariableFont.ttf';
 import fontArial from '$lib/assets/fonts/Arial.ttf';
 import imgStar8 from '$lib/assets/stars/star-8.png';
@@ -110,37 +110,13 @@ export default class ColumnMethod extends PDFDocument {
 
 		/** to determine the number of worksheets created */
 		for (let i = 0; i < this.num_page; i++) {
-			this.addHeader(this.x, this.y);
+			addHeader(this, this.x, this.y, this.origin_x);
 			this.addTitle(this.x, this.y, operation);
 			this.initDrillLayout(operation);
 			this.drawAllQuestions();
 			this.addPage();
 		}
 		this.createAnswerSheet();
-	}
-
-	/** header includes name, and score */
-	addHeader(x: number, y: number) {
-		this.registerFont('Chilanka', path.join(process.cwd(), fontChilankaRegular));
-		this.font('Chilanka')
-			.fontSize(14)
-			.text('Name: ___________________________________________________', { align: 'left' });
-		this.fontSize(9).fillColor('grey').text('Nama:');
-
-		this.font('Chilanka')
-			.fontSize(14)
-			.fillColor('black')
-			.text('Marks: _______/16', x, y, { align: 'right' });
-		this.fontSize(9)
-			.fillColor('grey')
-			.text('Markah:', 423, y + 15.5);
-
-		this.font('Chilanka').fontSize(14).fillColor('black');
-
-		// Reset the value of x
-		this.x = this.origin_x;
-
-		this.moveDown(1);
 	}
 
 	/** title includes cartoon image, and title */

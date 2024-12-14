@@ -1,7 +1,8 @@
 
-import fontChilankaRegular from '$lib/assets/fonts/Chilanka-Regular.ttf';
+// import fontChilankaRegular from '$lib/assets/fonts/Chilanka-Regular.ttf';
 import PDFKit from 'pdfkit';
-import { join } from 'path';
+// import { join } from 'path';
+import { addHeader } from '$lib/server/drillvendor';
 
 export default class longDivisionMethod extends PDFKit{
 
@@ -30,32 +31,6 @@ export default class longDivisionMethod extends PDFKit{
 		});
 
         this.origin_x = this.x;
-        this.addHeader(this.x, this.y)
+        addHeader(this, this.x, this.y, this.origin_x)
     }
-
-    	/** header includes name, and score */
-	addHeader(x: number, y: number) {
-		this.registerFont('Chilanka', join(process.cwd(), fontChilankaRegular));
-		this.font('Chilanka')
-			.fontSize(14)
-			.text('Name: ___________________________________________________', { align: 'left' });
-		this.fontSize(9).fillColor('grey').text('Nama:');
-
-		this.font('Chilanka')
-			.fontSize(14)
-			.fillColor('black')
-			.text('Marks: _______/16', x, y, { align: 'right' });
-		this.fontSize(9)
-			.fillColor('grey')
-			.text('Markah:', 423, y + 15.5);
-
-		this.font('Chilanka').fontSize(14).fillColor('black');
-
-		// Reset the value of x
-		this.x = this.origin_x;
-
-		this.moveDown(1);
-	}
-
-
 }
