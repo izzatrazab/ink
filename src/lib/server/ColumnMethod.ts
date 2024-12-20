@@ -67,15 +67,15 @@ export default class ColumnMethod extends PDFDocument {
 			size: 'A4',
 			margins: {
 				top: 50,
-				left: 65,
+				left: 50,
 				bottom: 50,
-				right: 65
+				right: 50
 			},
 			info: {
 				// Producer?: string;
 				// Creator?: string;
 				// CreationDate?: Date;
-				Title: "Column Method: " + difficulty.charAt(0).toUpperCase() + difficulty.slice(1)
+				Title: 'Column Method: ' + difficulty.charAt(0).toUpperCase() + difficulty.slice(1)
 				// Author?: string;
 				// Subject?: string;
 				// Keywords?: string;
@@ -90,13 +90,7 @@ export default class ColumnMethod extends PDFDocument {
 
 		this.origin_x = this.x;
 		this.origin_y = this.y;
-		if (operation === 'multiplication') {
-			this.content_height =
-				this.page.height - this.page.margins.top / 50 - this.page.margins.bottom * 2;
-		} else {
-			this.content_height = this.page.height - this.page.margins.top - this.page.margins.bottom;
-		}
-
+		this.content_height = this.page.height - this.page.margins.top - this.page.margins.bottom;
 		this.content_width = this.page.width - this.page.margins.left - this.page.margins.right;
 		this.operation_symbol = this.getSymbol(operation).symbol;
 		this.operation_method_eng = operation;
@@ -112,7 +106,7 @@ export default class ColumnMethod extends PDFDocument {
 		for (let i = 0; i < this.num_page; i++) {
 			addHeader(this, this.x, this.y, this.origin_x);
 			this.addTitle(this.x, this.y, operation);
-			this.initDrillLayout(operation);
+			this.initDrillLayout();
 			this.drawAllQuestions();
 			this.addPage();
 		}
@@ -170,30 +164,27 @@ export default class ColumnMethod extends PDFDocument {
 			);
 
 		this.moveDown(1);
-
-		// Set the stroke color and line width for the border
-		this.strokeColor('orange').lineWidth(3);
-
-		// Draw a rounded rectangle
-		const xAxis = 60;
-		const yAxis = 209;
-		const widthRect = 475;
-		var heightRect = 0;
-		if (operation === 'multiplication') {
-			heightRect = 595;
-		} else {
-			heightRect = 565;
-		}
-		const radius = 10;
-		this.roundedRect(xAxis, yAxis, widthRect, heightRect, radius).stroke();
-
-		// Reset the stroke color and line width
-		this.strokeColor('black').lineWidth(1);
+		this.drawOrangeContentBorder();
 
 		// star images
-		this.image(path.join(process.cwd(), imgStar8), 540, 665, { align: 'right', width: 30 });
-		this.image(path.join(process.cwd(), imgStar9), 540, 705, { align: 'right', width: 30 });
-		this.image(path.join(process.cwd(), imgStar10), 540, 745, { align: 'right', width: 30 });
+		this.image(
+			path.join(process.cwd(), imgStar8),
+			this.page.width - (this.page.margins.right * 7) / 8,
+			665,
+			{ align: 'right', width: 30 }
+		);
+		this.image(
+			path.join(process.cwd(), imgStar9),
+			this.page.width - (this.page.margins.right * 7) / 8,
+			705,
+			{ align: 'right', width: 30 }
+		);
+		this.image(
+			path.join(process.cwd(), imgStar10),
+			this.page.width - (this.page.margins.right * 7) / 8,
+			745,
+			{ align: 'right', width: 30 }
+		);
 
 		this.displayCartoonImage();
 	}
@@ -201,6 +192,8 @@ export default class ColumnMethod extends PDFDocument {
 	private drawAllQuestions() {
 		let columnMethodWidth: number = this.layout.columnWidth - 10;
 		let x_shift: number = (this.layout.columnWidth - columnMethodWidth) / 2;
+		let columnMethodHeight: number = this.layout.rowHeight - 10;
+		let y_shift: number = (this.layout.rowHeight - columnMethodHeight) / 2;
 
 		let origin_x: number = this.origin_x;
 		let origin_y: number = this.y;
@@ -225,7 +218,7 @@ export default class ColumnMethod extends PDFDocument {
 
 				this.drawColumnMethod(
 					origin_x + x_shift + j * this.layout.columnWidth,
-					origin_y + index * this.layout.rowHeight,
+					origin_y + y_shift + index * this.layout.rowHeight,
 					this.array_num_1[this.total_questions],
 					this.array_num_2[this.total_questions],
 					this.operation_symbol,
@@ -252,7 +245,7 @@ export default class ColumnMethod extends PDFDocument {
 		operation: string,
 		width: number,
 		questionNumber: number,
-		padding: number = 5
+		padding: number = 3
 	) {
 		const content_width = width - padding - padding;
 		const content_x = x + padding;
@@ -269,7 +262,7 @@ export default class ColumnMethod extends PDFDocument {
 
 		// Draw first number
 		this.fontSize(fontSize).text(num1.toString(), content_x, content_y + 15, {
-			width: content_width,
+			width: content_width -5,
 			align: 'right',
 			characterSpacing: characterSpacing
 		});
@@ -282,14 +275,14 @@ export default class ColumnMethod extends PDFDocument {
 
 		// Draw second number
 		this.fontSize(fontSize).text(num2.toString(), content_x, content_y + 30, {
-			width: content_width,
+			width: content_width-5,
 			align: 'right',
 			characterSpacing: characterSpacing
 		});
 
 		// Draw lines for calculation and answer space
 		const start_line_x = content_x + 15;
-		const end_line_x = content_x + content_width + 5;
+		const end_line_x = content_x + content_width;
 
 		// Draw first line
 		this.moveTo(start_line_x, this.y).lineTo(end_line_x, this.y).stroke();
@@ -311,13 +304,15 @@ export default class ColumnMethod extends PDFDocument {
 		let counter = 0;
 		let columnMethodWidth: number = this.layout.columnWidth - 10;
 		let x_shift: number = (this.layout.columnWidth - columnMethodWidth) / 2;
+		let columnMethodHeight: number = this.layout.rowHeight - 10;
+		let y_shift: number = (this.layout.rowHeight - columnMethodHeight) / 2;
 
 		for (let index = 0; index < this.num_page * this.layout.row; index++) {
 			let y = this.y;
 			for (let j = 0; j < this.layout.column; j++) {
 				this.printAnswers(
 					this.origin_x + x_shift + j * this.layout.columnWidth,
-					y,
+					y + y_shift,
 					this.array_num_1[counter],
 					this.array_num_2[counter],
 					columnMethodWidth,
@@ -325,14 +320,14 @@ export default class ColumnMethod extends PDFDocument {
 				);
 			}
 			index++;
-
+			
+			this.moveDown(2);
 			if (counter % 48 == 0 && index < this.num_page * this.layout.row) {
 				this.addPage();
 				this.answerSheetLayout();
 			}
 			index--;
 
-			this.moveDown(2);
 		}
 	}
 
@@ -424,28 +419,16 @@ export default class ColumnMethod extends PDFDocument {
 			.fillColor('grey')
 			.text('Kertas Jawapan');
 
+		//reset font and font color
 		this.font('Helvetica').fontSize(12).fillColor('black');
 
-		this.strokeColor('orange').lineWidth(3);
-
-		// Draw a rounded rectangle
-		const xAxis = 60;
-		const yAxis = 109;
-		const widthRect = 475;
-		const heightRect = 665;
-		const radius = 10;
-		this.roundedRect(xAxis, yAxis, widthRect, heightRect, radius).stroke();
-
-		this.y = yAxis + 10;
+		this.moveDown(1);
+		this.drawOrangeContentBorder();
 	}
 
-	private initDrillLayout(operation: string) {
+	private initDrillLayout() {
 		this.layout.columnWidth = this.content_width / this.layout.column;
-		if (operation === 'multiplication') {
-			this.layout.rowHeight = (this.content_height - 160) / this.layout.row;
-		} else {
-			this.layout.rowHeight = (this.content_height - this.y) / this.layout.row;
-		}
+		this.layout.rowHeight = (this.content_height - (this.y - this.origin_y)) / this.layout.row;
 	}
 
 	private getSymbol(operation: string) {
@@ -458,5 +441,29 @@ export default class ColumnMethod extends PDFDocument {
 			case 'multiplication':
 				return { symbol: '×', operation_char: 'darab' };
 		}
+	}
+
+	private drawOrangeContentBorder() {
+		//	Draw an orange rounded rectangle
+		//	Set the stroke color and line width for the border
+		this.strokeColor('orange').lineWidth(2);
+
+		let padding = 8;
+		let rect_x_coordinate = this.origin_x - padding / 2; // shift to the left half of the padding to add the x-padding
+		let rect_y_coordinate = this.y - padding / 2; // shift to the top half of the padding to add the y-padding
+		let rect_width = this.content_width + padding; // add padding length to the width
+		let rect_height = this.content_height - (this.y - this.origin_y) + padding; // add padding length to the height
+		let radius = 10;
+
+		this.roundedRect(
+			rect_x_coordinate,
+			rect_y_coordinate,
+			rect_width,
+			rect_height,
+			radius
+		).stroke();
+
+		// Reset the stroke color and line width
+		this.strokeColor('black').lineWidth(1);
 	}
 }
