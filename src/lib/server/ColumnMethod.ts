@@ -9,7 +9,7 @@ import imgStar10 from '$lib/assets/stars/star-10.png';
 
 import PDFDocument from 'pdfkit';
 
-import path from 'path';
+import { join } from 'path';
 
 interface DrillLayout {
 	row: number;
@@ -123,7 +123,7 @@ export default class ColumnMethod extends PDFDocument {
 		this.strokeColor('#737373').lineWidth(2);
 		this.rect(xTitle, y, wTitle, hTitle).stroke();
 
-		this.registerFont('DynaPuff', path.join(process.cwd(), fontDynaPuffVariable));
+		this.registerFont('DynaPuff', join(process.cwd(), fontDynaPuffVariable));
 		this.font('DynaPuff').fontSize(14);
 		this.fillColor('#2acf90').text(
 			`Worksheet: ${this.label_eng} Level (${this.first_number_of_digits} digits ${this.operation_symbol} ${this.second_number_of_digits} digit(s))`,
@@ -168,19 +168,19 @@ export default class ColumnMethod extends PDFDocument {
 
 		// star images
 		this.image(
-			path.join(process.cwd(), imgStar8),
+			join(process.cwd(), imgStar8),
 			this.page.width - (this.page.margins.right * 7) / 8,
 			665,
 			{ align: 'right', width: 30 }
 		);
 		this.image(
-			path.join(process.cwd(), imgStar9),
+			join(process.cwd(), imgStar9),
 			this.page.width - (this.page.margins.right * 7) / 8,
 			705,
 			{ align: 'right', width: 30 }
 		);
 		this.image(
-			path.join(process.cwd(), imgStar10),
+			join(process.cwd(), imgStar10),
 			this.page.width - (this.page.margins.right * 7) / 8,
 			745,
 			{ align: 'right', width: 30 }
@@ -192,13 +192,14 @@ export default class ColumnMethod extends PDFDocument {
 	private drawAllQuestions() {
 		let columnMethodWidth: number = this.layout.columnWidth - 10;
 		let x_shift: number = (this.layout.columnWidth - columnMethodWidth) / 2;
+		let x: number = this.origin_x + x_shift;
+
 		let columnMethodHeight: number = this.layout.rowHeight - 10;
 		let y_shift: number = (this.layout.rowHeight - columnMethodHeight) / 2;
+		let y: number = this.y + y_shift;
 
-		let origin_x: number = this.origin_x;
-		let origin_y: number = this.y;
 
-		this.registerFont('Arial', path.join(process.cwd(), fontArial));
+		this.registerFont('Arial', join(process.cwd(), fontArial));
 		this.font('Arial').fillColor('black');
 
 		for (let index = 0; index < this.layout.row; index++) {
@@ -217,8 +218,8 @@ export default class ColumnMethod extends PDFDocument {
 				/** end of generating random a question */
 
 				this.drawColumnMethod(
-					origin_x + x_shift + j * this.layout.columnWidth,
-					origin_y + y_shift + index * this.layout.rowHeight,
+					x + (j * this.layout.columnWidth),
+					y + (index * this.layout.rowHeight),
 					this.array_num_1[this.total_questions],
 					this.array_num_2[this.total_questions],
 					this.operation_symbol,
@@ -284,6 +285,7 @@ export default class ColumnMethod extends PDFDocument {
 		const start_line_x = content_x + 15;
 		const end_line_x = content_x + content_width;
 
+		this.strokeColor('black').lineWidth(0.5);
 		// Draw first line
 		this.moveTo(start_line_x, this.y).lineTo(end_line_x, this.y).stroke();
 
@@ -296,6 +298,7 @@ export default class ColumnMethod extends PDFDocument {
 		// answer gap and draw last line
 		this.moveDown(1.5);
 		this.moveTo(start_line_x, this.y).lineTo(end_line_x, this.y).stroke();
+
 	}
 
 	createAnswerSheet() {
@@ -304,15 +307,17 @@ export default class ColumnMethod extends PDFDocument {
 		let counter = 0;
 		let columnMethodWidth: number = this.layout.columnWidth - 10;
 		let x_shift: number = (this.layout.columnWidth - columnMethodWidth) / 2;
+		let x = this.origin_x + x_shift
+
 		let columnMethodHeight: number = this.layout.rowHeight - 10;
 		let y_shift: number = (this.layout.rowHeight - columnMethodHeight) / 2;
 
 		for (let index = 0; index < this.num_page * this.layout.row; index++) {
-			let y = this.y;
+			let y = this.y + y_shift;
 			for (let j = 0; j < this.layout.column; j++) {
 				this.printAnswers(
-					this.origin_x + x_shift + j * this.layout.columnWidth,
-					y + y_shift,
+					x + (j * this.layout.columnWidth),
+					y,
 					this.array_num_1[counter],
 					this.array_num_2[counter],
 					columnMethodWidth,
@@ -401,7 +406,7 @@ export default class ColumnMethod extends PDFDocument {
 		const selectedImagePath = imagePaths[randomIndex];
 		const module = allImagesPath[selectedImagePath];
 
-		let imagePath = path.join(process.cwd(), module.default as string);
+		let imagePath = join(process.cwd(), module.default as string);
 
 		this.image(imagePath, this.x, this.y - 136, {
 			align: 'right',
