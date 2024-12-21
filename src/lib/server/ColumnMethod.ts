@@ -1,6 +1,6 @@
 import { generateRandomNumber } from '$lib/helper';
 import { difficultyList } from '$lib/difficulty';
-import { addHeader } from '$lib/server/drillvendor';
+import { addHeader, displayCartoonImage } from '$lib/server/drillvendor';
 import fontDynaPuffVariable from '$lib/assets/fonts/DynaPuff-VariableFont.ttf';
 import fontArial from '$lib/assets/fonts/Arial.ttf';
 import imgStar8 from '$lib/assets/stars/star-8.png';
@@ -115,6 +115,7 @@ export default class ColumnMethod extends PDFDocument {
 
 	/** title includes cartoon image, and title */
 	addTitle(x: number, y: number, operation: string) {
+		displayCartoonImage(this, this.x, this.y - 13, this.difficulty);
 		let width: number = 90;
 		let gap: number = 10;
 		let xTitle: number = x + width + 3 * gap;
@@ -185,8 +186,6 @@ export default class ColumnMethod extends PDFDocument {
 			745,
 			{ align: 'right', width: 30 }
 		);
-
-		this.displayCartoonImage();
 	}
 
 	private drawAllQuestions() {
@@ -382,35 +381,6 @@ export default class ColumnMethod extends PDFDocument {
 		this.text(result.toString(), content_x + 30, content_y, {
 			width: content_width,
 			align: 'left'
-		});
-	}
-
-	displayCartoonImage() {
-		let allImagesPath: any;
-
-		switch (this.difficulty) {
-			default:
-			case 'easy':
-				allImagesPath = import.meta.glob('/src/lib/assets/animals/easy/*.png', { eager: true });
-				break;
-			case 'medium':
-				allImagesPath = import.meta.glob('/src/lib/assets/animals/medium/*.png', { eager: true });
-				break;
-			case 'hard':
-				allImagesPath = import.meta.glob('/src/lib/assets/animals/hard/*.png', { eager: true });
-				break;
-		}
-
-		const imagePaths = Object.keys(allImagesPath);
-		const randomIndex = Math.floor(Math.random() * imagePaths.length);
-		const selectedImagePath = imagePaths[randomIndex];
-		const module = allImagesPath[selectedImagePath];
-
-		let imagePath = join(process.cwd(), module.default as string);
-
-		this.image(imagePath, this.x, this.y - 136, {
-			align: 'right',
-			height: 90
 		});
 	}
 
