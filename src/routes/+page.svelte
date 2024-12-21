@@ -21,6 +21,7 @@
 						<option selected value="addition">Addition</option>
 						<option value="subtraction">Subtraction</option>
 						<option value="multiplication">Multiplication</option>
+						<option value="division">Division</option>
 					</select>
 				</label>
 				<label for="difficulty"
