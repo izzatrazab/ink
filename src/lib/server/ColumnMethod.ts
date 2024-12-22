@@ -1,11 +1,13 @@
 import { generateRandomNumber } from '$lib/helper';
 import { difficultyList } from '$lib/difficulty';
-import { addHeader, displayCartoonImage, drawOrangeBorder } from '$lib/server/drillvendor';
+import {
+	addHeader,
+	displayCartoonImage,
+	displayStarImages,
+	drawOrangeBorder
+} from '$lib/server/drillvendor';
 import fontDynaPuffVariable from '$lib/assets/fonts/DynaPuff-VariableFont.ttf';
 import fontArial from '$lib/assets/fonts/Arial.ttf';
-import imgStar8 from '$lib/assets/stars/star-8.png';
-import imgStar9 from '$lib/assets/stars/star-9.png';
-import imgStar10 from '$lib/assets/stars/star-10.png';
 
 import PDFDocument from 'pdfkit';
 
@@ -170,29 +172,8 @@ export default class ColumnMethod extends PDFDocument {
 	}
 
 	drawQuestionsBorder() {
-		drawOrangeBorder(this, this.origin_x, this.origin_y, this.content_width, this.content_height)
-		// display star images
-		let starSize = 30;
-		let y_gap = 40;
-		let start_3_y = this.page.height - this.page.margins.bottom - starSize;
-		this.image(
-			join(process.cwd(), imgStar8),
-			this.page.width - (this.page.margins.right * 7) / 8,
-			start_3_y - y_gap * 3,
-			{ align: 'right', width: 30 }
-		);
-		this.image(
-			join(process.cwd(), imgStar9),
-			this.page.width - (this.page.margins.right * 7) / 8,
-			start_3_y - y_gap * 2,
-			{ align: 'right', width: 30 }
-		);
-		this.image(
-			join(process.cwd(), imgStar10),
-			this.page.width - (this.page.margins.right * 7) / 8,
-			start_3_y - y_gap,
-			{ align: 'right', width: 30 }
-		);
+		drawOrangeBorder(this, this.origin_x, this.origin_y, this.content_width, this.content_height);
+		displayStarImages(this, 30, 40);
 	}
 
 	private drawAllQuestions() {
@@ -223,8 +204,8 @@ export default class ColumnMethod extends PDFDocument {
 				/** end of generating random a question */
 
 				this.drawColumnMethod(
-					x + (j * this.layout.columnWidth),
-					y + (index * this.layout.rowHeight),
+					x + j * this.layout.columnWidth,
+					y + index * this.layout.rowHeight,
 					this.array_num_1[this.total_questions],
 					this.array_num_2[this.total_questions],
 					this.operation_symbol,
@@ -320,7 +301,7 @@ export default class ColumnMethod extends PDFDocument {
 			let y = this.y + y_shift;
 			for (let j = 0; j < this.layout.column; j++) {
 				this.printAnswers(
-					x + (j * this.layout.columnWidth),
+					x + j * this.layout.columnWidth,
 					y,
 					this.array_num_1[counter],
 					this.array_num_2[counter],
@@ -402,7 +383,7 @@ export default class ColumnMethod extends PDFDocument {
 		this.font('Helvetica').fontSize(12).fillColor('black');
 
 		this.moveDown(1);
-		drawOrangeBorder(this, this.origin_x, this.origin_y, this.content_width, this.content_height)
+		drawOrangeBorder(this, this.origin_x, this.origin_y, this.content_width, this.content_height);
 	}
 
 	private initDrillLayout() {

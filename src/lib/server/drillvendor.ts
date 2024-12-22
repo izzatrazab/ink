@@ -1,4 +1,7 @@
 import fontChilankaRegular from '$lib/assets/fonts/Chilanka-Regular.ttf';
+import imgStar8 from '$lib/assets/stars/star-8.png';
+import imgStar9 from '$lib/assets/stars/star-9.png';
+import imgStar10 from '$lib/assets/stars/star-10.png';
 
 import { join } from 'path';
 
@@ -77,4 +80,29 @@ export function drawOrangeBorder(PDFKit: PDFKit.PDFDocument, x: number, y:number
 
 	// Reset the stroke color and line width
 	PDFKit.strokeColor('black').lineWidth(1);
+}
+
+export function displayStarImages(PDFKit: PDFKit.PDFDocument, star_size: number, y_gap: number )
+{
+
+	// let y_gap = 40;
+	let start_3_y = PDFKit.page.height - PDFKit.page.margins.bottom - star_size;
+	PDFKit.image(
+		join(process.cwd(), imgStar8),
+		PDFKit.page.width - (PDFKit.page.margins.right * 7) / 8,
+		start_3_y - y_gap * 3,
+		{ align: 'right', width: star_size }
+	); 
+	PDFKit.image(
+		join(process.cwd(), imgStar9),
+		PDFKit.page.width - (PDFKit.page.margins.right * 7) / 8,
+		start_3_y - y_gap * 2,
+		{ align: 'right', width: star_size }
+	);
+	PDFKit.image(
+		join(process.cwd(), imgStar10),
+		PDFKit.page.width - (PDFKit.page.margins.right * 7) / 8,
+		start_3_y - y_gap,
+		{ align: 'right', width: star_size }
+	);
 }

@@ -2,13 +2,15 @@ import { generateRandomNumber } from '$lib/helper';
 // import fontChilankaRegular from '$lib/assets/fonts/Chilanka-Regular.ttf';
 import PDFKit from 'pdfkit';
 // import { join } from 'path';
-import { addHeader, displayCartoonImage, drawOrangeBorder } from '$lib/server/drillvendor';
+import {
+	addHeader,
+	displayCartoonImage,
+	displayStarImages,
+	drawOrangeBorder
+} from '$lib/server/drillvendor';
 import { difficultyList } from '$lib/difficulty';
 import fontDynaPuffVariable from '$lib/assets/fonts/DynaPuff-VariableFont.ttf';
 import fontArial from '$lib/assets/fonts/Arial.ttf';
-import imgStar8 from '$lib/assets/stars/star-8.png';
-import imgStar9 from '$lib/assets/stars/star-9.png';
-import imgStar10 from '$lib/assets/stars/star-10.png';
 
 import path from 'path';
 
@@ -19,8 +21,7 @@ interface DrillLayout {
 	columnWidth: number;
 }
 
-export default class longDivisionMethod extends PDFKit{
-
+export default class longDivisionMethod extends PDFKit {
 	/** number of pages */
 	public num_page: number = 0;
 	/** x coordinate after the left margin */
@@ -61,8 +62,8 @@ export default class longDivisionMethod extends PDFKit{
 		columnWidth: 0
 	};
 
-    constructor(difficulty: string, num_page: any){
-        super({
+	constructor(difficulty: string, num_page: any) {
+		super({
 			size: 'A4',
 			margins: {
 				top: 50,
@@ -74,7 +75,7 @@ export default class longDivisionMethod extends PDFKit{
 				// Producer?: string;
 				// Creator?: string;
 				// CreationDate?: Date;
-				Title: "Long Division Method"
+				Title: 'Long Division Method'
 				// Author?: string;
 				// Subject?: string;
 				// Keywords?: string;
@@ -82,7 +83,7 @@ export default class longDivisionMethod extends PDFKit{
 			}
 		});
 
-        this.origin_x = this.x;
+		this.origin_x = this.x;
 		this.origin_y = this.y;
 
 		// this.content_width = this.page.width - this.page.margins.left - this.page.margins.right;
@@ -107,7 +108,7 @@ export default class longDivisionMethod extends PDFKit{
 		this.label_malay = difficultyList.get(difficulty)?.level_malay ?? 'mudah';
 		this.num_page = num_page;
 
-        addHeader(this, this.x, this.y, this.origin_x)
+		addHeader(this, this.x, this.y, this.origin_x);
 		this.addTitle(this.x, this.y);
 		this.initDrillLayout();
 		this.drawAllQuestions();
@@ -117,14 +118,12 @@ export default class longDivisionMethod extends PDFKit{
 		// let y:number = 200;
 		// this.moveTo(x + 100, y)
 		// .lineTo(x, y)
-		// .quadraticCurveTo(x + 10, y+(20/2), x, y + 20) 
-		// .stroke();  
-
-    }
+		// .quadraticCurveTo(x + 10, y+(20/2), x, y + 20)
+		// .stroke();
+	}
 
 	/** title includes cartoon image, and title */
 	addTitle(x: number, y: number) {
-
 		/** display cartoon at top right*/
 		displayCartoonImage(this, this.x, this.y - 13, this.difficulty);
 
@@ -177,18 +176,12 @@ export default class longDivisionMethod extends PDFKit{
 			);
 
 		this.moveDown(1);
-		
-		drawOrangeBorder(this, this.origin_x, this.origin_y, this.content_width, this.content_height)
-
-		// star images
-		this.image(path.join(process.cwd(), imgStar8), 540, 665, { align: 'right', width: 30 });
-		this.image(path.join(process.cwd(), imgStar9), 540, 705, { align: 'right', width: 30 });
-		this.image(path.join(process.cwd(), imgStar10), 540, 745, { align: 'right', width: 30 });
+		this.drawQuestionsBorder();
 	}
 
-	drawQuestionsBorder()
-	{
-		drawOrangeBorder(this, this.origin_x, this.origin_y, this.content_width, this.content_height)
+	drawQuestionsBorder() {
+		drawOrangeBorder(this, this.origin_x, this.origin_y, this.content_width, this.content_height);
+		displayStarImages(this, 30, 40);
 	}
 
 	private drawAllQuestions() {
@@ -203,7 +196,6 @@ export default class longDivisionMethod extends PDFKit{
 
 		for (let index = 0; index < this.layout.row; index++) {
 			for (let j = 0; j < this.layout.column; j++) {
-
 				/** start generating random a question */
 				var firstNum = 0;
 				var secondNum = 0;
@@ -212,10 +204,10 @@ export default class longDivisionMethod extends PDFKit{
 				secondNum = generateRandomNumber(this.second_number_of_digits);
 
 				// for non-remainder question
-					while(secondNum<2 || firstNum%secondNum!=0) {
-						firstNum = generateRandomNumber(this.first_number_of_digits);
-						secondNum = generateRandomNumber(this.second_number_of_digits);
-					}
+				while (secondNum < 2 || firstNum % secondNum != 0) {
+					firstNum = generateRandomNumber(this.first_number_of_digits);
+					secondNum = generateRandomNumber(this.second_number_of_digits);
+				}
 
 				this.array_num_1.push(firstNum);
 				this.array_num_2.push(secondNum);
@@ -233,8 +225,8 @@ export default class longDivisionMethod extends PDFKit{
 			}
 		}
 	}
-	
-		/**
+
+	/**
 	 * @param x coordinate x
 	 * @param y coordinate y
 	 * @param num1 first number in the equation
@@ -274,9 +266,9 @@ export default class longDivisionMethod extends PDFKit{
 
 		// Draw operation sign
 		this.moveTo(content_x + 100, content_y + 20)
-		.lineTo(content_x + 50, content_y + 20)
-		.quadraticCurveTo(content_x + 60, content_y+(60/2), content_x + 50, content_y + 45) 
-		.stroke();  
+			.lineTo(content_x + 50, content_y + 20)
+			.quadraticCurveTo(content_x + 60, content_y + 60 / 2, content_x + 50, content_y + 45)
+			.stroke();
 
 		// Draw second number
 		this.fontSize(fontSize).text(num2.toString(), content_x + 40, content_y + 25, {
