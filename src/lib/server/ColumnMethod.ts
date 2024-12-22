@@ -1,6 +1,6 @@
 import { generateRandomNumber } from '$lib/helper';
 import { difficultyList } from '$lib/difficulty';
-import { addHeader, displayCartoonImage } from '$lib/server/drillvendor';
+import { addHeader, displayCartoonImage, drawOrangeBorder } from '$lib/server/drillvendor';
 import fontDynaPuffVariable from '$lib/assets/fonts/DynaPuff-VariableFont.ttf';
 import fontArial from '$lib/assets/fonts/Arial.ttf';
 import imgStar8 from '$lib/assets/stars/star-8.png';
@@ -106,6 +106,7 @@ export default class ColumnMethod extends PDFDocument {
 		for (let i = 0; i < this.num_page; i++) {
 			addHeader(this, this.x, this.y, this.origin_x);
 			this.addTitle(this.x, this.y, operation);
+
 			this.initDrillLayout();
 			this.drawAllQuestions();
 			this.addPage();
@@ -165,25 +166,31 @@ export default class ColumnMethod extends PDFDocument {
 			);
 
 		this.moveDown(1);
-		this.drawOrangeContentBorder();
+		this.drawQuestionsBorder();
+	}
 
-		// star images
+	drawQuestionsBorder() {
+		drawOrangeBorder(this, this.origin_x, this.origin_y, this.content_width, this.content_height)
+		// display star images
+		let starSize = 30;
+		let y_gap = 40;
+		let start_3_y = this.page.height - this.page.margins.bottom - starSize;
 		this.image(
 			join(process.cwd(), imgStar8),
 			this.page.width - (this.page.margins.right * 7) / 8,
-			665,
+			start_3_y - y_gap * 3,
 			{ align: 'right', width: 30 }
 		);
 		this.image(
 			join(process.cwd(), imgStar9),
 			this.page.width - (this.page.margins.right * 7) / 8,
-			705,
+			start_3_y - y_gap * 2,
 			{ align: 'right', width: 30 }
 		);
 		this.image(
 			join(process.cwd(), imgStar10),
 			this.page.width - (this.page.margins.right * 7) / 8,
-			745,
+			start_3_y - y_gap,
 			{ align: 'right', width: 30 }
 		);
 	}
@@ -196,7 +203,6 @@ export default class ColumnMethod extends PDFDocument {
 		let columnMethodHeight: number = this.layout.rowHeight - 10;
 		let y_shift: number = (this.layout.rowHeight - columnMethodHeight) / 2;
 		let y: number = this.y + y_shift;
-
 
 		this.registerFont('Arial', join(process.cwd(), fontArial));
 		this.font('Arial').fillColor('black');
@@ -262,7 +268,7 @@ export default class ColumnMethod extends PDFDocument {
 
 		// Draw first number
 		this.fontSize(fontSize).text(num1.toString(), content_x, content_y + 15, {
-			width: content_width -5,
+			width: content_width - 5,
 			align: 'right',
 			characterSpacing: characterSpacing
 		});
@@ -275,7 +281,7 @@ export default class ColumnMethod extends PDFDocument {
 
 		// Draw second number
 		this.fontSize(fontSize).text(num2.toString(), content_x, content_y + 30, {
-			width: content_width-5,
+			width: content_width - 5,
 			align: 'right',
 			characterSpacing: characterSpacing
 		});
@@ -297,7 +303,6 @@ export default class ColumnMethod extends PDFDocument {
 		// answer gap and draw last line
 		this.moveDown(1.5);
 		this.moveTo(start_line_x, this.y).lineTo(end_line_x, this.y).stroke();
-
 	}
 
 	createAnswerSheet() {
@@ -306,7 +311,7 @@ export default class ColumnMethod extends PDFDocument {
 		let counter = 0;
 		let columnMethodWidth: number = this.layout.columnWidth - 10;
 		let x_shift: number = (this.layout.columnWidth - columnMethodWidth) / 2;
-		let x = this.origin_x + x_shift
+		let x = this.origin_x + x_shift;
 
 		let columnMethodHeight: number = this.layout.rowHeight - 10;
 		let y_shift: number = (this.layout.rowHeight - columnMethodHeight) / 2;
@@ -324,14 +329,13 @@ export default class ColumnMethod extends PDFDocument {
 				);
 			}
 			index++;
-			
+
 			this.moveDown(2);
 			if (counter % 48 == 0 && index < this.num_page * this.layout.row) {
 				this.addPage();
 				this.answerSheetLayout();
 			}
 			index--;
-
 		}
 	}
 
@@ -398,7 +402,7 @@ export default class ColumnMethod extends PDFDocument {
 		this.font('Helvetica').fontSize(12).fillColor('black');
 
 		this.moveDown(1);
-		this.drawOrangeContentBorder();
+		drawOrangeBorder(this, this.origin_x, this.origin_y, this.content_width, this.content_height)
 	}
 
 	private initDrillLayout() {
@@ -416,29 +420,5 @@ export default class ColumnMethod extends PDFDocument {
 			case 'multiplication':
 				return { symbol: '×', operation_char: 'darab' };
 		}
-	}
-
-	private drawOrangeContentBorder() {
-		//	Draw an orange rounded rectangle
-		//	Set the stroke color and line width for the border
-		this.strokeColor('orange').lineWidth(2);
-
-		let padding = 8;
-		let rect_x_coordinate = this.origin_x - padding / 2; // shift to the left half of the padding to add the x-padding
-		let rect_y_coordinate = this.y - padding / 2; // shift to the top half of the padding to add the y-padding
-		let rect_width = this.content_width + padding; // add padding length to the width
-		let rect_height = this.content_height - (this.y - this.origin_y) + padding; // add padding length to the height
-		let radius = 10;
-
-		this.roundedRect(
-			rect_x_coordinate,
-			rect_y_coordinate,
-			rect_width,
-			rect_height,
-			radius
-		).stroke();
-
-		// Reset the stroke color and line width
-		this.strokeColor('black').lineWidth(1);
 	}
 }

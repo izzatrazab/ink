@@ -2,7 +2,7 @@ import { generateRandomNumber } from '$lib/helper';
 // import fontChilankaRegular from '$lib/assets/fonts/Chilanka-Regular.ttf';
 import PDFKit from 'pdfkit';
 // import { join } from 'path';
-import { addHeader, displayCartoonImage } from '$lib/server/drillvendor';
+import { addHeader, displayCartoonImage, drawOrangeBorder } from '$lib/server/drillvendor';
 import { difficultyList } from '$lib/difficulty';
 import fontDynaPuffVariable from '$lib/assets/fonts/DynaPuff-VariableFont.ttf';
 import fontArial from '$lib/assets/fonts/Arial.ttf';
@@ -61,7 +61,7 @@ export default class longDivisionMethod extends PDFKit{
 		columnWidth: 0
 	};
 
-    constructor(operation: string, difficulty: string, num_page: any){
+    constructor(difficulty: string, num_page: any){
         super({
 			size: 'A4',
 			margins: {
@@ -97,9 +97,9 @@ export default class longDivisionMethod extends PDFKit{
 
 		this.content_height = this.page.height - this.page.margins.top - this.page.margins.bottom;
 		this.content_width = this.page.width - this.page.margins.left - this.page.margins.right;
-		this.operation_symbol = this.getSymbol(operation).symbol;
-		this.operation_method_eng = operation;
-		this.operation_method_malay = this.getSymbol(operation).operation_char;
+		// this.operation_symbol = this.getSymbol(operation).symbol;
+		// this.operation_method_eng = operation;
+		// this.operation_method_malay = this.getSymbol(operation).operation_char;
 		this.difficulty = difficulty;
 		this.first_number_of_digits = difficultyList.get(difficulty)?.first_number_of_digits ?? 1;
 		this.second_number_of_digits = difficultyList.get(difficulty)?.second_number_of_digits ?? 1;
@@ -108,8 +108,8 @@ export default class longDivisionMethod extends PDFKit{
 		this.num_page = num_page;
 
         addHeader(this, this.x, this.y, this.origin_x)
-		this.addTitle(this.x, this.y, operation);
-		this.initDrillLayout(operation);
+		this.addTitle(this.x, this.y);
+		this.initDrillLayout();
 		this.drawAllQuestions();
 		this.addPage();
 		this.createAnswerSheet();
@@ -123,7 +123,7 @@ export default class longDivisionMethod extends PDFKit{
     }
 
 	/** title includes cartoon image, and title */
-	addTitle(x: number, y: number, operation: string) {
+	addTitle(x: number, y: number) {
 
 		/** display cartoon at top right*/
 		displayCartoonImage(this, this.x, this.y - 13, this.difficulty);
@@ -177,30 +177,18 @@ export default class longDivisionMethod extends PDFKit{
 			);
 
 		this.moveDown(1);
-
-		// Set the stroke color and line width for the border
-		this.strokeColor('orange').lineWidth(3);
-
-		// Draw a rounded rectangle
-		const xAxis = 60;
-		const yAxis = 209;
-		const widthRect = 475;
-		var heightRect = 0;
-		if (operation === 'multiplication') {
-			heightRect = 595;
-		} else {
-			heightRect = 565;
-		}
-		const radius = 10;
-		this.roundedRect(xAxis, yAxis, widthRect, heightRect, radius).stroke();
-
-		// Reset the stroke color and line width
-		this.strokeColor('black').lineWidth(1);
+		
+		drawOrangeBorder(this, this.origin_x, this.origin_y, this.content_width, this.content_height)
 
 		// star images
 		this.image(path.join(process.cwd(), imgStar8), 540, 665, { align: 'right', width: 30 });
 		this.image(path.join(process.cwd(), imgStar9), 540, 705, { align: 'right', width: 30 });
 		this.image(path.join(process.cwd(), imgStar10), 540, 745, { align: 'right', width: 30 });
+	}
+
+	drawQuestionsBorder()
+	{
+		drawOrangeBorder(this, this.origin_x, this.origin_y, this.content_width, this.content_height)
 	}
 
 	private drawAllQuestions() {
@@ -407,7 +395,7 @@ export default class longDivisionMethod extends PDFKit{
 		this.y = yAxis + 10;
 	}
 
-	private initDrillLayout(operation: string) {
+	private initDrillLayout() {
 		this.layout.columnWidth = this.content_width / this.layout.column;
 		this.layout.rowHeight = (this.content_height - this.y) / this.layout.row;
 	}

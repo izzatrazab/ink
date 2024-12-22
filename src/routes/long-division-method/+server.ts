@@ -3,11 +3,10 @@ import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ url }) => {
 	
-	const operation = url.searchParams.get('operation') ?? 'addition';
 	const difficulty = url.searchParams.get('difficulty') ?? 'easy';
 	const number_of_pages = Number(url.searchParams.get('nop') ?? '1');
 
-	const doc = new LongDivisionMethod(operation, difficulty, number_of_pages);
+	const doc = new LongDivisionMethod(difficulty, number_of_pages);
 	let buffers: any[] = [];
 
 	// Collect data as the PDF is being generated
