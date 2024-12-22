@@ -1,4 +1,5 @@
 import fontChilankaRegular from '$lib/assets/fonts/Chilanka-Regular.ttf';
+import fontDynaPuffVariable from '$lib/assets/fonts/DynaPuff-VariableFont.ttf';
 import imgStar8 from '$lib/assets/stars/star-8.png';
 import imgStar9 from '$lib/assets/stars/star-9.png';
 import imgStar10 from '$lib/assets/stars/star-10.png';
@@ -27,6 +28,37 @@ export function addHeader(PDFKit: PDFKit.PDFDocument, x: number, y: number, orig
 	PDFKit.x = origin_x;
 
 	PDFKit.moveDown(1);
+}
+
+export function addTitleBox(
+	PDFKit: PDFKit.PDFDocument,
+	x: number,
+	y: number,
+	width: number,
+	height: number,
+	eng_title: string,
+	malay_title: string
+) {
+	let halfHeight = height / 2;
+
+	PDFKit.strokeColor('#737373').lineWidth(2);
+	PDFKit.rect(x, y, width, height).stroke();
+
+	PDFKit.registerFont('DynaPuff', join(process.cwd(), fontDynaPuffVariable)).font('DynaPuff');
+	
+	PDFKit.fontSize(14)
+		.fillColor('#2acf90')
+		.text(eng_title, x, y + halfHeight - 3, {
+			align: 'center',
+			baseline: 'bottom'
+		});
+
+	PDFKit.fontSize(11)
+		.fillColor('grey')
+		.text(malay_title, x, y + halfHeight + 3, {
+			align: 'center',
+			baseline: 'top'
+		});
 }
 
 /** sini kene explain function */
@@ -64,7 +96,13 @@ export function displayCartoonImage(
 	});
 }
 
-export function drawOrangeBorder(PDFKit: PDFKit.PDFDocument, x: number, y:number, content_width: number, content_height: number) {
+export function drawOrangeBorder(
+	PDFKit: PDFKit.PDFDocument,
+	x: number,
+	y: number,
+	content_width: number,
+	content_height: number
+) {
 	//	Draw an orange rounded rectangle
 	//	Set the stroke color and line width for the border
 	PDFKit.strokeColor('orange').lineWidth(2);
@@ -76,15 +114,19 @@ export function drawOrangeBorder(PDFKit: PDFKit.PDFDocument, x: number, y:number
 	let rect_height = content_height - (PDFKit.y - y) + padding; // add padding length to the height
 	let radius = 10;
 
-	PDFKit.roundedRect(rect_x_coordinate, rect_y_coordinate, rect_width, rect_height, radius).stroke();
+	PDFKit.roundedRect(
+		rect_x_coordinate,
+		rect_y_coordinate,
+		rect_width,
+		rect_height,
+		radius
+	).stroke();
 
 	// Reset the stroke color and line width
 	PDFKit.strokeColor('black').lineWidth(1);
 }
 
-export function displayStarImages(PDFKit: PDFKit.PDFDocument, star_size: number, y_gap: number )
-{
-
+export function displayStarImages(PDFKit: PDFKit.PDFDocument, star_size: number, y_gap: number) {
 	// let y_gap = 40;
 	let start_3_y = PDFKit.page.height - PDFKit.page.margins.bottom - star_size;
 	PDFKit.image(
@@ -92,7 +134,7 @@ export function displayStarImages(PDFKit: PDFKit.PDFDocument, star_size: number,
 		PDFKit.page.width - (PDFKit.page.margins.right * 7) / 8,
 		start_3_y - y_gap * 3,
 		{ align: 'right', width: star_size }
-	); 
+	);
 	PDFKit.image(
 		join(process.cwd(), imgStar9),
 		PDFKit.page.width - (PDFKit.page.margins.right * 7) / 8,

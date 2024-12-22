@@ -2,12 +2,12 @@ import { generateRandomNumber } from '$lib/helper';
 import PDFKit from 'pdfkit';
 import {
 	addHeader,
+	addTitleBox,
 	displayCartoonImage,
 	displayStarImages,
 	drawOrangeBorder
 } from '$lib/server/drillvendor';
 import { difficultyList } from '$lib/difficulty';
-import fontDynaPuffVariable from '$lib/assets/fonts/DynaPuff-VariableFont.ttf';
 import fontArial from '$lib/assets/fonts/Arial.ttf';
 
 import { join } from 'path';
@@ -95,6 +95,11 @@ export default class longDivisionMethod extends PDFKit {
 
 		addHeader(this, this.x, this.y, this.origin_x);
 		this.addTitle(this.x, this.y);
+		this.moveDown(2);
+		this.x = this.origin_x;
+		this.addInstruction();
+		this.moveDown(1);
+		this.drawQuestionsBorder();
 		this.initDrillLayout();
 		this.drawAllQuestions();
 		this.addPage();
@@ -103,59 +108,41 @@ export default class longDivisionMethod extends PDFKit {
 
 	/** title includes cartoon image, and title */
 	addTitle(x: number, y: number) {
-		/** display cartoon at top right*/
+		let eng_title: string = `Worksheet: ${this.label_eng} Level (${this.first_number_of_digits} digits ${this.operation_symbol} ${this.second_number_of_digits} digit(s))`;
+		let malay_title: string = `Latihan: Tahap ${this.label_malay} (${this.first_number_of_digits} digit ${this.operation_symbol} ${this.second_number_of_digits} digit)`;
+
 		displayCartoonImage(this, this.x, this.y - 13, this.difficulty);
 
-		let width: number = 90;
-		let gap: number = 10;
-		let xTitle: number = x + width + 3 * gap;
-		let wTitle: number = this.content_width - width - 3 * gap;
-		let hTitle: number = 70;
-		this.strokeColor('#737373').lineWidth(2);
-		this.rect(xTitle, y, wTitle, hTitle).stroke();
+		/** + 120 to shift to the right (avoid overlapped with the cartoon image */
+		let x_title_box = x + 120;
+		/** page width tolak x coordinate of title box tolak margin kanan */
+		let width_title_box = this.page.width - x_title_box - this.page.margins.right;
+		let height_title_box = 70;
 
-		this.registerFont('DynaPuff', join(process.cwd(), fontDynaPuffVariable));
-		this.font('DynaPuff').fontSize(14);
-		this.fillColor('#2acf90').text(
-			`Worksheet: ${this.label_eng} Level (${this.first_number_of_digits} digits ${this.operation_symbol} ${this.second_number_of_digits} digit(s))`,
-			xTitle,
-			y + 10,
-			{
-				align: 'center',
-				height: hTitle
-			}
-		);
-		this.fontSize(11)
-			.fillColor('grey')
-			.text(
-				`Latihan: Tahap ${this.label_malay} (${this.first_number_of_digits} digit ${this.operation_symbol} ${this.second_number_of_digits} digit)`,
-				xTitle,
-				y + 35,
-				{ align: 'center', height: hTitle }
-			);
+		addTitleBox(this, x_title_box, y, width_title_box, height_title_box, eng_title, malay_title);
+	}
 
+	addInstruction() {
 		this.font('Chilanka').fontSize(14).fillColor('black');
 		this.text(
 			`Solve the following questions using the ${this.operation_method_eng} function.`,
-			x,
-			y + 85,
+			this.x,
+			this.y,
 			{
 				align: 'center'
 			}
 		);
+
 		this.fontSize(10)
 			.fillColor('grey')
 			.text(
 				`Selesaikan soalan-soalan berikut dengan menggunakan fungsi ${this.operation_method_malay}.`,
-				x,
-				y + 100.5,
+				this.x,
+				this.y,
 				{
 					align: 'center'
 				}
 			);
-
-		this.moveDown(1);
-		this.drawQuestionsBorder();
 	}
 
 	drawQuestionsBorder() {
@@ -313,7 +300,7 @@ export default class longDivisionMethod extends PDFKit {
 		});
 
 		// Calculate and write the answer
-		let result: number =  num1 / num2;
+		let result: number = num1 / num2;
 
 		this.text(result.toString(), content_x + 30, content_y, {
 			width: content_width,
