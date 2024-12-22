@@ -108,7 +108,6 @@ export default class ColumnMethod extends PDFDocument {
 		for (let i = 0; i < this.num_page; i++) {
 			addHeader(this, this.x, this.y, this.origin_x);
 			this.addTitle(this.x, this.y, operation);
-
 			this.initDrillLayout();
 			this.drawAllQuestions();
 			this.addPage();

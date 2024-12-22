@@ -1,7 +1,5 @@
 import { generateRandomNumber } from '$lib/helper';
-// import fontChilankaRegular from '$lib/assets/fonts/Chilanka-Regular.ttf';
 import PDFKit from 'pdfkit';
-// import { join } from 'path';
 import {
 	addHeader,
 	displayCartoonImage,
@@ -12,7 +10,7 @@ import { difficultyList } from '$lib/difficulty';
 import fontDynaPuffVariable from '$lib/assets/fonts/DynaPuff-VariableFont.ttf';
 import fontArial from '$lib/assets/fonts/Arial.ttf';
 
-import path from 'path';
+import { join } from 'path';
 
 interface DrillLayout {
 	row: number;
@@ -39,13 +37,13 @@ export default class longDivisionMethod extends PDFKit {
 	/** number of digits of the first number in a question */
 	public first_number_of_digits: number = 1;
 	/** operation symbol */
-	public operation_symbol: string = '';
+	public operation_symbol: string = '÷';
 	/** label for the level of difficulty of the questions in malay */
 	public label_malay: string = '';
 	/** operation method in english */
-	public operation_method_eng: string = '';
+	public operation_method_eng: string = 'divide';
 	/** operation method in malay */
-	public operation_method_malay: string = '';
+	public operation_method_malay: string = 'bahagi';
 	/** number of digits of the second number in a question */
 	public second_number_of_digits: number = 1;
 	/** array containing first number in the column method */
@@ -86,21 +84,8 @@ export default class longDivisionMethod extends PDFKit {
 		this.origin_x = this.x;
 		this.origin_y = this.y;
 
-		// this.content_width = this.page.width - this.page.margins.left - this.page.margins.right;
-		// this.label_eng = difficultyList.get(difficulty)?.level_eng ?? 'easy';
-		// this.first_number_of_digits = difficultyList.get(difficulty)?.first_number_of_digits ?? 1;
-		// this.operation_symbol = this.getSymbol(operation).symbol;
-		// this.label_malay = difficultyList.get(difficulty)?.level_malay ?? 'mudah';
-		// this.operation_method_eng = operation;
-		// this.operation_method_malay = this.getSymbol(operation).operation_char;
-		// console.log("operation:", this.operation_method_eng);
-		// this.second_number_of_digits = difficultyList.get(difficulty)?.second_number_of_digits ?? 1;
-
 		this.content_height = this.page.height - this.page.margins.top - this.page.margins.bottom;
 		this.content_width = this.page.width - this.page.margins.left - this.page.margins.right;
-		// this.operation_symbol = this.getSymbol(operation).symbol;
-		// this.operation_method_eng = operation;
-		// this.operation_method_malay = this.getSymbol(operation).operation_char;
 		this.difficulty = difficulty;
 		this.first_number_of_digits = difficultyList.get(difficulty)?.first_number_of_digits ?? 1;
 		this.second_number_of_digits = difficultyList.get(difficulty)?.second_number_of_digits ?? 1;
@@ -114,12 +99,6 @@ export default class longDivisionMethod extends PDFKit {
 		this.drawAllQuestions();
 		this.addPage();
 		this.createAnswerSheet();
-		// let x:number = 100;
-		// let y:number = 200;
-		// this.moveTo(x + 100, y)
-		// .lineTo(x, y)
-		// .quadraticCurveTo(x + 10, y+(20/2), x, y + 20)
-		// .stroke();
 	}
 
 	/** title includes cartoon image, and title */
@@ -135,7 +114,7 @@ export default class longDivisionMethod extends PDFKit {
 		this.strokeColor('#737373').lineWidth(2);
 		this.rect(xTitle, y, wTitle, hTitle).stroke();
 
-		this.registerFont('DynaPuff', path.join(process.cwd(), fontDynaPuffVariable));
+		this.registerFont('DynaPuff', join(process.cwd(), fontDynaPuffVariable));
 		this.font('DynaPuff').fontSize(14);
 		this.fillColor('#2acf90').text(
 			`Worksheet: ${this.label_eng} Level (${this.first_number_of_digits} digits ${this.operation_symbol} ${this.second_number_of_digits} digit(s))`,
@@ -191,7 +170,7 @@ export default class longDivisionMethod extends PDFKit {
 		let origin_x: number = this.origin_x;
 		let origin_y: number = this.y;
 
-		this.registerFont('Arial', path.join(process.cwd(), fontArial));
+		this.registerFont('Arial', join(process.cwd(), fontArial));
 		this.font('Arial').fillColor('black');
 
 		for (let index = 0; index < this.layout.row; index++) {
@@ -218,7 +197,6 @@ export default class longDivisionMethod extends PDFKit {
 					origin_y + index * this.layout.rowHeight,
 					this.array_num_1[this.total_questions],
 					this.array_num_2[this.total_questions],
-					this.operation_symbol,
 					columnMethodWidth,
 					++this.total_questions
 				);
@@ -239,7 +217,6 @@ export default class longDivisionMethod extends PDFKit {
 		y: number,
 		num1: number,
 		num2: number,
-		operation: string,
 		width: number,
 		questionNumber: number,
 		padding: number = 5
@@ -249,7 +226,6 @@ export default class longDivisionMethod extends PDFKit {
 		const content_y = y + padding;
 		const characterSpacing = 8;
 		const fontSize = 14;
-		const operationSymbolSize = 18;
 
 		// Draw question number
 		this.fontSize(fontSize).text(questionNumber.toString() + ')', content_x, content_y, {
@@ -337,24 +313,7 @@ export default class longDivisionMethod extends PDFKit {
 		});
 
 		// Calculate and write the answer
-		let result: number;
-
-		switch (this.operation_method_eng) {
-			default:
-			case 'addition':
-				result = num1 + num2;
-				break;
-			case 'subtraction':
-				result = num1 - num2;
-				break;
-			case 'multiplication':
-				result = num1 * num2;
-				break;
-
-			case 'division':
-				result = num1 / num2;
-				break;
-		}
+		let result: number =  num1 / num2;
 
 		this.text(result.toString(), content_x + 30, content_y, {
 			width: content_width,
@@ -372,37 +331,15 @@ export default class longDivisionMethod extends PDFKit {
 			.fillColor('grey')
 			.text('Kertas Jawapan');
 
+		//reset font and font color
 		this.font('Helvetica').fontSize(12).fillColor('black');
 
-		this.strokeColor('orange').lineWidth(3);
-
-		// Draw a rounded rectangle
-		const xAxis = 60;
-		const yAxis = 109;
-		const widthRect = 475;
-		const heightRect = 665;
-		const radius = 10;
-		this.roundedRect(xAxis, yAxis, widthRect, heightRect, radius).stroke();
-
-		this.y = yAxis + 10;
+		this.moveDown(1);
+		drawOrangeBorder(this, this.origin_x, this.origin_y, this.content_width, this.content_height);
 	}
 
 	private initDrillLayout() {
 		this.layout.columnWidth = this.content_width / this.layout.column;
 		this.layout.rowHeight = (this.content_height - this.y) / this.layout.row;
-	}
-
-	private getSymbol(operation: string) {
-		switch (operation) {
-			default:
-			case 'addition':
-				return { symbol: '+', operation_char: 'tambah' };
-			case 'subtraction':
-				return { symbol: '−', operation_char: 'tolak' };
-			case 'multiplication':
-				return { symbol: '×', operation_char: 'darab' };
-			case 'division':
-				return { symbol: '/', operation_char: 'bahagi' };
-		}
 	}
 }
