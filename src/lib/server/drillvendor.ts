@@ -30,37 +30,6 @@ export function addHeader(PDFKit: PDFKit.PDFDocument, x: number, y: number, orig
 	PDFKit.moveDown(1);
 }
 
-export function addTitleBox(
-	PDFKit: PDFKit.PDFDocument,
-	x: number,
-	y: number,
-	width: number,
-	height: number,
-	eng_title: string,
-	malay_title: string
-) {
-	let halfHeight = height / 2;
-
-	PDFKit.strokeColor('#737373').lineWidth(2);
-	PDFKit.rect(x, y, width, height).stroke();
-
-	PDFKit.registerFont('DynaPuff', join(process.cwd(), fontDynaPuffVariable)).font('DynaPuff');
-	
-	PDFKit.fontSize(14)
-		.fillColor('#2acf90')
-		.text(eng_title, x, y + halfHeight - 3, {
-			align: 'center',
-			baseline: 'bottom'
-		});
-
-	PDFKit.fontSize(11)
-		.fillColor('grey')
-		.text(malay_title, x, y + halfHeight + 3, {
-			align: 'center',
-			baseline: 'top'
-		});
-}
-
 /** sini kene explain function */
 export function displayCartoonImage(
 	PDFKit: PDFKit.PDFDocument,
@@ -94,6 +63,50 @@ export function displayCartoonImage(
 		align: 'right',
 		height: 90
 	});
+}
+
+export function addTitleBox(
+	PDFKit: PDFKit.PDFDocument,
+	x: number,
+	y: number,
+	width: number,
+	height: number,
+	eng_title: string,
+	malay_title: string
+) {
+	let halfHeight = height / 2;
+
+	PDFKit.strokeColor('#737373').lineWidth(2);
+	PDFKit.rect(x, y, width, height).stroke();
+
+	PDFKit.registerFont('DynaPuff', join(process.cwd(), fontDynaPuffVariable)).font('DynaPuff');
+
+	PDFKit.fontSize(14)
+		.fillColor('#2acf90')
+		.text(eng_title, x, y + halfHeight - 3, {
+			align: 'center',
+			baseline: 'bottom'
+		});
+
+	PDFKit.fontSize(11)
+		.fillColor('grey')
+		.text(malay_title, x, y + halfHeight + 3, {
+			align: 'center',
+			baseline: 'top'
+		});
+}
+
+export function addInstruction(
+	PDFKit: PDFKit.PDFDocument,
+	x: number,
+	y: number,
+	instruction: string,
+	translation: string
+) {
+	PDFKit.registerFont('Chilanka', join(process.cwd(), fontChilankaRegular));
+	PDFKit.font('Chilanka');
+	PDFKit.fontSize(14).fillColor('black').text(instruction, x, y, { align: 'center' });
+	PDFKit.fontSize(10).fillColor('grey').text(translation, PDFKit.x, PDFKit.y, { align: 'center' });
 }
 
 export function drawOrangeBorder(

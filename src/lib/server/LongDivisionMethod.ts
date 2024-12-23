@@ -2,6 +2,7 @@ import { generateRandomNumber } from '$lib/helper';
 import PDFKit from 'pdfkit';
 import {
 	addHeader,
+	addInstruction,
 	addTitleBox,
 	displayCartoonImage,
 	displayStarImages,
@@ -93,11 +94,14 @@ export default class longDivisionMethod extends PDFKit {
 		this.label_malay = difficultyList.get(difficulty)?.level_malay ?? 'mudah';
 		this.num_page = num_page;
 
+		let instruction = `Solve the following questions using the ${this.operation_method_eng} function.`;
+		let instruction_translation = `Selesaikan soalan-soalan berikut dengan menggunakan fungsi ${this.operation_method_malay}.`;
+
 		addHeader(this, this.x, this.y, this.origin_x);
 		this.addTitle(this.x, this.y);
 		this.moveDown(2);
 		this.x = this.origin_x;
-		this.addInstruction();
+		addInstruction(this, this.x, this.y, instruction, instruction_translation);
 		this.moveDown(1);
 		this.drawQuestionsBorder();
 		this.initDrillLayout();
@@ -120,29 +124,6 @@ export default class longDivisionMethod extends PDFKit {
 		let height_title_box = 70;
 
 		addTitleBox(this, x_title_box, y, width_title_box, height_title_box, eng_title, malay_title);
-	}
-
-	addInstruction() {
-		this.font('Chilanka').fontSize(14).fillColor('black');
-		this.text(
-			`Solve the following questions using the ${this.operation_method_eng} function.`,
-			this.x,
-			this.y,
-			{
-				align: 'center'
-			}
-		);
-
-		this.fontSize(10)
-			.fillColor('grey')
-			.text(
-				`Selesaikan soalan-soalan berikut dengan menggunakan fungsi ${this.operation_method_malay}.`,
-				this.x,
-				this.y,
-				{
-					align: 'center'
-				}
-			);
 	}
 
 	drawQuestionsBorder() {
