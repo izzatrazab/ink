@@ -160,7 +160,7 @@ export default class longDivisionMethod extends PDFKit {
 				this.array_num_2.push(secondNum);
 				/** end of generating random a question */
 
-				this.drawColumnMethod(
+				this.drawLongDivisionMethod(
 					origin_x + x_shift + j * this.layout.columnWidth,
 					origin_y + index * this.layout.rowHeight,
 					this.array_num_1[this.total_questions],
@@ -180,7 +180,7 @@ export default class longDivisionMethod extends PDFKit {
 	 * @param operation the operation symbol (+, -, x)
 	 * @param width width of the column method (box ??, ibarat mcm kotak).
 	 */
-	drawColumnMethod(
+	drawLongDivisionMethod(
 		x: number,
 		y: number,
 		num1: number,
