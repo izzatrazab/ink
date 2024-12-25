@@ -97,17 +97,18 @@ export default class longDivisionMethod extends PDFKit {
 
 		let instruction = `Solve the following questions using the ${this.operation_method_eng} function.`;
 		let instruction_translation = `Selesaikan soalan-soalan berikut dengan menggunakan fungsi ${this.operation_method_malay}.`;
-
-		addHeader(this, this.x, this.y, this.origin_x);
-		this.addTitle(this.x, this.y);
-		this.moveDown(2);
-		this.x = this.origin_x;
-		addInstruction(this, this.x, this.y, instruction, instruction_translation);
-		this.moveDown(1);
-		this.drawQuestionsBorder();
-		this.initDrillLayout();
-		this.drawAllQuestions();
-		this.addPage();
+		for (let i = 0; i < this.num_page; i++) {
+			addHeader(this, this.x, this.y, this.origin_x);
+			this.addTitle(this.x, this.y);
+			this.moveDown(2);
+			this.x = this.origin_x;
+			addInstruction(this, this.x, this.y, instruction, instruction_translation);
+			this.moveDown(1);
+			this.drawQuestionsBorder();
+			this.initDrillLayout();
+			this.drawAllQuestions();
+			this.addPage();
+		}
 		this.createAnswerSheet();
 	}
 
@@ -197,13 +198,13 @@ export default class longDivisionMethod extends PDFKit {
 		const fontSize = 14;
 
 		// Draw question number
-		this.fontSize(fontSize).text(questionNumber.toString() + ')', content_x, content_y, {
+		this.fontSize(fontSize - 2).text(questionNumber.toString() + ')', content_x, content_y, {
 			width: width,
 			align: 'left'
 		});
 
 		// Draw long division method lines
-		const long_division_x = content_x + 22;
+		const long_division_x = content_x + 25;
 		const long_division_y = content_y + 20;
 		const curve_height = 25;
 
@@ -254,13 +255,12 @@ export default class longDivisionMethod extends PDFKit {
 			}
 			index++;
 
+			this.moveDown(2);
 			if (counter % 48 == 0 && index < this.num_page * this.layout.row) {
 				this.addPage();
 				this.answerSheetLayout();
 			}
 			index--;
-
-			this.moveDown(2);
 		}
 	}
 

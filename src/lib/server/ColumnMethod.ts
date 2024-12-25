@@ -212,7 +212,7 @@ export default class ColumnMethod extends PDFDocument {
 		const operationSymbolSize = 18;
 
 		// Draw question number
-		this.fontSize(fontSize).text(questionNumber.toString() + ')', content_x, content_y, {
+		this.fontSize(fontSize - 2).text(questionNumber.toString() + ')', content_x, content_y, {
 			width: width,
 			align: 'left'
 		});
