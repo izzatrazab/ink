@@ -37,9 +37,9 @@
 						</label>
 						<fieldset>
 							<legend>Remainder</legend>
-							<input type="radio" id="has-remainder" name="remainder" checked />
+							<input type="radio" id="has-remainder" name="remainder" value='true' checked />
 							<label for="has-remainder">Has Remainder</label>
-							<input type="radio" id="no-remainder" name="remainder" />
+							<input type="radio" id="no-remainder" name="remainder" value='false' />
 							<label for="no-remainder">No Remainder</label>
 						</fieldset>
 					</fieldset>

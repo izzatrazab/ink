@@ -51,6 +51,8 @@ export default class longDivisionMethod extends PDFKit {
 	public array_num_1: Array<number> = [];
 	/** array containing second number in the column method */
 	public array_num_2: Array<number> = [];
+	/** has remainder */
+	public has_remainder: boolean = false;
 	/** total number of questions */
 	public total_questions: number = 0;
 	/** drills layout information */
@@ -61,7 +63,7 @@ export default class longDivisionMethod extends PDFKit {
 		columnWidth: 0
 	};
 
-	constructor(difficulty: string, num_page: any) {
+	constructor(difficulty: string, num_page: any, has_remainder: boolean) {
 		super({
 			size: 'A4',
 			margins: {
@@ -93,6 +95,7 @@ export default class longDivisionMethod extends PDFKit {
 		this.second_number_of_digits = 1;
 		this.label_eng = difficultyList.get(difficulty)?.level_eng ?? 'easy';
 		this.label_malay = difficultyList.get(difficulty)?.level_malay ?? 'mudah';
+		this.has_remainder = has_remainder;
 		this.num_page = num_page;
 
 		let instruction = `Solve the following questions using the ${this.operation_method_eng} function.`;
@@ -152,10 +155,17 @@ export default class longDivisionMethod extends PDFKit {
 				firstNum = generateRandomNumber(this.first_number_of_digits);
 				secondNum = generateRandomNumber(this.second_number_of_digits);
 
-				// for non-remainder question
-				while (secondNum < 2 || firstNum % secondNum != 0) {
-					firstNum = generateRandomNumber(this.first_number_of_digits);
-					secondNum = generateRandomNumber(this.second_number_of_digits);
+				if (this.has_remainder) {
+					while (secondNum < 2 || firstNum % secondNum == 0) {
+						firstNum = generateRandomNumber(this.first_number_of_digits);
+						secondNum = generateRandomNumber(this.second_number_of_digits);
+					}
+				} else {
+					// for non-remainder question
+					while (secondNum < 2 || firstNum % secondNum != 0) {
+						firstNum = generateRandomNumber(this.first_number_of_digits);
+						secondNum = generateRandomNumber(this.second_number_of_digits);
+					}
 				}
 
 				this.array_num_1.push(firstNum);
@@ -292,9 +302,9 @@ export default class longDivisionMethod extends PDFKit {
 		});
 
 		// Calculate and write the answer
-		let result: number = num / divisor;
+		let result: number =  Math.floor((num / divisor) * 100)/100 ;
 
-		this.text(result.toString(), content_x + 30, content_y, {
+		this.text(result.toFixed(2), content_x + 30, content_y, {
 			width: content_width,
 			align: 'left'
 		});
