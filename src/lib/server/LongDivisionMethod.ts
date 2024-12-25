@@ -89,7 +89,8 @@ export default class longDivisionMethod extends PDFKit {
 		this.content_width = this.page.width - this.page.margins.left - this.page.margins.right;
 		this.difficulty = difficulty;
 		this.first_number_of_digits = difficultyList.get(difficulty)?.first_number_of_digits ?? 1;
-		this.second_number_of_digits = difficultyList.get(difficulty)?.second_number_of_digits ?? 1;
+		// this.first_number_of_digits = 3;
+		this.second_number_of_digits = 1;
 		this.label_eng = difficultyList.get(difficulty)?.level_eng ?? 'easy';
 		this.label_malay = difficultyList.get(difficulty)?.level_malay ?? 'mudah';
 		this.num_page = num_page;
@@ -175,16 +176,16 @@ export default class longDivisionMethod extends PDFKit {
 	/**
 	 * @param x coordinate x
 	 * @param y coordinate y
-	 * @param num1 first number in the equation
-	 * @param num2 second number in the equation
+	 * @param num first number in the equation
+	 * @param divisor second number in the equation
 	 * @param operation the operation symbol (+, -, x)
 	 * @param width width of the column method (box ??, ibarat mcm kotak).
 	 */
 	drawLongDivisionMethod(
 		x: number,
 		y: number,
-		num1: number,
-		num2: number,
+		num: number,
+		divisor: number,
 		width: number,
 		questionNumber: number,
 		padding: number = 5
@@ -201,22 +202,32 @@ export default class longDivisionMethod extends PDFKit {
 			align: 'left'
 		});
 
-		// Draw first number
-		this.fontSize(fontSize).text(num1.toString(), content_x + 60, content_y + 25, {
+		// Draw long division method lines
+		const long_division_x = content_x + 22;
+		const long_division_y = content_y + 20;
+		const curve_height = 25;
+
+		this.moveTo(content_x + 100, content_y + 20)
+			.lineTo(long_division_x, content_y + 20)
+			.quadraticCurveTo(
+				long_division_x + 10,
+				long_division_y + curve_height / 2,
+				long_division_x,
+				long_division_y + curve_height
+			)
+			.stroke();
+
+		// draw divisor
+		this.fontSize(fontSize).text(divisor.toString(), long_division_x - 8, content_y + 25, {
 			width: content_width,
 			align: 'left',
 			characterSpacing: characterSpacing
 		});
 
-		// Draw operation sign
-		this.moveTo(content_x + 100, content_y + 20)
-			.lineTo(content_x + 50, content_y + 20)
-			.quadraticCurveTo(content_x + 60, content_y + 60 / 2, content_x + 50, content_y + 45)
-			.stroke();
-
-		// Draw second number
-		this.fontSize(fontSize).text(num2.toString(), content_x + 40, content_y + 25, {
+		// num
+		this.fontSize(fontSize).text(num.toString(), long_division_x + 10, content_y + 25, {
 			width: content_width,
+			// baseline: 'top',
 			align: 'left',
 			characterSpacing: characterSpacing
 		});
@@ -256,16 +267,16 @@ export default class longDivisionMethod extends PDFKit {
 	/**
 	 * @param x coordinate x
 	 * @param y coordinate y
-	 * @param num1 first number in the equation
-	 * @param num2 second number in the equation
+	 * @param num first number in the equation
+	 * @param divisor second number in the equation
 	 * @param operation the operation symbol (+, -, x)
 	 * @param width width of the column method (box ??, ibarat mcm kotak).
 	 */
 	printAnswers(
 		x: number,
 		y: number,
-		num1: number,
-		num2: number,
+		num: number,
+		divisor: number,
 		width: number,
 		questionNumber: number,
 		padding: number = 5
@@ -281,7 +292,7 @@ export default class longDivisionMethod extends PDFKit {
 		});
 
 		// Calculate and write the answer
-		let result: number = num1 / num2;
+		let result: number = num / divisor;
 
 		this.text(result.toString(), content_x + 30, content_y, {
 			width: content_width,

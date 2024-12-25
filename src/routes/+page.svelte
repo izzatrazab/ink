@@ -15,7 +15,13 @@
 			</hgroup>
 			<article>
 				<header>Generate Long Division Method Drills</header>
-				<form action="./long-division-method" method="GET" id="generate-long-division-drill" target="_blank">
+
+				<form
+					action="./long-division-method"
+					method="GET"
+					id="generate-long-division-drill"
+					target="_blank"
+				>
 					<fieldset class="grid">
 						<label for="difficulty"
 							>Difficulty
@@ -29,7 +35,15 @@
 								<option value="hard">Hard</option>
 							</select>
 						</label>
+						<fieldset>
+							<legend>Remainder</legend>
+							<input type="radio" id="has-remainder" name="remainder" checked />
+							<label for="has-remainder">Has Remainder</label>
+							<input type="radio" id="no-remainder" name="remainder" />
+							<label for="no-remainder">No Remainder</label>
+						</fieldset>
 					</fieldset>
+
 					<fieldset>
 						<label for="nop">
 							Number of Pages
@@ -54,7 +68,9 @@
 					</fieldset>
 				</form>
 				<footer>
-					<button type="submit" form="generate-long-division-drill" aria-label="Generate">Generate Drill</button>
+					<button type="submit" form="generate-long-division-drill" aria-label="Generate"
+						>Generate Drill</button
+					>
 				</footer>
 			</article>
 		</div>
@@ -118,7 +134,9 @@
 				</fieldset>
 			</form>
 			<footer>
-				<button type="submit" form="generate-column-method-drill" aria-label="Generate">Generate Drill</button>
+				<button type="submit" form="generate-column-method-drill" aria-label="Generate"
+					>Generate Drill</button
+				>
 			</footer>
 		</article>
 	</div>
