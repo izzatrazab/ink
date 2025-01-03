@@ -1,11 +1,14 @@
 import { generateRandomNumber } from '$lib/helper';
 import { difficultyList } from '$lib/difficulty';
-import { addHeader } from '$lib/server/drillvendor';
-import fontDynaPuffVariable from '$lib/assets/fonts/DynaPuff-VariableFont.ttf';
+import {
+	addHeader,
+	addInstruction,
+	addTitleBox,
+	displayCartoonImage,
+	displayStarImages,
+	drawOrangeBorder
+} from '$lib/server/drillvendor';
 import fontArial from '$lib/assets/fonts/Arial.ttf';
-import imgStar8 from '$lib/assets/stars/star-8.png';
-import imgStar9 from '$lib/assets/stars/star-9.png';
-import imgStar10 from '$lib/assets/stars/star-10.png';
 
 import PDFDocument from 'pdfkit';
 
@@ -102,10 +105,19 @@ export default class ColumnMethod extends PDFDocument {
 		this.label_malay = difficultyList.get(difficulty)?.level_malay ?? 'mudah';
 		this.num_page = num_page;
 
+		let instruction = `Solve the following questions using the ${this.operation_method_eng} function.`;
+		let instruction_translation = `Selesaikan soalan-soalan berikut dengan menggunakan fungsi ${this.operation_method_malay}.`;
+
 		/** to determine the number of worksheets created */
 		for (let i = 0; i < this.num_page; i++) {
 			addHeader(this, this.x, this.y, this.origin_x);
 			this.addTitle(this.x, this.y, operation);
+			this.moveDown(2);
+			this.x = this.origin_x;
+			addInstruction(this, this.x, this.y, instruction, instruction_translation);
+			// this.addInstruction();
+			this.moveDown(1);
+			this.drawQuestionsBorder();
 			this.initDrillLayout();
 			this.drawAllQuestions();
 			this.addPage();
@@ -115,78 +127,23 @@ export default class ColumnMethod extends PDFDocument {
 
 	/** title includes cartoon image, and title */
 	addTitle(x: number, y: number, operation: string) {
-		let width: number = 90;
-		let gap: number = 10;
-		let xTitle: number = x + width + 3 * gap;
-		let wTitle: number = this.content_width - width - 3 * gap;
-		let hTitle: number = 70;
-		this.strokeColor('#737373').lineWidth(2);
-		this.rect(xTitle, y, wTitle, hTitle).stroke();
+		let eng_title: string = `Worksheet: ${this.label_eng} Level (${this.first_number_of_digits} digits ${this.operation_symbol} ${this.second_number_of_digits} digit(s))`;
+		let malay_title: string = `Latihan: Tahap ${this.label_malay} (${this.first_number_of_digits} digit ${this.operation_symbol} ${this.second_number_of_digits} digit)`;
 
-		this.registerFont('DynaPuff', join(process.cwd(), fontDynaPuffVariable));
-		this.font('DynaPuff').fontSize(14);
-		this.fillColor('#2acf90').text(
-			`Worksheet: ${this.label_eng} Level (${this.first_number_of_digits} digits ${this.operation_symbol} ${this.second_number_of_digits} digit(s))`,
-			xTitle,
-			y + 10,
-			{
-				align: 'center',
-				height: hTitle
-			}
-		);
-		this.fontSize(11)
-			.fillColor('grey')
-			.text(
-				`Latihan: Tahap ${this.label_malay} (${this.first_number_of_digits} digit ${this.operation_symbol} ${this.second_number_of_digits} digit)`,
-				xTitle,
-				y + 35,
-				{ align: 'center', height: hTitle }
-			);
+		displayCartoonImage(this, this.x, this.y - 13, this.difficulty);
 
-		this.font('Chilanka').fontSize(14).fillColor('black');
-		this.text(
-			`Solve the following questions using the ${this.operation_method_eng} function.`,
-			x,
-			y + 85,
-			{
-				align: 'center'
-			}
-		);
-		this.fontSize(10)
-			.fillColor('grey')
-			.text(
-				`Selesaikan soalan-soalan berikut dengan menggunakan fungsi ${this.operation_method_malay}.`,
-				x,
-				y + 100.5,
-				{
-					align: 'center'
-				}
-			);
+		/** + 120 to shift to the right (avoid overlapped with the cartoon image */
+		let x_title_box = x + 120;
+		/** page width tolak x coordinate of title box tolak margin kanan */
+		let width_title_box = this.page.width - x_title_box - this.page.margins.right;
+		let height_title_box = 70;
 
-		this.moveDown(1);
-		this.drawOrangeContentBorder();
+		addTitleBox(this, x_title_box, y, width_title_box, height_title_box, eng_title, malay_title);
+	}
 
-		// star images
-		this.image(
-			join(process.cwd(), imgStar8),
-			this.page.width - (this.page.margins.right * 7) / 8,
-			665,
-			{ align: 'right', width: 30 }
-		);
-		this.image(
-			join(process.cwd(), imgStar9),
-			this.page.width - (this.page.margins.right * 7) / 8,
-			705,
-			{ align: 'right', width: 30 }
-		);
-		this.image(
-			join(process.cwd(), imgStar10),
-			this.page.width - (this.page.margins.right * 7) / 8,
-			745,
-			{ align: 'right', width: 30 }
-		);
-
-		this.displayCartoonImage();
+	drawQuestionsBorder() {
+		drawOrangeBorder(this, this.origin_x, this.origin_y, this.content_width, this.content_height);
+		displayStarImages(this, 30, 40);
 	}
 
 	private drawAllQuestions() {
@@ -197,7 +154,6 @@ export default class ColumnMethod extends PDFDocument {
 		let columnMethodHeight: number = this.layout.rowHeight - 10;
 		let y_shift: number = (this.layout.rowHeight - columnMethodHeight) / 2;
 		let y: number = this.y + y_shift;
-
 
 		this.registerFont('Arial', join(process.cwd(), fontArial));
 		this.font('Arial').fillColor('black');
@@ -218,8 +174,8 @@ export default class ColumnMethod extends PDFDocument {
 				/** end of generating random a question */
 
 				this.drawColumnMethod(
-					x + (j * this.layout.columnWidth),
-					y + (index * this.layout.rowHeight),
+					x + j * this.layout.columnWidth,
+					y + index * this.layout.rowHeight,
 					this.array_num_1[this.total_questions],
 					this.array_num_2[this.total_questions],
 					this.operation_symbol,
@@ -256,14 +212,14 @@ export default class ColumnMethod extends PDFDocument {
 		const operationSymbolSize = 18;
 
 		// Draw question number
-		this.fontSize(fontSize).text(questionNumber.toString() + ')', content_x, content_y, {
+		this.fontSize(fontSize - 2).text(questionNumber.toString() + ')', content_x, content_y, {
 			width: width,
 			align: 'left'
 		});
 
 		// Draw first number
 		this.fontSize(fontSize).text(num1.toString(), content_x, content_y + 15, {
-			width: content_width -5,
+			width: content_width - 5,
 			align: 'right',
 			characterSpacing: characterSpacing
 		});
@@ -276,7 +232,7 @@ export default class ColumnMethod extends PDFDocument {
 
 		// Draw second number
 		this.fontSize(fontSize).text(num2.toString(), content_x, content_y + 30, {
-			width: content_width-5,
+			width: content_width - 5,
 			align: 'right',
 			characterSpacing: characterSpacing
 		});
@@ -298,7 +254,6 @@ export default class ColumnMethod extends PDFDocument {
 		// answer gap and draw last line
 		this.moveDown(1.5);
 		this.moveTo(start_line_x, this.y).lineTo(end_line_x, this.y).stroke();
-
 	}
 
 	createAnswerSheet() {
@@ -307,7 +262,7 @@ export default class ColumnMethod extends PDFDocument {
 		let counter = 0;
 		let columnMethodWidth: number = this.layout.columnWidth - 10;
 		let x_shift: number = (this.layout.columnWidth - columnMethodWidth) / 2;
-		let x = this.origin_x + x_shift
+		let x = this.origin_x + x_shift;
 
 		let columnMethodHeight: number = this.layout.rowHeight - 10;
 		let y_shift: number = (this.layout.rowHeight - columnMethodHeight) / 2;
@@ -316,7 +271,7 @@ export default class ColumnMethod extends PDFDocument {
 			let y = this.y + y_shift;
 			for (let j = 0; j < this.layout.column; j++) {
 				this.printAnswers(
-					x + (j * this.layout.columnWidth),
+					x + j * this.layout.columnWidth,
 					y,
 					this.array_num_1[counter],
 					this.array_num_2[counter],
@@ -325,14 +280,13 @@ export default class ColumnMethod extends PDFDocument {
 				);
 			}
 			index++;
-			
+
 			this.moveDown(2);
 			if (counter % 48 == 0 && index < this.num_page * this.layout.row) {
 				this.addPage();
 				this.answerSheetLayout();
 			}
 			index--;
-
 		}
 	}
 
@@ -385,35 +339,6 @@ export default class ColumnMethod extends PDFDocument {
 		});
 	}
 
-	displayCartoonImage() {
-		let allImagesPath: any;
-
-		switch (this.difficulty) {
-			default:
-			case 'easy':
-				allImagesPath = import.meta.glob('/src/lib/assets/animals/easy/*.png', { eager: true });
-				break;
-			case 'medium':
-				allImagesPath = import.meta.glob('/src/lib/assets/animals/medium/*.png', { eager: true });
-				break;
-			case 'hard':
-				allImagesPath = import.meta.glob('/src/lib/assets/animals/hard/*.png', { eager: true });
-				break;
-		}
-
-		const imagePaths = Object.keys(allImagesPath);
-		const randomIndex = Math.floor(Math.random() * imagePaths.length);
-		const selectedImagePath = imagePaths[randomIndex];
-		const module = allImagesPath[selectedImagePath];
-
-		let imagePath = join(process.cwd(), module.default as string);
-
-		this.image(imagePath, this.x, this.y - 136, {
-			align: 'right',
-			height: 90
-		});
-	}
-
 	answerSheetLayout() {
 		this.font('Chilanka')
 			.fontSize(14)
@@ -428,7 +353,7 @@ export default class ColumnMethod extends PDFDocument {
 		this.font('Helvetica').fontSize(12).fillColor('black');
 
 		this.moveDown(1);
-		this.drawOrangeContentBorder();
+		drawOrangeBorder(this, this.origin_x, this.origin_y, this.content_width, this.content_height);
 	}
 
 	private initDrillLayout() {
@@ -446,29 +371,5 @@ export default class ColumnMethod extends PDFDocument {
 			case 'multiplication':
 				return { symbol: '×', operation_char: 'darab' };
 		}
-	}
-
-	private drawOrangeContentBorder() {
-		//	Draw an orange rounded rectangle
-		//	Set the stroke color and line width for the border
-		this.strokeColor('orange').lineWidth(2);
-
-		let padding = 8;
-		let rect_x_coordinate = this.origin_x - padding / 2; // shift to the left half of the padding to add the x-padding
-		let rect_y_coordinate = this.y - padding / 2; // shift to the top half of the padding to add the y-padding
-		let rect_width = this.content_width + padding; // add padding length to the width
-		let rect_height = this.content_height - (this.y - this.origin_y) + padding; // add padding length to the height
-		let radius = 10;
-
-		this.roundedRect(
-			rect_x_coordinate,
-			rect_y_coordinate,
-			rect_width,
-			rect_height,
-			radius
-		).stroke();
-
-		// Reset the stroke color and line width
-		this.strokeColor('black').lineWidth(1);
 	}
 }
