@@ -214,7 +214,7 @@ export default class longDivisionMethod extends PDFKit {
 		});
 
 		// Draw long division method lines
-		const long_division_x = content_x + 25;
+		const long_division_x = content_x + 15;
 		const long_division_y = content_y + 20;
 		const curve_height = 25;
 
