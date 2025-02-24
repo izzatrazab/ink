@@ -304,7 +304,7 @@ export default class longDivisionMethod extends PDFKit {
 		// Calculate and write the answer
 		let result: number =  Math.floor((num / divisor) * 100)/100 ;
 
-		this.text(result.toFixed(2), content_x + 30, content_y, {
+		this.text(result.toFixed(this.has_remainder ? 2: 0), content_x + 30, content_y, {
 			width: content_width,
 			align: 'left'
 		});
