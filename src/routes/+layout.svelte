@@ -1,6 +1,61 @@
 <script lang="ts">
 	import '../app.css';
+	import { onMount } from 'svelte';
+	import plusMinusSvg from '$lib/assets/plus-minus.svg';
+	import Moon from '$lib/components/icons/phosphor/Moon.svelte';
+	import Sun from '$lib/components/icons/phosphor/Sun.svelte';
+	import Github from '$lib/components/icons/Github.svelte';
+
 	let { children } = $props();
+	let darkMode = $state(true);
+
+	onMount(() => {
+		// Set theme on mount
+		let prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
+		let theme = localStorage.getItem('theme') || (prefersDarkScheme ? 'dark' : 'light');
+		document.documentElement.setAttribute('data-theme', theme);
+		if (theme == 'dark') darkMode = true;
+		else darkMode = false;
+	});
+
+	function toggleTheme() {
+		const newTheme =
+			document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+		document.documentElement.setAttribute('data-theme', newTheme);
+		localStorage.setItem('theme', newTheme);
+		darkMode = !darkMode;
+	}
 </script>
 
-{@render children()}
+<svelte:head>
+	<link rel="icon" type="image/svg" href={plusMinusSvg} />
+</svelte:head>
+
+<nav class="container px-4 py-2">
+	<ul>
+		<li>
+			<a href="/">
+				<strong class="text-3xl"> InK </strong>
+			</a>
+		</li>
+	</ul>
+	<ul>
+		<li>
+			<button onclick={toggleTheme} class="border-0">
+				{#if darkMode}
+					<Moon class="inline size-6" />
+				{:else}
+					<Sun class="inline size-6" />
+				{/if}
+			</button>
+		</li>
+		<li>
+			<a href="https://github.com/izzatrazab/math-drill-generator" target="_blank">
+				<Github class="inline size-6" />
+			</a>
+		</li>
+	</ul>
+</nav>
+<main style="display: flex; align-items: center; justify-content: center;">
+	{@render children()}
+</main>

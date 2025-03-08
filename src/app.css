@@ -1,5 +1,12 @@
-@import "@picocss/pico/css/pico.pink.css";
-/* @import 'tailwindcss/base';
+@import "@picocss/pico/css/pico.violet.css";
+@import 'tailwindcss/base';
 @import 'tailwindcss/components';
-@import 'tailwindcss/utilities'; */
- 
+@import 'tailwindcss/utilities';
+
+
+.ink-linear-gradient{
+    background: linear-gradient(to right, darkorange, blueviolet);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
