@@ -8,15 +8,15 @@
 </svelte:head>
 
 <div class="container" style="padding: 2rem;">
-	<section class="my-10">
-		<div class="mx-auto max-w-xl text-center text-5xl font-bold">
-			<h1 class="ink-linear-gradient block">Penjana Latih Tubi Matematik</h1>
-			<p class="mx-auto mt-6 max-w-lg text-lg leading-normal">
-				Hasilkan Latih Tubi Matematik (<Pdf class={'inline size-6'} />) dengan soalan baharu dan
+	<section style="text-align: center; padding: 2rem 0 2rem 0;">
+		<div style="max-width: 500px; margin: 0 auto 2rem auto;">
+			<h1 class="ink-linear-gradient" style="font-size: 3rem;">Penjana Latih Tubi Matematik</h1>
+			<p>
+				Hasilkan Latih Tubi Matematik (<Pdf class="icon" />) dengan soalan baharu dan
 				unik setiap kali dimuat turun!
 			</p>
 		</div>
-		<a href="/generator" type="button" class='mx-auto mt-10 block w-fit rounded-full'>
+		<a href="/generator" type="button" style="width:fit-content;">
 			Mari Mulakan &rarr;
 		</a>
 	</section>

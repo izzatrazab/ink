@@ -1,5 +1,6 @@
 <script lang="ts">
 	import '../app.css';
+	import { base } from '$app/paths';
 	import { onMount } from 'svelte';
 	import plusMinusSvg from '$lib/assets/plus-minus.svg';
 	import Moon from '$lib/components/icons/phosphor/Moon.svelte';
@@ -31,27 +32,27 @@
 	<link rel="icon" type="image/svg" href={plusMinusSvg} />
 </svelte:head>
 
-<nav class="container px-4 py-2">
+<nav class="container" style="padding: .25rem 2rem .25rem 2rem;">
 	<ul>
 		<li>
-			<a href="/">
-				<strong class="text-3xl"> InK </strong>
+			<a href="{base}/">
+				<strong style="font-size: 2.5rem;"> InK </strong>
 			</a>
 		</li>
 	</ul>
 	<ul>
 		<li>
-			<button onclick={toggleTheme} class="border-0">
+			<button onclick={toggleTheme} class="contrast outline" style="border: none; ">
 				{#if darkMode}
-					<Moon class="inline size-6" />
+					<Moon class="icon" />
 				{:else}
-					<Sun class="inline size-6" />
+					<Sun class="icon" />
 				{/if}
 			</button>
 		</li>
 		<li>
-			<a href="https://github.com/izzatrazab/math-drill-generator" target="_blank">
-				<Github class="inline size-6" />
+			<a href="https://github.com/izzatrazab/math-drill-generator" target="_blank" class="contrast">
+				<Github class="icon" />
 			</a>
 		</li>
 	</ul>

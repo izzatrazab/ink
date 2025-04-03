@@ -1,12 +1,58 @@
-@import "@picocss/pico/css/pico.violet.css";
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+@import '@picocss/pico/css/pico.violet.css';
 
-
-.ink-linear-gradient{
-    background: linear-gradient(to right, darkorange, blueviolet);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+.ink-linear-gradient {
+	background: linear-gradient(to right, darkorange, blueviolet);
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
 }
+
+.ink-nav {
+	li {
+		a {
+			font-weight: bolder;
+		}
+		a:hover {
+			text-decoration: var(--pico-text-decoration);
+		}
+
+		details {
+			summary {
+				font-weight: bolder;
+			}
+
+			ul {
+				li {
+					border-left: 1px;
+					border-style: solid;
+					border-color: var(--pico-secondary-focus);
+					color: var(--pico-muted-color);
+
+                    a{
+                        font-weight: normal;
+                    }
+
+					a:hover {
+						text-decoration: var(--pico-text-decoration);
+						text-decoration-color: var(--pico-secondary-hover-underline);
+					}
+				}
+				li:hover {
+					border-left: 1px;
+					border-style: solid;
+					border-color: var(--pico-secondary);
+					color: var(--pico-color);
+				}
+			}
+		}
+	}
+}
+
+
+/* general usage */
+.icon{
+	display: inline;
+	height: 1.5rem;
+	width: 1.5rem;
+}
+/* end general usage */
