@@ -1,12 +1,27 @@
 <script lang="ts">
-	// import '../app.css';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
+	import { afterNavigate } from '$app/navigation';
 	import List from '$lib/components/icons/phosphor/List.svelte';
-	import { nonpassive } from 'svelte/legacy';
+	import Navigation from '$lib/components/layouts/Navigation.svelte';
+
 	let { children } = $props();
 
 	// prepare breadcrumb
-	let navs: string[] = $page.url.pathname.split('/').filter(Boolean).slice(1);
+	let navsKey: string[] = $state([]);
+	initNavKeys();
+
+	const navs = new Map<string, string>(
+		Object.entries({
+			basic: 'Asas',
+			column: 'Kaedah Kolumn',
+			'long-division': 'Long Division'
+		})
+	);
+
+	afterNavigate(() => {
+		closeNavDialog();
+		initNavKeys();
+	});
 
 	let navigationIsOpen = $state(false);
 
@@ -17,6 +32,15 @@
 	function openNavDialog() {
 		navigationIsOpen = true;
 	}
+
+	function initNavKeys() {
+		navsKey = page.url.pathname.split('/').filter(Boolean).slice(1);
+	}
+
+	// function navigating() {
+	// 	closeNavDialog();
+	// 	initNavKeys();
+	// }
 </script>
 
 <svelte:head>
@@ -33,6 +57,26 @@
 			.mobile-nav {
 				display: none;
 			}
+
+			.generator-layout {
+				display: flex;
+				flex-direction: row;
+				column-gap: 0.5rem;
+			}
+
+			.desktop-nav {
+				min-width: 150px;
+			}
+
+			.generator-content {
+				flex-grow: 1;
+			}
+		}
+
+		@media (max-width: 768px) {
+			.desktop-nav {
+				display: none;
+			}
 		}
 
 		.mobile-nav-button {
@@ -43,66 +87,43 @@
 		}
 	</style>
 </svelte:head>
-<div class="container" style="width: 100%;">
-	<!-- <aside  class="hidden md:block md:w-[25%]" style="padding-left:2rem;">
-		<nav class="ink-nav">
-			<li>
-				<a href="/generator">Pengenalan</a>
-			</li>
-			<li>
-				<details>
-					<summary>Asas</summary>
-					<ul>
-						<li><a href="/generator/basic/column">Kaedah Kolumn</a></li>
-						<li><a href="/generator/basic/long-division">Long Division</a></li>
-					</ul>
-				</details>
-			</li>
-		</nav>
-	</aside> -->
+<div class="generator-layout container" style="width: 100%;">
+	<nav class="desktop-nav">
+		<!-- <ink-navigation direct={navigating}></ink-navigation> -->
+
+		<Navigation />
+	</nav>
 	<nav class="mobile-nav">
 		<button onclick={openNavDialog} class="mobile-nav-button outline">
 			<List class="icon" />
 		</button>
 		<nav aria-label="breadcrumb">
 			<ul>
-				{#each navs as nav}
-					<li>{nav}</li>
+				{#each navsKey as key}
+					<li>{navs.get(key)}</li>
 				{:else}
 					<li>Pengenalan</li>
 				{/each}
 			</ul>
 		</nav>
 	</nav>
-	<div>
+	<div class="generator-content">
+		<!-- <button onclick={initNavKeys}>test</button> -->
 		{@render children()}
 	</div>
-	<dialog 
-	open={navigationIsOpen}
-	>
-		<article>
-			<header class="flex justify-between" style="display: flex; justify-content:space-between; align-items:center;">
-				<strong style="height: fit-content;">Navigasi</strong>
-				<button aria-label="Close" onclick={closeNavDialog} class="outline" style="border: none;">
-					&cross;
-				</button>
-			</header>
-			<aside>
-				<nav class="ink-nav">
-					<li>
-						<a href="/generator">Pengenalan</a>
-					</li>
-					<li>
-						<details>
-							<summary>Asas</summary>
-							<ul>
-								<li><a href="/generator/basic/column"> Kaedah Kolumn</a></li>
-								<li><a href="/generator/basic/long-division">Long Division</a></li>
-							</ul>
-						</details>
-					</li>
-				</nav>
-			</aside>
-		</article>
-	</dialog>
 </div>
+<dialog open={navigationIsOpen}>
+	<article>
+		<header
+			class="flex justify-between"
+			style="display: flex; justify-content:space-between; align-items:center;"
+		>
+			<strong style="height: fit-content;">Navigasi</strong>
+			<button aria-label="Close" onclick={closeNavDialog} class="outline" style="border: none;">
+				&cross;
+			</button>
+		</header>
+		<Navigation />
+		<!-- <ink-navigation ondirect={navigating}></ink-navigation> -->
+	</article>
+</dialog>
