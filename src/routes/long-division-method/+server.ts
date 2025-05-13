@@ -21,7 +21,7 @@ export const GET: RequestHandler = async ({ url }) => {
 
 	// Concatenate all the chunks into a single buffer
 	const pdfData = Buffer.concat(buffers);
-	const fileName = `Long Division Method - ${number_of_pages} question pages.pdf`
+	const fileName = `Long Division Method - ${((has_remainder == 'true') ? 'has remainder' : 'no remainder')} - ${difficulty} - ${number_of_pages} question pages.pdf`
 
 	// Return the PDF as a response
 	return new Response(pdfData, {
