@@ -61,11 +61,11 @@
 			.generator-layout {
 				display: flex;
 				flex-direction: row;
-				column-gap: 0.5rem;
+				column-gap: 1rem;
 			}
 
 			.desktop-nav {
-				min-width: 150px;
+				min-width: 200px;
 			}
 
 			.generator-content {
