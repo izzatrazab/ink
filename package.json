@@ -38,5 +38,10 @@
 	"dependencies": {
 		"@picocss/pico": "^2.1.1",
 		"pdfkit": "^0.15.2"
+	},
+	"pnpm": {
+		"onlyBuiltDependencies": [
+			"esbuild"
+		]
 	}
 }
