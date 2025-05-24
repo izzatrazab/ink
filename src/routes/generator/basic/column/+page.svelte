@@ -1,5 +1,7 @@
 <script>
 	import { base } from '$app/paths';
+	
+	const formAction = `${base}/exports/column-method`;
 </script>
 
 <div>
@@ -13,7 +15,7 @@
 	</hgroup>
 	<article>
 		<header>Generate Column Method Drills</header>
-		<form action="{base}/column-method" method="GET" id="generate-column-method-drill" target="_blank">
+		<form action="{formAction}" method="GET" id="generate-column-method-drill" target="_blank">
 			<fieldset class="grid">
 				<label for="operation"
 					>Operation
