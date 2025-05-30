@@ -1,4 +1,3 @@
-
 <svelte:head>
 	<style>
 		.ink-nav {
@@ -53,11 +52,14 @@
 				<summary>Asas</summary>
 				<ul>
 					<li>
-						<a href="/generator/basic/column" class="contrast">
-							Kaedah Kolumn</a
-						>
+						<a href="/generator/basic/column" class="contrast"> Kaedah Kolumn </a>
 					</li>
-					<li><a href="/generator/basic/long-division" class="contrast">Long Division</a></li>
+					<li>
+						<a href="/generator/basic/long-division" class="contrast">Long Division</a>
+					</li>
+					<li>
+						<a href="/generator/basic/equation" class="contrast">Persamaan</a>
+					</li>
 				</ul>
 			</details>
 		</li>
