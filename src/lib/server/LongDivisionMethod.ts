@@ -1,4 +1,4 @@
-import { generateRandomNumber } from '$lib/helper';
+import { getRandomNumber } from '$lib/helper';
 import PDFKit from 'pdfkit';
 import {
 	addHeader,
@@ -152,19 +152,19 @@ export default class longDivisionMethod extends PDFKit {
 				var firstNum = 0;
 				var secondNum = 0;
 
-				firstNum = generateRandomNumber(this.first_number_of_digits);
-				secondNum = generateRandomNumber(this.second_number_of_digits);
+				firstNum = getRandomNumber(this.first_number_of_digits);
+				secondNum = getRandomNumber(this.second_number_of_digits);
 
 				if (this.has_remainder) {
 					while (secondNum < 2 || firstNum % secondNum == 0) {
-						firstNum = generateRandomNumber(this.first_number_of_digits);
-						secondNum = generateRandomNumber(this.second_number_of_digits);
+						firstNum = getRandomNumber(this.first_number_of_digits);
+						secondNum = getRandomNumber(this.second_number_of_digits);
 					}
 				} else {
 					// for non-remainder question
 					while (secondNum < 2 || firstNum % secondNum != 0) {
-						firstNum = generateRandomNumber(this.first_number_of_digits);
-						secondNum = generateRandomNumber(this.second_number_of_digits);
+						firstNum = getRandomNumber(this.first_number_of_digits);
+						secondNum = getRandomNumber(this.second_number_of_digits);
 					}
 				}
 

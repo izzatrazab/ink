@@ -1,4 +1,4 @@
-import { generateRandomNumber } from '$lib/helper';
+import { getRandomNumber } from '$lib/helper';
 import { difficultyList } from '$lib/difficulty';
 import {
 	addHeader,
@@ -165,8 +165,8 @@ export default class EquationQuestion extends PDFDocument {
 				var firstNum = 0;
 				var secondNum = 0;
 
-				firstNum = generateRandomNumber(this.first_number_of_digits);
-				secondNum = generateRandomNumber(this.second_number_of_digits);
+				firstNum = getRandomNumber(this.first_number_of_digits);
+				secondNum = getRandomNumber(this.second_number_of_digits);
 
 				this.array_num_1.push(firstNum);
 				this.array_num_2.push(secondNum);
