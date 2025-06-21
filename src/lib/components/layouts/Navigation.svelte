@@ -1,3 +1,34 @@
+<script lang="ts">
+	const navigations = [
+		{
+			name: 'Basic',
+			child: [
+				{
+					name: 'Kolum',
+					url: '/generator/basic/column'
+				},
+				{
+					name: 'Long Division',
+					url: '/generator/basic/long-division'
+				},
+				{
+					name: 'Equation',
+					url: '/generator/basic/equation'
+				}
+			]
+		},
+		{
+			name: 'Standard 6',
+			child: [
+				{
+					name: 'Addition',
+					url: '/generator/standard-6/addition'
+				}
+			]
+		}
+	];
+</script>
+
 <svelte:head>
 	<style>
 		.ink-nav {
@@ -48,20 +79,18 @@
 			<a href="/generator" class="contrast">Pengenalan</a>
 		</li>
 		<li>
-			<details>
-				<summary>Asas</summary>
-				<ul>
-					<li>
-						<a href="/generator/basic/column" class="contrast"> Kaedah Kolumn </a>
-					</li>
-					<li>
-						<a href="/generator/basic/long-division" class="contrast">Long Division</a>
-					</li>
-					<li>
-						<a href="/generator/basic/equation" class="contrast">Persamaan</a>
-					</li>
-				</ul>
-			</details>
+			{#each navigations as navigation}
+				<details>
+					<summary>{navigation['name']}</summary>
+					<ul>
+						{#each navigation['child'] as child}
+							<li>
+								<a href="{child['url']}" class="contrast">{child['name']}</a>
+							</li>
+						{/each}
+					</ul>
+				</details>
+			{/each}
 		</li>
 	</nav>
 </aside>

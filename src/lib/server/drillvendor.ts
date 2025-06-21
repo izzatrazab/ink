@@ -18,9 +18,10 @@ export function addHeader(PDFKit: PDFKit.PDFDocument, x: number, y: number, orig
 		.fontSize(14)
 		.fillColor('black')
 		.text('Marks: _______/16', x, y, { align: 'right' });
+
 	PDFKit.fontSize(9)
 		.fillColor('grey')
-		.text('Markah:', 423, y + 15.5);
+		.text('Markah:', 445, y + 15.5);
 
 	PDFKit.font('Chilanka').fontSize(14).fillColor('black');
 

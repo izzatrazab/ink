@@ -14,7 +14,10 @@
 		Object.entries({
 			basic: 'Asas',
 			column: 'Kaedah Kolumn',
-			'long-division': 'Long Division'
+			'long-division': 'Long Division',
+			'equation' : 'Equation',
+			'standard-6' : 'Standard 6',
+			'addition' : 'Addition'
 		})
 	);
 
