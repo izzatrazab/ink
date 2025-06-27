@@ -7,7 +7,7 @@ import imgStar10 from '$lib/assets/stars/star-10.png';
 import { join } from 'path';
 
 /** add header in the page. header includes name field (top left) and marks field (top right) */
-export function addHeader(PDFKit: PDFKit.PDFDocument, x: number, y: number, origin_x: number) {
+export function addHeader(PDFKit: PDFKit.PDFDocument, x: number, y: number, origin_x: number, total_marks: number = 16) {
 	PDFKit.registerFont('Chilanka', join(process.cwd(), fontChilankaRegular));
 	PDFKit.font('Chilanka')
 		.fontSize(14)
@@ -17,7 +17,7 @@ export function addHeader(PDFKit: PDFKit.PDFDocument, x: number, y: number, orig
 	PDFKit.font('Chilanka')
 		.fontSize(14)
 		.fillColor('black')
-		.text('Marks: _______/16', x, y, { align: 'right' });
+		.text(`Marks: _______/${total_marks}`, x, y, { align: 'right' });
 
 	PDFKit.fontSize(9)
 		.fillColor('grey')

@@ -34,11 +34,10 @@ export default class Addition extends DrillBase {
 
 		// see the range of buffered pages
 		const range = this.bufferedPageRange(); // => { start: 0, count: 2 }
-		console.dir(range);
 
 		for (let index = range.start; index < range.count; index++) {
 			this.switchToPage(index);
-			console.dir(this.page.height);
+
 			this.text(
 				`p. ${index + 1}/${range.count}`,
 				this.origin_x,
@@ -52,10 +51,11 @@ export default class Addition extends DrillBase {
 	}
 
 	private generate() {
+		addHeader(this, this.x, this.y, this.origin_x, (this.layout.row * this.num_page));
+		this.addTitle()
+		this.moveDown(0.5)
 		for (let index = 0; index < this.num_page; index++) {
-			addHeader(this, this.x, this.y, this.origin_x);
-			this.addTitle();
-			this.moveDown(0.5).drawBorder({ x: this.origin_x, y: this.y });
+			this.drawBorder({ x: this.origin_x, y: this.y });
 			this.initDrillLayout();
 			this.drawAllQuestions();
 			this.addPage();
@@ -147,15 +147,9 @@ export default class Addition extends DrillBase {
 
 				let question_string = formatted_addends.join(' + ') + ' = ';
 
-				this.fontSize(16).text(`${++this.counter})`, x_point, y_point, {
-					width: box_width * 0.05,
-					// continued: true,
-					align: 'right'
-				});
-
-				this.fontSize(16).text(question_string, x_point + 35, y_point, {
-					width: box_width * 0.8,
-					align: 'left',
+				this.fontSize(16).text(`${++this.counter})  `, x_point, y_point, {
+					continued: true,
+				}).text(`${question_string}`, {
 					wordSpacing: 5,
 					characterSpacing: 2
 				});
