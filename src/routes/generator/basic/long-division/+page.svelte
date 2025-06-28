@@ -1,69 +1,66 @@
 <script>
 	import { base } from '$app/paths';
+	import UnderConstruction from '$lib/components/alert/UnderConstruction.svelte';
 
 	const formAction = `${base}/exports/long-division-method`;
 </script>
 
 <div>
-	<hgroup>
-		<h1>Long Division Method</h1>
-		<p>
-			Long division is a way to divide big numbers by breaking it down into smaller steps. You see
-			how many times the divisor (the number you're dividing by) fits into parts of the dividend
-			(the number you're dividing), write the result, subtract, and then bring down the next number.
-			You keep going until you’ve finished. The result is the answer, and any leftover is the
-			remainder.
+	<h1 class="text-4xl font-bold">Pembahagian Panjang</h1>
+	<article class="mt-4 flex flex-col gap-8 md:flex-row-reverse">
+		<p class="flex-1 text-xl">
+			Pembahagian Panjang adalah suatu kaedah pembahagian dimana nombor yang dibahagi akan
+			dihuraikan kepada langkah-langkah yang lebih kecil.
 		</p>
-	</hgroup>
-	<article>
-		<header>Generate Long Division Method Drills</header>
 
-		<form action={formAction} method="GET" id="generate-long-division-drill" target="_blank">
-			<fieldset class="grid">
-				<label for="difficulty">
-					Difficulty
-					<select name="difficulty" placeholder="Select difficulty" aria-label="Select difficulty">
-						<option selected value="easy">Easy</option>
-						<option value="medium">Medium</option>
-						<option value="hard">Hard</option>
+		<div class="card bg-base-100 mx-auto w-[300px]">
+			<form action={formAction} method="GET" id="form" target="_blank" class="card-body">
+				<h2 class="card-title text-wrap">Jana Latih Tubi Pembahagian Panjang</h2>
+				<fieldset class="fieldset">
+					<label for="difficulty" class="fieldset-legend">Tahap Kesukaran</label>
+					<select
+						name="difficulty"
+						class="select"
+						placeholder="Pilih Tahan Kesukaran"
+						aria-label="Select difficulty"
+					>
+						<option selected value="easy">Mudah</option>
+						<option value="medium">Sederhana</option>
+						<option value="hard">Sukar</option>
 					</select>
-				</label>
-				<fieldset>
-					<legend>Remainder</legend>
-					<input type="radio" id="has-remainder" name="remainder" value="true" checked />
-					<label for="has-remainder">Has Remainder</label>
-					<input type="radio" id="no-remainder" name="remainder" value="false" />
-					<label for="no-remainder">No Remainder</label>
 				</fieldset>
-			</fieldset>
 
-			<fieldset>
-				<label for="nop">
-					Number of Pages
+				<fieldset class="fieldset">
+					<label for="remainder" class="fieldset-legend">Ada Baki</label>
+					<input type="checkbox" class="checkbox" name="remainder" value="true" checked />
+				</fieldset>
+				<fieldset class="fieldset">
+					<label class="fieldset-legend" for="nop">Bilangan Muka Surat Soalan</label>
 					<input
+						class="input"
 						type="number"
 						name="nop"
 						required
-						placeholder="Provide number of pages"
+						placeholder="Sila isikan bilangan muka surat soalan"
 						aria-label="Number of pages"
 						min="1"
 						list="fibonacci"
 						value="1"
 					/>
-				</label>
-				<datalist id="fibonacci">
-					<option value="1"></option>
-					<option value="2"></option>
-					<option value="3"></option>
-					<option value="5"></option>
-					<option value="8"></option>
-				</datalist>
-			</fieldset>
-		</form>
-		<footer>
-			<button type="submit" form="generate-long-division-drill" aria-label="Generate">
-				Generate Drill
-			</button>
-		</footer>
+					<datalist id="fibonacci">
+						<option value="1"></option>
+						<option value="2"></option>
+						<option value="3"></option>
+						<option value="5"></option>
+						<option value="8"></option>
+					</datalist>
+				</fieldset>
+				<div class="card-actions mt-4 justify-center">
+					<button class="btn btn-primary btn-block" type="submit" aria-label="Generate">
+						Jana
+					</button>
+				</div>
+			</form>
+		</div>
 	</article>
 </div>

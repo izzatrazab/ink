@@ -7,17 +7,15 @@
 	<meta name="description" content="Generate column method drills." />
 </svelte:head>
 
-<div class="container" style="padding: 2rem;">
-	<section style="text-align: center; padding: 2rem 0 2rem 0;">
-		<div style="max-width: 500px; margin: 0 auto 2rem auto;">
-			<h1 class="ink-linear-gradient" style="font-size: 3rem;">Penjana Latih Tubi Matematik</h1>
-			<p>
-				Hasilkan Latih Tubi Matematik (<Pdf class="icon" />) dengan soalan baharu dan
-				unik setiap kali dimuat turun!
+<div class="hero mt-20">
+	<div class="hero-content text-center">
+		<div class="max-w-md">
+			<h1 class="text-5xl font-bold ink-linear-gradient">Penjana Latih Tubi Matematik</h1>
+			<p class="py-6">
+				Hasilkan Latih Tubi Matematik (<Pdf class="icon" />) dengan soalan baharu dan unik setiap
+				kali dimuat turun!
 			</p>
+			<a href="/generator" class="btn btn-primary">Mari Mulakan &rarr;</a>
 		</div>
-		<a href="/generator" type="button" style="width:fit-content;">
-			Mari Mulakan &rarr;
-		</a>
-	</section>
+	</div>
 </div>

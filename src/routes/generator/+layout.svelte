@@ -15,9 +15,9 @@
 			basic: 'Asas',
 			column: 'Kaedah Kolumn',
 			'long-division': 'Long Division',
-			'equation' : 'Equation',
-			'standard-6' : 'Standard 6',
-			'addition' : 'Addition'
+			equation: 'Equation',
+			'standard-6': 'Standard 6',
+			addition: 'Addition'
 		})
 	);
 
@@ -62,9 +62,9 @@
 			}
 
 			.generator-layout {
-				display: flex;
-				flex-direction: row;
-				column-gap: 1rem;
+				display: grid;
+				grid-template-columns: auto 1fr;
+				column-gap: 5rem;
 			}
 
 			.desktop-nav {
@@ -72,7 +72,7 @@
 			}
 
 			.generator-content {
-				flex-grow: 1;
+				/* flex-grow: 1; */
 			}
 		}
 
@@ -90,17 +90,17 @@
 		}
 	</style>
 </svelte:head>
-<div class="generator-layout container" style="width: 100%;">
+<div class="generator-layout container mt-4" style="width: 100%;">
 	<nav class="desktop-nav">
 		<!-- <ink-navigation direct={navigating}></ink-navigation> -->
 
 		<Navigation />
 	</nav>
-	<nav class="mobile-nav">
+	<nav class="mobile-nav pt-20 flex flex-row">
 		<button onclick={openNavDialog} class="mobile-nav-button outline">
 			<List class="icon" />
 		</button>
-		<nav aria-label="breadcrumb">
+		<!-- <nav aria-label="breadcrumb">
 			<ul>
 				{#each navsKey as key}
 					<li>{navs.get(key)}</li>
@@ -108,9 +108,18 @@
 					<li>Pengenalan</li>
 				{/each}
 			</ul>
-		</nav>
+		</nav> -->
+		<div class="breadcrumbs text-sm">
+			<ul>
+				{#each navsKey as key}
+					<li>{navs.get(key)}</li>
+				{:else}
+					<li>Pengenalan</li>
+				{/each}
+			</ul>
+		</div>
 	</nav>
-	<div class="generator-content">
+	<div class="generator-content max-w-fit">
 		<!-- <button onclick={initNavKeys}>test</button> -->
 		{@render children()}
 	</div>

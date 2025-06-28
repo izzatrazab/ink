@@ -36,8 +36,10 @@
 		"vite": "^5.4.19"
 	},
 	"dependencies": {
-		"@picocss/pico": "^2.1.1",
-		"pdfkit": "^0.17.1"
+		"@tailwindcss/vite": "^4.1.11",
+		"daisyui": "^5.0.43",
+		"pdfkit": "^0.17.1",
+		"tailwindcss": "^4.1.11"
 	},
 	"pnpm": {
 		"onlyBuiltDependencies": [

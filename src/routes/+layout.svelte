@@ -32,31 +32,31 @@
 	<link rel="icon" type="image/svg" href={plusMinusSvg} />
 </svelte:head>
 
-<nav class="container" style="padding: .25rem 2rem .25rem 2rem;">
-	<ul>
-		<li>
-			<a href="{base}/">
-				<strong style="font-size: 2.5rem;"> InK </strong>
-			</a>
-		</li>
-	</ul>
-	<ul>
-		<li>
-			<button onclick={toggleTheme} class="contrast outline" style="border: none; ">
-				{#if darkMode}
-					<Moon class="icon" />
-				{:else}
-					<Sun class="icon" />
-				{/if}
-			</button>
-		</li>
-		<li>
-			<a href="https://github.com/izzatrazab/math-drill-generator" target="_blank" class="contrast">
-				<Github class="icon" />
-			</a>
-		</li>
-	</ul>
-</nav>
+<div class="navbar bg-base-100 shadow-sm px-8">
+	<div class="flex-1">
+		<a class="text-4xl font-bold" href="{base}/">InK</a>
+	</div>
+	<div class="flex flex-row gap-x-4">
+		<button class="swap swap-rotate" onclick={toggleTheme}>
+			<!-- this hidden checkbox controls the state -->
+			<input type="checkbox" bind:checked={darkMode} />
+
+			<!-- sun icon -->
+			<div class="swap-off">
+				<Sun class="h-8 w-8" />
+			</div>
+
+			<!-- moon icon -->
+			<div class="swap-on">
+				<Moon class="h-8 w-8" />
+			</div>
+		</button>
+
+		<a href="https://github.com/izzatrazab/math-drill-generator" target="_blank" class="contrast">
+			<Github class="h-8 w-8" />
+		</a>
+	</div>
+</div>
 <main style="display: flex; align-items: center; justify-content: center;">
 	{@render children()}
 </main>

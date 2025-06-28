@@ -1,14 +1,16 @@
 <script lang="ts">
+		import { page } from '$app/state';
+
 	const navigations = [
 		{
-			name: 'Basic',
+			name: 'Asas',
 			child: [
 				{
-					name: 'Kolum',
+					name: 'Bentuk Lazim',
 					url: '/generator/basic/column'
 				},
 				{
-					name: 'Long Division',
+					name: 'Pembahagian Panjang',
 					url: '/generator/basic/long-division'
 				},
 				{
@@ -18,15 +20,17 @@
 			]
 		},
 		{
-			name: 'Standard 6',
+			name: 'Tahun 6',
 			child: [
 				{
-					name: 'Addition',
+					name: 'Penambahan',
 					url: '/generator/standard-6/addition'
 				}
 			]
 		}
 	];
+	// let current_url = page.url.pathname;
+	
 </script>
 
 <svelte:head>
@@ -74,23 +78,25 @@
 </svelte:head>
 
 <aside style="width: 100%;">
-	<nav class="ink-nav">
-		<li>
-			<a href="/generator" class="contrast">Pengenalan</a>
-		</li>
-		<li>
-			{#each navigations as navigation}
-				<details>
+	<nav>
+		<ul class="menu menu-lg bg-base-300 rounded-box w-56">
+			<li class='menu-focus'>
+				<a href="/generator" class:menu-active="{page.url.pathname.endsWith('/generator')}">Pengenalan</a>
+			</li>
+			<li>
+				{#each navigations as navigation}
+				<details open>
 					<summary>{navigation['name']}</summary>
 					<ul>
 						{#each navigation['child'] as child}
 							<li>
-								<a href="{child['url']}" class="contrast">{child['name']}</a>
+								<a href={child['url']} class:menu-active="{page.url.pathname.endsWith(child['url'])}">{child['name']}</a>
 							</li>
 						{/each}
 					</ul>
 				</details>
 			{/each}
-		</li>
+			</li>
+		</ul>
 	</nav>
 </aside>
