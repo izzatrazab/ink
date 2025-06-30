@@ -8,7 +8,7 @@
 	<h1 class="text-4xl font-bold">Equation Problems</h1>
 	<article class="mt-4 flex flex-col gap-8 md:flex-row-reverse">
 		<p class="flex-1 text-xl">Simple equation problems</p>
-		<div class="card bg-base-100 mx-auto" style="width: 300px;">
+		<div class="card bg-base-100 mx-auto shadow-sm" style="width: 300px;">
 			<form
 				action={formAction}
 				method="GET"

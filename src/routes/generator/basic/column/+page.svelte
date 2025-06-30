@@ -15,7 +15,7 @@
 			<br />
 			Kaedah ini boleh digunakan untuk melakukan proses penambahan, penolakan, dan pendaraban.
 		</p>
-		<div class="card bg-base-100 mx-auto w-[300px]">
+		<div class="card bg-base-100 mx-auto w-[300px] shadow-sm">
 			<form
 				action={formAction}
 				method="GET"
@@ -38,7 +38,7 @@
 					</select>
 				</fieldset>
 				<fieldset class="fieldset">
-					<label class="fieldset-legend" for="difficulty">Kesukaran</label>
+					<label class="fieldset-legend" for="difficulty">Tahap Kesukaran</label>
 					<select
 						class="select"
 						name="difficulty"

@@ -1,8 +1,8 @@
 @import "tailwindcss";
-/* @plugin "daisyui"; */
-@plugin "daisyui" {
-	themes: forest --default;
-}
+@plugin "daisyui";
+/* @plugin "daisyui" {
+	themes: pastel --default;
+} */
 
 
 

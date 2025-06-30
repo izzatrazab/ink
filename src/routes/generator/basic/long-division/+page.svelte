@@ -13,9 +13,15 @@
 			dihuraikan kepada langkah-langkah yang lebih kecil.
 		</p>
 
-		<div class="card bg-base-100 mx-auto w-[300px]">
+		<div class="card bg-base-100 mx-auto shadow-sm" style="width: 300px;">
 			<form action={formAction} method="GET" id="form" target="_blank" class="card-body">
 				<h2 class="card-title text-wrap">Jana Latih Tubi Pembahagian Panjang</h2>
+
+				<fieldset class="fieldset">
+					<label for="remainder" class="fieldset-legend">Ada Baki</label>
+					<input type="checkbox" class="checkbox" name="remainder" value="true" checked />
+				</fieldset>
+
 				<fieldset class="fieldset">
 					<label for="difficulty" class="fieldset-legend">Tahap Kesukaran</label>
 					<select
@@ -30,10 +36,6 @@
 					</select>
 				</fieldset>
 
-				<fieldset class="fieldset">
-					<label for="remainder" class="fieldset-legend">Ada Baki</label>
-					<input type="checkbox" class="checkbox" name="remainder" value="true" checked />
-				</fieldset>
 				<fieldset class="fieldset">
 					<label class="fieldset-legend" for="nop">Bilangan Muka Surat Soalan</label>
 					<input

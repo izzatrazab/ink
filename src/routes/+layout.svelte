@@ -57,6 +57,6 @@
 		</a>
 	</div>
 </div>
-<main style="display: flex; align-items: center; justify-content: center;">
+<main class="w-full" style="display: flex; align-items: center; justify-content: center;">
 	{@render children()}
 </main>

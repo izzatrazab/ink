@@ -1,49 +1,22 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { afterNavigate } from '$app/navigation';
 	import List from '$lib/components/icons/phosphor/List.svelte';
 	import Navigation from '$lib/components/layouts/Navigation.svelte';
 
 	let { children } = $props();
 
-	// prepare breadcrumb
-	let navsKey: string[] = $state([]);
-	initNavKeys();
-
 	const navs = new Map<string, string>(
 		Object.entries({
 			basic: 'Asas',
-			column: 'Kaedah Kolumn',
-			'long-division': 'Long Division',
+			column: 'Bentuk Lazim',
+			'long-division': 'Pembahagi Panjang',
 			equation: 'Equation',
 			'standard-6': 'Standard 6',
-			addition: 'Addition'
+			addition: 'Penambahan'
 		})
 	);
 
-	afterNavigate(() => {
-		closeNavDialog();
-		initNavKeys();
-	});
-
-	let navigationIsOpen = $state(false);
-
-	function closeNavDialog() {
-		navigationIsOpen = false;
-	}
-
-	function openNavDialog() {
-		navigationIsOpen = true;
-	}
-
-	function initNavKeys() {
-		navsKey = page.url.pathname.split('/').filter(Boolean).slice(1);
-	}
-
-	// function navigating() {
-	// 	closeNavDialog();
-	// 	initNavKeys();
-	// }
+	let modal: HTMLDialogElement;
 </script>
 
 <svelte:head>
@@ -51,91 +24,52 @@
 	<meta name="description" content="math drill generator forms" />
 
 	<style>
-		.mobile-nav {
-			justify-content: start;
-			column-gap: 0.5rem;
-		}
-
 		@media (min-width: 768px) {
-			.mobile-nav {
-				display: none;
-			}
-
 			.generator-layout {
 				display: grid;
 				grid-template-columns: auto 1fr;
-				column-gap: 5rem;
+				column-gap: 2.5rem;
 			}
-
-			.desktop-nav {
-				min-width: 200px;
-			}
-
-			.generator-content {
-				/* flex-grow: 1; */
-			}
-		}
-
-		@media (max-width: 768px) {
-			.desktop-nav {
-				display: none;
-			}
-		}
-
-		.mobile-nav-button {
-			display: flex;
-			align-items: center;
-			padding: 0;
-			border: none;
 		}
 	</style>
-</svelte:head>
-<div class="generator-layout container mt-4" style="width: 100%;">
-	<nav class="desktop-nav">
-		<!-- <ink-navigation direct={navigating}></ink-navigation> -->
 
+</svelte:head>
+
+<div class="generator-layout container mt-4 flex-1">
+	<nav class="hidden lg:block">
 		<Navigation />
 	</nav>
-	<nav class="mobile-nav pt-20 flex flex-row">
-		<button onclick={openNavDialog} class="mobile-nav-button outline">
-			<List class="icon" />
-		</button>
-		<!-- <nav aria-label="breadcrumb">
-			<ul>
-				{#each navsKey as key}
-					<li>{navs.get(key)}</li>
-				{:else}
-					<li>Pengenalan</li>
-				{/each}
-			</ul>
-		</nav> -->
-		<div class="breadcrumbs text-sm">
-			<ul>
-				{#each navsKey as key}
-					<li>{navs.get(key)}</li>
-				{:else}
-					<li>Pengenalan</li>
-				{/each}
-			</ul>
+
+	<div class="flex-1 px-8 pb-36">
+		<div class="flex flex-row items-center">
+			<button class="btn btn-ghost block lg:hidden" onclick={() => modal.showModal()}>
+				<List class="icon" />
+			</button>
+			<div class="breadcrumbs text-sm">
+				<ul>
+					{#each page.url.pathname.split('/').filter(Boolean).slice(1) as key}
+						<li>{navs.get(key)}</li>
+					{:else}
+						<li>Pengenalan</li>
+					{/each}
+				</ul>
+			</div>
 		</div>
-	</nav>
-	<div class="generator-content max-w-fit">
-		<!-- <button onclick={initNavKeys}>test</button> -->
 		{@render children()}
 	</div>
 </div>
-<dialog open={navigationIsOpen}>
-	<article>
-		<header
-			class="flex justify-between"
-			style="display: flex; justify-content:space-between; align-items:center;"
-		>
-			<strong style="height: fit-content;">Navigasi</strong>
-			<button aria-label="Close" onclick={closeNavDialog} class="outline" style="border: none;">
-				&cross;
-			</button>
-		</header>
-		<Navigation />
-		<!-- <ink-navigation ondirect={navigating}></ink-navigation> -->
-	</article>
+
+<!-- modal for navigation -->
+<dialog class="modal grid lg:hidden" bind:this={modal}>
+	<div class="modal-box w-auto">
+		<form method="dialog">
+			<button class="btn btn-sm btn-circle btn-ghost absolute top-2 right-2">✕</button>
+		</form>
+		<div class="flex w-full justify-center">
+			<Navigation />
+		</div>
+	</div>
+	<form method="dialog" class="modal-backdrop">
+		<button>close</button>
+	</form>
 </dialog>
