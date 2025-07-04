@@ -18,27 +18,17 @@
 					url: '/generator/basic/equation'
 				}
 			]
-		},
-		{
-			name: 'Tahun 6',
-			child: [
-				{
-					name: 'Penambahan',
-					url: '/generator/standard-6/addition'
-				}
-			]
 		}
 	];
-
 </script>
 
 <aside style="width: 250px;">
 	<nav>
 		<ul class="menu menu-lg w-full">
 			<li class="menu-focus">
-				<a href="/generator" class:menu-active={page.url.pathname.endsWith('/generator')}
-					>Pengenalan</a
-				>
+				<a href="/generator" class:menu-active={page.url.pathname.endsWith('/generator')}>
+					Pengenalan
+				</a>
 			</li>
 			<li>
 				{#each navigations as navigation}
@@ -56,6 +46,14 @@
 						</ul>
 					</details>
 				{/each}
+			</li>
+			<li>
+				<a
+					href="/generator/standard-6"
+					class:menu-active={page.url.pathname.endsWith('/standard-6')}
+				>
+					Tahun 6
+				</a>
 			</li>
 		</ul>
 	</nav>

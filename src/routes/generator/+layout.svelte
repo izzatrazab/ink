@@ -11,7 +11,7 @@
 			column: 'Bentuk Lazim',
 			'long-division': 'Pembahagi Panjang',
 			equation: 'Equation',
-			'standard-6': 'Standard 6',
+			'standard-6': 'Tahun 6',
 			addition: 'Penambahan'
 		})
 	);

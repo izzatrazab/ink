@@ -1,7 +1,5 @@
 <script lang="ts">
 	import { base } from '$app/paths';
-	import UnderConstruction from '$lib/components/alert/UnderConstruction.svelte';
-
 	const formAction = `${base}/exports/primary-school/standard-6/addition`;
 </script>
 
