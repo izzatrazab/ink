@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { base } from '$app/paths';
+	import NumberOfPagesInput from '$lib/components/forms/inputs/NumberOfPagesInput.svelte';
 	const formAction = `${base}/exports/primary-school/standard-6/addition`;
 </script>
 
@@ -10,27 +11,7 @@
 		<div class="card bg-base-100 mx-auto shadow-sm" style="width:300px;">
 			<form action={formAction} method="GET" id="form" target="_blank" class="card-body">
 				<h2 class="card-title text-wrap">Jana Latih Tubi</h2>
-				<fieldset class="fieldset">
-					<label for="nop" class="fieldset-legend">Bilangan Muka Surat Soalan</label>
-					<input
-						type="number"
-						name="nop"
-						class="input"
-						required
-						placeholder="Provide number of pages"
-						aria-label="Number of pages"
-						min="1"
-						list="fibonacci"
-						value="1"
-					/>
-					<datalist id="fibonacci">
-						<option value="1"></option>
-						<option value="2"></option>
-						<option value="3"></option>
-						<option value="5"></option>
-						<option value="8"></option>
-					</datalist>
-				</fieldset>
+				<NumberOfPagesInput name="nop" />
 				<div class="card-actions mt-4 justify-center">
 					<button class="btn btn-primary btn-block" type="submit" aria-label="Jana">Jana</button>
 				</div>

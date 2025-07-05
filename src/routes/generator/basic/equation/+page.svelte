@@ -1,6 +1,7 @@
 <script>
 	import { base } from '$app/paths';
 	import UnderConstruction from '$lib/components/alert/UnderConstruction.svelte';
+	import NumberOfPagesInput from '$lib/components/forms/inputs/NumberOfPagesInput.svelte';
 	const formAction = `${base}/exports/equation`;
 </script>
 
@@ -43,27 +44,9 @@
 						<option value="hard">Sukar</option>
 					</select>
 				</fieldset>
-				<fieldset class="fieldset">
-					<label for="nop" class="fieldset-legend">Bilangan Muka Surat Soalan</label>
-					<input
-						type="number"
-						name="nop"
-						class="input"
-						required
-						placeholder="Sila isikan bilangan muka surat soalan"
-						aria-label="Number of pages"
-						min="1"
-						list="fibonacci"
-						value="1"
-					/>
-					<datalist id="fibonacci">
-						<option value="1"></option>
-						<option value="2"></option>
-						<option value="3"></option>
-						<option value="5"></option>
-						<option value="8"></option>
-					</datalist>
-				</fieldset>
+
+				<NumberOfPagesInput name="nop" />
+
 				<div class="card-actions mt-4 justify-center">
 					<button class="btn btn-primary btn-block" type="submit" aria-label="Jana">
 						Jana

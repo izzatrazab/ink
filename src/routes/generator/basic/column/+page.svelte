@@ -1,5 +1,6 @@
 <script>
 	import { base } from '$app/paths';
+	import NumberOfPagesInput from '$lib/components/forms/inputs/NumberOfPagesInput.svelte';
 
 	const formAction = `${base}/exports/column-method`;
 </script>
@@ -50,27 +51,9 @@
 						<option value="hard">Sukar</option>
 					</select>
 				</fieldset>
-				<fieldset class="fieldset">
-					<label class="fieldset-legend" for="nop">Bilangan Muka Surat Soalan</label>
-					<input
-						class="input"
-						type="number"
-						name="nop"
-						required
-						placeholder="Sila isikan bilangan muka surat soalan"
-						aria-label="Number of pages"
-						min="1"
-						list="fibonacci"
-						value="1"
-					/>
-					<datalist id="fibonacci">
-						<option value="1"></option>
-						<option value="2"></option>
-						<option value="3"></option>
-						<option value="5"></option>
-						<option value="8"></option>
-					</datalist>
-				</fieldset>
+
+				<NumberOfPagesInput name="nop" />
+
 				<div class="card-actions mt-4">
 					<button
 						class="btn btn-primary btn-block"
