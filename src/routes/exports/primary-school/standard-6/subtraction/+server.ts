@@ -1,10 +1,9 @@
-import Standard6Addition from '$lib/server/exports/standard-6/Addition';
+import Standard6Subtraction from '$lib/server/exports/standard-6/Subtraction';
 import type { RequestHandler } from '@sveltejs/kit';
 
 export const GET: RequestHandler = async ({ url }) => {
-
 	const number_of_pages = Number(url.searchParams.get('nop') ?? 1);
-	const doc = new Standard6Addition(number_of_pages);
+	const doc = new Standard6Subtraction(number_of_pages);
 	let buffers: any[] = [];
 
 	// Collect data as the PDF is being generated
@@ -18,7 +17,7 @@ export const GET: RequestHandler = async ({ url }) => {
 
 	// Concatenate all the chunks into a single buffer
 	const pdfData = Buffer.concat(buffers);
-	const fileName = `Standard 6 Addition - ${number_of_pages} pg.pdf`
+	const fileName = `Standard 6 Subtraction - ${number_of_pages} pg.pdf`;
 
 	// Return the PDF as a response
 	return new Response(pdfData, {

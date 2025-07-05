@@ -20,7 +20,7 @@
 	});
 </script>
 
-<div class="card bg-base-100 mx-auto shadow-sm" style="width: 300px;">
+<div class="card bg-base-200 mx-auto shadow-sm" style="width: 300px;">
 	<form {action} method="GET" {id} target="_blank" class="card-body">
 		<h2 class="card-title text-wrap">{title}</h2>
 		<div>
