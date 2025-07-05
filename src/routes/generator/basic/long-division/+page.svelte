@@ -1,6 +1,7 @@
 <script>
 	import { base } from '$app/paths';
 	import UnderConstruction from '$lib/components/alert/UnderConstruction.svelte';
+	import DrillForm from '$lib/components/forms/DrillForm.svelte';
 	import NumberOfPagesInput from '$lib/components/forms/inputs/NumberOfPagesInput.svelte';
 
 	const formAction = `${base}/exports/long-division-method`;
@@ -14,37 +15,27 @@
 			dihuraikan kepada langkah-langkah yang lebih kecil.
 		</p>
 
-		<div class="card bg-base-100 mx-auto shadow-sm" style="width: 300px;">
-			<form action={formAction} method="GET" id="form" target="_blank" class="card-body">
-				<h2 class="card-title text-wrap">Jana Latih Tubi Pembahagian Panjang</h2>
+		<DrillForm action={formAction} id="long-division">
+			<fieldset class="fieldset">
+				<label for="remainder" class="fieldset-legend">Ada Baki</label>
+				<input type="checkbox" class="checkbox" name="remainder" value="true" checked />
+			</fieldset>
 
-				<fieldset class="fieldset">
-					<label for="remainder" class="fieldset-legend">Ada Baki</label>
-					<input type="checkbox" class="checkbox" name="remainder" value="true" checked />
-				</fieldset>
+			<fieldset class="fieldset">
+				<label for="difficulty" class="fieldset-legend">Tahap Kesukaran</label>
+				<select
+					name="difficulty"
+					class="select"
+					placeholder="Pilih Tahan Kesukaran"
+					aria-label="Select difficulty"
+				>
+					<option selected value="easy">Mudah</option>
+					<option value="medium">Sederhana</option>
+					<option value="hard">Sukar</option>
+				</select>
+			</fieldset>
 
-				<fieldset class="fieldset">
-					<label for="difficulty" class="fieldset-legend">Tahap Kesukaran</label>
-					<select
-						name="difficulty"
-						class="select"
-						placeholder="Pilih Tahan Kesukaran"
-						aria-label="Select difficulty"
-					>
-						<option selected value="easy">Mudah</option>
-						<option value="medium">Sederhana</option>
-						<option value="hard">Sukar</option>
-					</select>
-				</fieldset>
-
-				<NumberOfPagesInput name='nop'/>
-
-				<div class="card-actions mt-4 justify-center">
-					<button class="btn btn-primary btn-block" type="submit" aria-label="Generate">
-						Jana
-					</button>
-				</div>
-			</form>
-		</div>
+			<NumberOfPagesInput name="nop" />
+		</DrillForm>
 	</article>
 </div>
