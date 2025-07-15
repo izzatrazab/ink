@@ -6,9 +6,9 @@
 </script>
 
 <div>
-	<h2 class="text-3xl font-bold">Penambahan</h2>
+	<h2 class="text-xl font-bold">Penambahan</h2>
 	<article class="mt-4 flex flex-col gap-8 md:flex-row-reverse">
-		<p class="flex-1 text-xl">Latih tubi penambahan.</p>
+		<p class="flex-1 text-lg">Latih tubi penambahan.</p>
 		<DrillForm action={formAction} id="standard-6-addition-form">
 			<NumberOfPagesInput name="nop" />
 		</DrillForm>
