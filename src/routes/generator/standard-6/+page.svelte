@@ -1,5 +1,6 @@
 <script>
 	import Addition from "$lib/components/drill-sections/standard-6/addition.svelte";
+	import Multiplication from "$lib/components/drill-sections/standard-6/multiplication.svelte";
 	import Subtraction from "$lib/components/drill-sections/standard-6/subtraction.svelte";
 </script>
 
@@ -15,6 +16,8 @@
 	<Addition />
 	<div class="divider"></div>
 	<Subtraction />
+	<div class="divider"></div>
+	<Multiplication />
 </div>
 
 
