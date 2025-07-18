@@ -1,122 +1,32 @@
-import {
-	addHeader
-} from '$lib/server/drillvendor';
-import { DrillBase, type DrillLayout } from '../base/DrillBase';
+import { DrillBase } from '../base/DrillBase';
 import fontArial from '$lib/assets/fonts/Arial.ttf';
-
-import fontDynaPuffVariable from '$lib/assets/fonts/DynaPuff-VariableFont.ttf';
 import { join } from 'path';
-import { getRandomNumber} from '$lib/helper';
+import { getRandomNumber } from '$lib/helper';
 
 export default class Addition extends DrillBase {
-	public layout: DrillLayout = {
-		row: 12,
-		column: 1,
-		rowHeight: 0,
-		columnWidth: 0
-	};
-
-	public answers: Array<number> = [];
-	public counter: number = 0;
-
 	constructor(num_page: number) {
-		super(
-			{
-				Title: 'Standard 6 - Addition'
-			},
-			true
-		);
+		let eng_title = 'Standard 6 - Addition';
+		super({ Title: eng_title });
 
+		this.title.eng = eng_title;
+		this.title.ms = 'Tahun 6 - Penambahan';
 		this.num_page = num_page;
 		this.origin_x = this.x;
 
 		this.generate();
-
-		// see the range of buffered pages
-		const range = this.bufferedPageRange(); // => { start: 0, count: 2 }
-
-		for (let index = range.start; index < range.count; index++) {
-			this.switchToPage(index);
-
-			this.text(
-				`p. ${index + 1}/${range.count}`,
-				this.origin_x,
-				this.page.margins.top / 2,
-				{
-					align: "right",
-					baseline: 'top'
-				}
-			);
-		}
+		this.generatePageNumbers();
 	}
 
 	private generate() {
-		addHeader(this, this.x, this.y, this.origin_x, (this.layout.row * this.num_page));
-		this.addTitle()
-		this.moveDown(0.5)
+		this.addHeader();
+		this.moveDown(0.5);
 		for (let index = 0; index < this.num_page; index++) {
 			this.drawBorder({ x: this.origin_x, y: this.y });
 			this.initDrillLayout();
 			this.drawAllQuestions();
 			this.addPage();
 		}
-
-		// answer
-		this.font('Chilanka')
-			.fontSize(14)
-			.text('Answer Sheet', {
-				align: 'left'
-			})
-			.fontSize(9)
-			.fillColor('grey')
-			.text('Kertas Jawapan');
-
-		//reset font and font color
-		this.font('Arial').fontSize(12).fillColor('black').moveDown(1);
-		let formatted_answers = this.answers.map((answer) => answer.toLocaleString());
-
-		this.moveDown(1);
-
-		let string = formatted_answers.map(function (value, index) {
-			return index + 1 + ')  ' + value;
-		});
-
-		let final = string.reduce((result, item) => (result += item + '\n'), '');
-
-		this.text(final, {
-			columns: 3,
-			columnGap: 15,
-			align: 'justify',
-			wordSpacing: 5,
-			characterSpacing: 1,
-			lineGap: 20
-		});
-	}
-
-	initDrillLayout() {
-		let padding = 10;
-		this.layout.columnWidth = (this.getContentWidth() - padding * 2) / this.layout.column;
-		let remaining_available_height =
-			this.page.height - this.y - this.page.margins.bottom - padding * 2;
-		this.layout.rowHeight = remaining_available_height / this.layout.row;
-	}
-
-	addTitle() {
-		let x = this.x;
-		let y = this.y;
-		let eng_title = 'Standard 6 - Addition';
-		let malay_title = '  (Tahun 6 - Penambahan)';
-
-		this.registerFont('DynaPuff', join(process.cwd(), fontDynaPuffVariable)).font('DynaPuff');
-
-		this.fontSize(16).fillColor('#982cc9').text(eng_title, this.x, this.y, {
-			continued: true,
-			baseline: 'middle'
-		});
-
-		this.fontSize(11).fillColor('grey').text(malay_title, this.x, this.y, {
-			baseline: 'middle'
-		});
+		this.drawAnswers();
 	}
 
 	private drawAllQuestions() {
@@ -147,12 +57,14 @@ export default class Addition extends DrillBase {
 
 				let question_string = formatted_addends.join(' + ') + ' = ';
 
-				this.fontSize(16).text(`${++this.counter})  `, x_point, y_point, {
-					continued: true,
-				}).text(`${question_string}`, {
-					wordSpacing: 5,
-					characterSpacing: 2
-				});
+				this.fontSize(16)
+					.text(`${++this.counter})  `, x_point, y_point, {
+						continued: true
+					})
+					.text(`${question_string}`, {
+						wordSpacing: 5,
+						characterSpacing: 2
+					});
 			}
 		}
 	}
