@@ -38,6 +38,7 @@
 	"dependencies": {
 		"@tailwindcss/vite": "^4.1.11",
 		"daisyui": "^5.0.46",
+		"esbuild": "^0.25.8",
 		"pdfkit": "^0.17.1",
 		"tailwindcss": "^4.1.11"
 	},
