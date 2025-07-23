@@ -3,6 +3,10 @@
 
 	const navigations = [
 		{
+			name: 'Pengenalan',
+			url: '/generator'
+		},
+		{
 			name: 'Asas',
 			child: [
 				{
@@ -18,6 +22,10 @@
 					url: '/generator/basic/equation'
 				}
 			]
+		},
+		{
+			name: 'Tahun 6',
+			url: '/generator/standard-6'
 		}
 	];
 </script>
@@ -25,36 +33,29 @@
 <aside style="width: 250px;">
 	<nav>
 		<ul class="menu menu-lg w-full">
-			<li class="menu-focus">
-				<a href="/generator" class:menu-active={page.url.pathname.endsWith('/generator')}>
-					Pengenalan
-				</a>
-			</li>
-			<li>
-				{#each navigations as navigation}
-					<details open>
-						<summary>{navigation['name']}</summary>
-						<ul>
-							{#each navigation['child'] as child}
-								<li>
-									<a
-										href={child['url']}
-										class:menu-active={page.url.pathname.endsWith(child['url'])}>{child['name']}</a
-									>
-								</li>
-							{/each}
-						</ul>
-					</details>
-				{/each}
-			</li>
-			<li>
-				<a
-					href="/generator/standard-6"
-					class:menu-active={page.url.pathname.endsWith('/standard-6')}
-				>
-					Tahun 6
-				</a>
-			</li>
+			{#each navigations as navigation}
+				<li>
+					{#if ('child' in navigation) && Array.isArray(navigation.child)}
+						<details open>
+							<summary>{navigation.name}</summary>
+							<ul>
+								{#each navigation.child ?? [] as child}
+									<li>
+										<a href={child.url} class:menu-active={page.url.pathname.endsWith(child.url)}
+											>{child.name}</a
+										>
+									</li>
+								{/each}
+							</ul>
+						</details>
+					{:else}
+						
+						<a href={navigation.url} class:menu-active={(typeof navigation.url === 'string') ? page.url.pathname.endsWith(navigation.url) : false}>
+							{navigation.name}
+						</a>
+					{/if}
+				</li>
+			{/each}
 		</ul>
 	</nav>
 </aside>
