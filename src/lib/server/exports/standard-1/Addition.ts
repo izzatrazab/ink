@@ -11,7 +11,7 @@ export default class Addition extends DrillBase {
 		this.title.eng = eng_title;
 		this.title.ms = 'Tahun 1 - Penambahan';
 		this.num_page = num_page;
-        this.layout.column = 2;
+		this.layout.column = 2;
 
 		this.generate();
 		this.generatePageNumbers();
@@ -39,7 +39,7 @@ export default class Addition extends DrillBase {
 				let x_point = x + j * this.layout.columnWidth;
 				let y_point = y + index * this.layout.rowHeight;
 
-				let addends = [getRandomNumber(1), getRandomNumber(1)];
+				let addends = this.getAddends();
 				this.answers[this.counter] = addends.reduce((sum, addend) => sum + addend, 0);
 				let formatted_addends = addends.map((addend) => addend.toLocaleString());
 
@@ -50,10 +50,47 @@ export default class Addition extends DrillBase {
 						continued: true
 					})
 					.text(`${question_string}`, {
-						wordSpacing: 5,
+						// wordSpacing: 1,
 						characterSpacing: 2
 					});
 			}
 		}
+	}
+
+	private getAddends() {
+		switch (Math.floor(Math.random() * 3)) {
+			default:
+			case 0:
+				return this.caseOne();
+			case 1:
+				return this.caseTwo();
+			case 2:
+				return this.caseThree();
+		}
+	}
+
+	private caseOne() {
+		switch (Math.floor(Math.random() * 4)) {
+			default:
+			case 0:
+				return [getRandomNumber(1), getRandomNumber(1)];
+			case 1:
+				return [getRandomNumber(2), getRandomNumber(1)];
+			case 2:
+				return [getRandomNumber(1), getRandomNumber(2)];
+			case 3:
+				return [getRandomNumber(2), getRandomNumber(2)];
+		}
+	}
+
+	private caseTwo() {
+		let temp = getRandomNumber(Math.floor(Math.random() * 2) + 1);
+
+		return [temp, temp, temp];
+	}
+	private caseThree() {
+		let temp = getRandomNumber(1);
+
+		return [temp, temp, temp, temp];
 	}
 }
