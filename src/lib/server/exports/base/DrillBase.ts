@@ -59,6 +59,8 @@ export class DrillBase extends PDFDocument {
 			info,
 			bufferPages: true
 		});
+
+		this.origin_x = this.x;
 	}
 
 	addHeader() {
@@ -179,4 +181,21 @@ export class DrillBase extends PDFDocument {
 			});
 		}
 	}
+
+	public generate() {
+		this.addHeader();
+		this.moveDown(0.5);
+		for (let index = 0; index < this.num_page; index++) {
+			this.drawBorder({ x: this.origin_x, y: this.y });
+			this.initDrillLayout();
+			this.drawAllQuestions();
+			this.addPage();
+		}
+		this.drawAnswers();
+	}
+
+	/** each drill might have multiple types of questions so each one need to be custom.
+	 * therefore, overwrite this function to add the specific logic for that drill 
+	 */
+	public drawAllQuestions() {}
 }

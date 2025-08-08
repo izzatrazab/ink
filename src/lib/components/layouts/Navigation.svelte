@@ -24,9 +24,13 @@
 			]
 		},
 		{
+			name: 'Tahun 1',
+			url: '/generator/standard-1'
+		},
+		{
 			name: 'Tahun 6',
 			url: '/generator/standard-6'
-		}
+		},
 	];
 </script>
 
@@ -35,7 +39,7 @@
 		<ul class="menu menu-lg w-full">
 			{#each navigations as navigation}
 				<li>
-					{#if ('child' in navigation) && Array.isArray(navigation.child)}
+					{#if 'child' in navigation && Array.isArray(navigation.child)}
 						<details open>
 							<summary>{navigation.name}</summary>
 							<ul>
@@ -49,8 +53,12 @@
 							</ul>
 						</details>
 					{:else}
-						
-						<a href={navigation.url} class:menu-active={(typeof navigation.url === 'string') ? page.url.pathname.endsWith(navigation.url) : false}>
+						<a
+							href={navigation.url}
+							class:menu-active={typeof navigation.url === 'string'
+								? page.url.pathname.endsWith(navigation.url)
+								: false}
+						>
 							{navigation.name}
 						</a>
 					{/if}

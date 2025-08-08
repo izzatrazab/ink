@@ -12,6 +12,7 @@
 			'long-division': 'Pembahagi Panjang',
 			equation: 'Equation',
 			'standard-6': 'Tahun 6',
+			'standard-1': 'Tahun 1',
 			addition: 'Penambahan'
 		})
 	);
@@ -32,7 +33,6 @@
 			}
 		}
 	</style>
-
 </svelte:head>
 
 <div class="generator-layout container mt-4 flex-1">

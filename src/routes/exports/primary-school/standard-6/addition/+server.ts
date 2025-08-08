@@ -2,8 +2,9 @@ import Standard6Addition from '$lib/server/exports/standard-6/Addition';
 import type { RequestHandler } from '@sveltejs/kit';
 
 export const GET: RequestHandler = async ({ url }) => {
-
-	const number_of_pages = Number(url.searchParams.get('nop') ?? 1);
+	
+	const number_of_pages = Number(url.searchParams.get('nop') || 1);
+	
 	const doc = new Standard6Addition(number_of_pages);
 	let buffers: any[] = [];
 
