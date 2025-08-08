@@ -1,4 +1,3 @@
-
 <div class="space-y-16">
 	<section>
 		<hgroup>
@@ -10,9 +9,23 @@
 				semasa ke semasa.
 			</p>
 		</hgroup>
+
+		<p>
+			Peringatan: Sistem ini masih dalam proses pembinaan. Masih banyak pembaikian perlu dilakukan.
+		</p>
 	</section>
 
 	<section>
+		<hgroup>
+			<h1 class="text-4xl font-bold">! Kami masih dalam fasa pembinaan !</h1>
+			<p class="mt-8">
+				Peringatan: Sistem ini masih dalam proses pembinaan. Masih banyak pembaikian dan penambahan perlu
+				dilakukan.
+			</p>
+		</hgroup>
+	</section>
+
+	<!-- <section>
 		<hgroup>
 			<h1 class="text-4xl font-bold">Kenapa Pilih Kami&nbsp;? 🤔</h1>
 			<p class="mt-8">
@@ -36,12 +49,12 @@
 				</li>
 			</ul>
 		</div>
-	</section>
-		<section>
+	</section> -->
+	<section>
 		<hgroup>
 			<h1 class="text-4xl font-bold">Hubungi Kami 📨</h1>
 			<p class="mt-8">
-				Jika ada pertanyaan atau cadangan(sangat dialu-alukan). Boleh hantar e-mel kepada kami di  
+				Jika ada pertanyaan atau cadangan(sangat dialu-alukan). Boleh hantar e-mel kepada kami di
 				<a href="mailto:inkcraft.space.@gmail.com" class="link-info">inkcraft.space.@gmail.com</a>.
 			</p>
 		</hgroup>
