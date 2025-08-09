@@ -1,6 +1,6 @@
 <script>
 	import { base } from '$app/paths';
-	import DrillForm from '$lib/components/forms/DrillForm.svelte';
+	import DrillForm from '$lib/components/forms/DrillFormOld.svelte';
 	import NumberOfPagesInput from '$lib/components/forms/inputs/NumberOfPagesInput.svelte';
 
 	const formAction = `${base}/exports/column-method`;
