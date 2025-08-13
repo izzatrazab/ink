@@ -1,11 +1,13 @@
-<script>
+<script lang="ts">
 	import DrillForm from '$lib/components/forms/DrillForm.svelte';
 	import { resolve } from '$app/paths';
 
 	const formActions = [
 		{
 			title: 'Penambahan',
-			action: resolve('/exports/primary-school/standard-1/addition')
+			action: resolve('/exports/primary-school/standard-one/[type]', {
+				type: 'addition'
+			})
 		}
 	];
 </script>
