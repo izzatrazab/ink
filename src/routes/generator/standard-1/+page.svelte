@@ -5,7 +5,7 @@
 	const formActions = [
 		{
 			title: 'Penambahan',
-			action: resolve('/exports/primary-school/standard-one/[type]', {
+			action: resolve('/exports/standard-one/[type]', {
 				type: 'addition'
 			})
 		}

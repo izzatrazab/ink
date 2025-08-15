@@ -1,6 +1,6 @@
 <script lang="ts">
 	import '../app.css';
-	import { base } from '$app/paths';
+	import { resolve } from '$app/paths';
 	import { onMount } from 'svelte';
 	import plusMinusSvg from '$lib/assets/plus-minus.svg';
 	import Moon from '$lib/components/icons/phosphor/Moon.svelte';
@@ -34,7 +34,7 @@
 
 <div class="navbar bg-base-100 shadow-sm px-8">
 	<div class="flex-1">
-		<a class="text-4xl font-bold" href="{base}/">InK</a>
+		<a class="text-4xl font-bold" href={resolve('/')}>InK</a>
 	</div>
 	<div class="flex flex-row gap-x-4">
 		<button class="swap swap-rotate" onclick={toggleTheme}>

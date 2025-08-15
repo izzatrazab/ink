@@ -1,9 +1,10 @@
 <script lang="ts">
-	import { base } from '$app/paths';
+	import { resolve } from '$app/paths';
 	import DrillForm from '$lib/components/forms/DrillFormOld.svelte';
 	import NumberOfPagesInput from '$lib/components/forms/inputs/NumberOfPagesInput.svelte';
 	import DrillSection from '$lib/components/layouts/DrillSection.svelte';
-	const formAction = `${base}/exports/primary-school/standard-6/subtraction`;
+	const formAction = resolve('/exports/standard-6/subtraction');
+
 </script>
 
 <div>
