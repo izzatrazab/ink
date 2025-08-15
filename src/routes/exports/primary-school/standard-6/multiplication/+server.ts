@@ -1,10 +1,13 @@
 import Standard6Multiplication from '$lib/server/exports/standard-6/Multiplication';
+import { pdfResponse } from '$lib/utils/pdfResponse';
 import type { RequestHandler } from '@sveltejs/kit';
 
 export const GET: RequestHandler = async ({ url }) => {
 
     const number_of_pages = Number(url.searchParams.get('nop') ?? 1);
     const doc = new Standard6Multiplication(number_of_pages);
+    const fileName = `Standard 6 Multiplication - ${number_of_pages} pg.pdf`;
+
     let buffers: any[] = [];
 
     // Collect data as the PDF is being generated
@@ -16,16 +19,5 @@ export const GET: RequestHandler = async ({ url }) => {
         doc.end();
     });
 
-    // Concatenate all the chunks into a single buffer
-    const pdfData = Buffer.concat(buffers);
-    const fileName = `Standard 6 Multiplication - ${number_of_pages} pg.pdf`
-
-    // Return the PDF as a response
-    return new Response(pdfData, {
-        headers: {
-            'Content-Type': 'application/pdf',
-            'Content-Disposition': 'inline ; filename="' + fileName + '"' // open in page
-            // 'Content-Disposition': 'attachment' // direct download
-        }
-    });
+    return pdfResponse(buffers, fileName);
 };

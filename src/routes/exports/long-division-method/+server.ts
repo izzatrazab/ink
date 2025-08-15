@@ -1,12 +1,15 @@
 import LongDivisionMethod from '$lib/server/LongDivisionMethod';
-import type { RequestHandler } from './$types';
+import { pdfResponse } from '$lib/utils/pdfResponse';
+
+import type { RequestHandler } from '@sveltejs/kit';
 
 export const GET: RequestHandler = async ({ url }) => {
 	
 	const difficulty = url.searchParams.get('difficulty') ?? 'easy';
 	const has_remainder = url.searchParams.get('remainder') ?? 'false';
-	// console.dir(has_remainder);
 	const number_of_pages = Number(url.searchParams.get('nop') ?? '1');
+	const fileName = `Long Division Method - ${((has_remainder == 'true') ? 'has remainder' : 'no remainder')} - ${difficulty} - ${number_of_pages} question pages.pdf`
+
 
 	const doc = new LongDivisionMethod(difficulty, number_of_pages, (has_remainder === 'true'));
 	let buffers: any[] = [];
@@ -20,16 +23,5 @@ export const GET: RequestHandler = async ({ url }) => {
 		doc.end();
 	});
 
-	// Concatenate all the chunks into a single buffer
-	const pdfData = Buffer.concat(buffers);
-	const fileName = `Long Division Method - ${((has_remainder == 'true') ? 'has remainder' : 'no remainder')} - ${difficulty} - ${number_of_pages} question pages.pdf`
-
-	// Return the PDF as a response
-	return new Response(pdfData, {
-		headers: {
-			'Content-Type': 'application/pdf',
-			'Content-Disposition': 'inline ; filename="' + fileName + '"' // open in page
-			// 'Content-Disposition': 'attachment' // direct download
-		}
-	});
+	return pdfResponse(buffers, fileName);
 };

@@ -1,6 +1,5 @@
 import { StandardOneAddition } from '$lib/server/exports/standard-1/StandardOne';
-// import { pdfResponse } from '$lib/utils/pdfResponse';
-
+import { pdfResponse } from '$lib/utils/pdfResponse';
 import type { RequestHandler } from '@sveltejs/kit';
 
 export const GET: RequestHandler = async ({ url, params }) => {
@@ -17,8 +16,6 @@ export const GET: RequestHandler = async ({ url, params }) => {
             break;
     }
 
-
-
     let buffers: any[] = [];
 
     // Collect data as the PDF is being generated
@@ -29,19 +26,6 @@ export const GET: RequestHandler = async ({ url, params }) => {
         doc.on('end', resolve);
         doc.end();
     });
-
     
-    // return pdfResponse(buffers, fileName);
-    
-
-    const pdfData = Buffer.concat(buffers);
-
-	// Return the PDF as a response
-	return new Response(pdfData, {
-		headers: {
-			'Content-Type': 'application/pdf',
-			'Content-Disposition': 'inline ; filename="' + fileName + '"' // open in new tab
-			// 'Content-Disposition': 'attachment' // direct download
-		}
-	});
+    return pdfResponse(buffers, fileName);
 };
