@@ -64,7 +64,7 @@ export class DrillBase extends PDFDocument {
 	}
 
 	addHeader() {
-		addHeader(this, this.x, this.y, this.origin_x, this.layout.row * this.num_page);
+		addHeader(this, this.x, this.y, this.origin_x, this.layout.row * this.layout.column * this.num_page);
 
 		this.registerFont('DynaPuff', join(process.cwd(), fontDynaPuffVariable)).font('DynaPuff');
 
