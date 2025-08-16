@@ -198,4 +198,75 @@ export class DrillBase extends PDFDocument {
 	 * therefore, overwrite this function to add the specific logic for that drill 
 	 */
 	public drawAllQuestions() {}
+
+
+		/**
+	 * @param x coordinate x
+	 * @param y coordinate y
+	 * @param num1 first number in the equation
+	 * @param num2 second number in the equation
+	 * @param operation the operation symbol (+, -, x)
+	 * @param width width of the column method (box ??, ibarat mcm kotak).
+	 */
+	public drawColumnMethod(
+		x: number,
+		y: number,
+		num1: number,
+		num2: number,
+		operation: string,
+		width: number,
+		questionNumber: number,
+		padding: number = 3
+	) {
+		const content_width = width - padding - padding;
+		const content_x = x + padding;
+		const content_y = y + padding;
+		const characterSpacing = 8;
+		const fontSize = 14;
+		const operationSymbolSize = 18;
+
+		// Draw question number
+		this.fontSize(fontSize - 2).text(questionNumber.toString() + ')', content_x, content_y, {
+			width: width,
+			align: 'left'
+		});
+
+		// Draw first number
+		this.fontSize(fontSize).text(num1.toString(), content_x, content_y + 15, {
+			width: content_width - 5,
+			align: 'right',
+			characterSpacing: characterSpacing
+		});
+
+		// Draw operation sign
+		this.fontSize(operationSymbolSize).text(operation, content_x + 20, content_y + 30, {
+			width: content_width,
+			align: 'left'
+		});
+
+		// Draw second number
+		this.fontSize(fontSize).text(num2.toString(), content_x, content_y + 30, {
+			width: content_width - 5,
+			align: 'right',
+			characterSpacing: characterSpacing
+		});
+
+		// Draw lines for calculation and answer space
+		const start_line_x = content_x + 15;
+		const end_line_x = content_x + content_width;
+
+		this.strokeColor('black').lineWidth(0.5);
+		// Draw first line
+		this.moveTo(start_line_x, this.y).lineTo(end_line_x, this.y).stroke();
+
+		// // Draw middle line (for multiplication, it has additional middle line if second number has more than 1 digit)
+		// if (this.operation_method_eng === 'multiplication' && this.second_number_of_digits > 1) {
+		// 	this.moveDown(this.second_number_of_digits * 1.25);
+		// 	this.moveTo(start_line_x, this.y).lineTo(end_line_x, this.y).stroke();
+		// }
+
+		// answer gap and draw last line
+		this.moveDown(1.5);
+		this.moveTo(start_line_x, this.y).lineTo(end_line_x, this.y).stroke();
+	}
 }

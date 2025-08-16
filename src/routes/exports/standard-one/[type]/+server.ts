@@ -1,4 +1,4 @@
-import { StandardOneAddition } from '$lib/server/exports/standard-1/StandardOne';
+import { Addition, AdditionStandardForm } from '$lib/server/exports/standard-1/StandardOne';
 import { pdfResponse } from '$lib/utils/pdfResponse';
 import type { RequestHandler } from '@sveltejs/kit';
 
@@ -12,7 +12,10 @@ export const GET: RequestHandler = async ({ url, params }) => {
     switch (params.type) {
         default:
         case 'addition':
-            doc = new StandardOneAddition(number_of_pages);
+            doc = new Addition(number_of_pages);
+            break;
+        case 'addition-standard-form':
+            doc = new AdditionStandardForm(number_of_pages);
             break;
     }
 

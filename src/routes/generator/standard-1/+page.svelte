@@ -5,11 +5,17 @@
 	const formActions = [
 		{
 			title: 'Penambahan',
-			action: resolve('/exports/standard-one/[type]', {
-				type: 'addition'
-			})
+			type: 'addition'
+		},
+		{
+			title: 'Penambahan Bentuk Lazim',
+			type: 'addition-standard-form'
 		}
 	];
+
+	function action(type: string): string {
+		return resolve('/exports/standard-one/[type]', { type });
+	}
 </script>
 
 <svelte:head>
@@ -19,7 +25,7 @@
 <h1 class="text-3xl font-bold">Koleksi Latih Tubi Tahun 1</h1>
 <div class="mt-16">
 	<ul class="list bg-base-100 rounded-box shadow-md">
-		{#each formActions as { title, action }, i}
+		{#each formActions as { title, type }, i}
 			<li class="list-row">
 				<div class="text-2xl">{i + 1})</div>
 				<div>
@@ -29,7 +35,7 @@
 				</div>
 
 				<div class="list-col-grow">
-					<DrillForm {action} />
+					<DrillForm action={action(type)} />
 				</div>
 			</li>
 		{/each}
