@@ -1,12 +1,11 @@
 import Standard6Addition from '$lib/server/exports/standard-6/Addition';
 import { pdfResponse } from '$lib/utils/pdfResponse';
-import type { RequestHandler } from '@sveltejs/kit';
+import { error, type RequestHandler } from '@sveltejs/kit';
 
 export const GET: RequestHandler = async ({ url }) => {
-	
 	const number_of_pages = Number(url.searchParams.get('nop') || 1);
-	const fileName = `Standard 6 Addition - ${number_of_pages} pg.pdf`
-	
+	const fileName = `Standard 6 Addition - ${number_of_pages} pg.pdf`;
+
 	const doc = new Standard6Addition(number_of_pages);
 	let buffers: any[] = [];
 

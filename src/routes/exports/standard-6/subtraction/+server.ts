@@ -3,7 +3,7 @@ import { pdfResponse } from '$lib/utils/pdfResponse';
 import type { RequestHandler } from '@sveltejs/kit';
 
 export const GET: RequestHandler = async ({ url }) => {
-	const number_of_pages = Number(url.searchParams.get('nop') ?? 1);
+	const number_of_pages = Number(url.searchParams.get('nop') || 1);
 	const doc = new Standard6Subtraction(number_of_pages);
 	const fileName = `Standard 6 Subtraction - ${number_of_pages} pg.pdf`;
 

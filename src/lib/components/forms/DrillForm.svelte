@@ -4,7 +4,7 @@
 
 	let {
 		action = '#',
-		id = ''
+		id = '',
 	}: {
 		action: string;
 		id?: string;
@@ -32,7 +32,6 @@
 	</fieldset>
 	<!-- <NumberOfPagesInput name="nop" /> -->
 	<button class="btn btn-square p-1" aria-label="muat turun" title="muat turun">
-		<!-- test -->
-		<DownloadSimple class="h-100 w-100" />
+		<DownloadSimple class="w-100" />
 	</button>
 </form>

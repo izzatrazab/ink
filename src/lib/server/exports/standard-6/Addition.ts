@@ -17,7 +17,7 @@ export default class Addition extends DrillBase {
 		this.generatePageNumbers();
 	}
 
-	private generate() {
+	public generate() {
 		this.addHeader();
 		this.moveDown(0.5);
 		for (let index = 0; index < this.num_page; index++) {
@@ -29,7 +29,7 @@ export default class Addition extends DrillBase {
 		this.drawAnswers();
 	}
 
-	private drawAllQuestions() {
+	public drawAllQuestions() {
 		let layout_padding = 0;
 		let box_width: number = this.layout.columnWidth - layout_padding;
 		let x_shift: number = (this.layout.columnWidth - box_width) / 2;
