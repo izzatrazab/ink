@@ -25,7 +25,7 @@
 	<meta name="description" content="math drill generator forms" />
 
 	<style>
-		@media (min-width: 768px) {
+		@media (min-width: 1024px) {
 			.generator-layout {
 				display: grid;
 				grid-template-columns: auto 1fr;

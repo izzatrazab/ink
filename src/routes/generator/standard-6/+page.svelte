@@ -20,7 +20,6 @@
 			action: resolve('/exports/standard-6/division')
 		}
 	];
-
 </script>
 
 <svelte:head>
@@ -34,15 +33,16 @@
 		<!-- <li class="p-4 pb-2 text-xs opacity-60 tracking-wide">Tahun 6</li> -->
 		{#each formActions as { title, action }, i}
 			<li class="list-row">
-				<div class="text-2xl">{i + 1})</div>
-				<div>
-					<hgroup>
-						<h2 class="text-2xl">{title}</h2>
-					</hgroup>
+				<div class="text-2xl whitespace-nowrap">
+					{i + 1})
 				</div>
-
 				<div class="list-col-grow">
-					<DrillForm {action} />
+					<div class="flex flex-col justify-between gap-y-2 sm:flex-row">
+						<hgroup>
+							<h2 class="text-2xl">{title}</h2>
+						</hgroup>
+						<DrillForm {action} />
+					</div>
 				</div>
 			</li>
 		{/each}

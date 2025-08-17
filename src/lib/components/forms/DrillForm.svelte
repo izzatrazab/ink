@@ -18,11 +18,11 @@
 
 </script>
 
-<form {action} method="GET" {id} class="flex flex-row justify-end gap-2" target="_blank">
+<form {action} method="GET" {id} class="flex flex-row gap-2" target="_blank" >
 	<fieldset class="max-w-[200px] flex-1 text-right">
 		<input
 			type="number"
-			class="input"
+			class="input min-w-30"
 			placeholder="Muka Surat"
 			min="1"
 			max="10"
