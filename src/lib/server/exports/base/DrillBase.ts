@@ -37,6 +37,7 @@ export class DrillBase extends PDFDocument {
 		eng: '',
 		ms: ''
 	};
+	public buffers: any[] = [];
 
 	constructor(info: {
 		Producer?: string;
@@ -61,10 +62,19 @@ export class DrillBase extends PDFDocument {
 		});
 
 		this.origin_x = this.x;
+
+		// collect data as the PDF is being generated
+		this.on('data', (chunk) => this.buffers.push(chunk));
 	}
 
 	addHeader() {
-		addHeader(this, this.x, this.y, this.origin_x, this.layout.row * this.layout.column * this.num_page);
+		addHeader(
+			this,
+			this.x,
+			this.y,
+			this.origin_x,
+			this.layout.row * this.layout.column * this.num_page
+		);
 
 		this.registerFont('DynaPuff', join(process.cwd(), fontDynaPuffVariable)).font('DynaPuff');
 
@@ -195,12 +205,11 @@ export class DrillBase extends PDFDocument {
 	}
 
 	/** each drill might have multiple types of questions so each one need to be custom.
-	 * therefore, overwrite this function to add the specific logic for that drill 
+	 * therefore, overwrite this function to add the specific logic for that drill
 	 */
 	public drawAllQuestions() {}
 
-
-		/**
+	/**
 	 * @param x coordinate x
 	 * @param y coordinate y
 	 * @param num1 first number in the equation
@@ -268,5 +277,23 @@ export class DrillBase extends PDFDocument {
 		// answer gap and draw last line
 		this.moveDown(1.5);
 		this.moveTo(start_line_x, this.y).lineTo(end_line_x, this.y).stroke();
+	}
+
+	public async response(fileName: string) {
+		await new Promise((resolve) => {
+			this.on('end', resolve);
+			this.end();
+		});
+
+		const pdfData = Buffer.concat(this.buffers);
+
+		// Return the PDF as a response
+		return new Response(pdfData, {
+			headers: {
+				'Content-Type': 'application/pdf',
+				'Content-Disposition': 'inline; filename="' + fileName + '"' // open in new tab
+				// 'Content-Disposition': 'attachment' // direct download
+			}
+		});
 	}
 }

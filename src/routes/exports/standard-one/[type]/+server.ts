@@ -1,5 +1,4 @@
 import { Addition, AdditionStandardForm } from '$lib/server/exports/standard-1/StandardOne';
-import { pdfResponse } from '$lib/utils/pdfResponse';
 import type { RequestHandler } from '@sveltejs/kit';
 
 export const GET: RequestHandler = async ({ url, params }) => {
@@ -18,17 +17,6 @@ export const GET: RequestHandler = async ({ url, params }) => {
             doc = new AdditionStandardForm(number_of_pages);
             break;
     }
-
-    let buffers: any[] = [];
-
-    // Collect data as the PDF is being generated
-    doc.on('data', (chunk) => buffers.push(chunk));
-
-    // Return a promise that resolves when the PDF is fully generated
-    await new Promise((resolve) => {
-        doc.on('end', resolve);
-        doc.end();
-    });
     
-    return pdfResponse(buffers, fileName);
+    return doc.response(fileName);
 };

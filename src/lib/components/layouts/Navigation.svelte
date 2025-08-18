@@ -30,7 +30,7 @@
 		{
 			name: 'Tahun 6',
 			url: '/generator/standard-6'
-		},
+		}
 	];
 </script>
 
@@ -45,9 +45,9 @@
 							<ul>
 								{#each navigation.child ?? [] as child}
 									<li>
-										<a href={child.url} class:menu-active={page.url.pathname.endsWith(child.url)}
-											>{child.name}</a
-										>
+										<a href={child.url} class:menu-active={page.url.pathname.endsWith(child.url)}>
+											{child.name}
+										</a>
 									</li>
 								{/each}
 							</ul>
