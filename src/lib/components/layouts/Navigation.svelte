@@ -16,10 +16,6 @@
 				{
 					name: 'Pembahagian Panjang',
 					url: '/generator/basic/long-division'
-				},
-				{
-					name: 'Equation',
-					url: '/generator/basic/equation'
 				}
 			]
 		},
