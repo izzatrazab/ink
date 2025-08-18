@@ -13,7 +13,7 @@ export default class AdditionStandardForm extends DrillBase {
 		this.num_page = num_page;
 		this.origin_x = this.x;
         this.layout.column = 3;
-        this.layout.row = 4;
+        this.layout.row = 5;
 
 		this.registerFont('Arial', join(process.cwd(), fontArial));
 
@@ -29,7 +29,7 @@ export default class AdditionStandardForm extends DrillBase {
 
 		let columnMethodHeight: number = this.layout.rowHeight - 10;
 		let y_shift: number = (this.layout.rowHeight - columnMethodHeight) / 2;
-		let y: number = this.y + y_shift;
+		let y: number = this.y + y_shift + 20;
 
 		this.font('Arial').fillColor('black');
 
@@ -42,7 +42,7 @@ export default class AdditionStandardForm extends DrillBase {
 				this.answers[this.counter] = addends.reduce((sum, addend) => sum + addend, 0);
 
 				/** end of generating random a question */
-
+				
 				this.drawColumnMethod(
 					x_point,
 					y_point,

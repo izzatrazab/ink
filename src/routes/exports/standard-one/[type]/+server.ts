@@ -1,4 +1,4 @@
-import { Addition, AdditionStandardForm } from '$lib/server/exports/standard-1/StandardOne';
+import { Addition, AdditionStandardForm } from '$lib/server/exports/standard-one/StandardOne';
 import type { RequestHandler } from '@sveltejs/kit';
 
 export const GET: RequestHandler = async ({ url, params }) => {
