@@ -1,9 +1,14 @@
-import { addHeader, displayStarImages, drawOrangeBorder } from '$lib/server/drillvendor';
+import {
+	addHeader,
+	displayCartoonImage,
+	drawOrangeBorder
+} from '$lib/utils/draw';
 import PDFDocument from 'pdfkit';
 import imgStar8 from '$lib/assets/stars/star-8.png';
 import imgStar9 from '$lib/assets/stars/star-9.png';
 import imgStar10 from '$lib/assets/stars/star-10.png';
 import fontDynaPuffVariable from '$lib/assets/fonts/DynaPuff-VariableFont.ttf';
+import fontArial from '$lib/assets/fonts/Arial.ttf';
 import { join } from 'path';
 
 export interface DrillLayout {
@@ -29,6 +34,10 @@ export class DrillBase extends PDFDocument {
 		rowHeight: 0,
 		columnWidth: 0
 	};
+	public header: { withPicture: boolean } = {
+		withPicture: false
+	};
+
 	/** store answers */
 	public answers: Array<number> = [];
 	/** for question numbers */
@@ -58,13 +67,15 @@ export class DrillBase extends PDFDocument {
 				right: 50
 			},
 			info,
-			bufferPages: true
+			bufferPages: true,
 		});
-
 		this.origin_x = this.x;
 
 		// collect data as the PDF is being generated
 		this.on('data', (chunk) => this.buffers.push(chunk));
+
+		this.registerFont('Arial', join(process.cwd(), fontArial));
+		this.registerFont('DynaPuff', join(process.cwd(), fontDynaPuffVariable));
 	}
 
 	addHeader() {
@@ -76,16 +87,44 @@ export class DrillBase extends PDFDocument {
 			this.layout.row * this.layout.column * this.num_page
 		);
 
-		this.registerFont('DynaPuff', join(process.cwd(), fontDynaPuffVariable)).font('DynaPuff');
+		if (this.header.withPicture) {
+			// displayCartoonImage(this, this.x, this.y - 13, 'easy', 60, this.page.width - this.page.margins.left - this.page.margins.right);
+			// displayCartoonImage(this, this.x, this.y - 13, 'easy', 60, this.page.width - this.page.margins.left - this.page.margins.right);
+			this.font('DynaPuff')
+				.fontSize(14)
+				.fillColor('#2acf90')
+				.text(this.title.eng, this.x, this.y, {
+					align: 'center',
+					// baseline: 'bottom'
+				});
+			this.fontSize(11).fillColor('grey').text(`  ${this.title.ms}`, this.x, this.y, {
+				align: 'center',
+				// baseline: 'top'
+			});
+			// this.moveDown(1);
+		} else {
+			this.registerFont('DynaPuff', join(process.cwd(), fontDynaPuffVariable)).font('DynaPuff');
 
-		this.fontSize(16).fillColor('#982cc9').text(this.title.eng, this.x, this.y, {
-			continued: true,
-			baseline: 'middle'
-		});
+			this.fontSize(16).fillColor('#982cc9').text(this.title.eng, this.x, this.y, {
+				continued: true,
+				baseline: 'middle'
+			});
 
-		this.fontSize(11).fillColor('grey').text(`  ${this.title.ms}`, this.x, this.y, {
-			baseline: 'middle'
-		});
+			this.fontSize(11).fillColor('grey').text(`  ${this.title.ms}`, this.x, this.y, {
+				baseline: 'middle'
+			});
+		}
+	}
+
+	public addTitle() {
+		displayCartoonImage(this, this.x, this.y - 13, 'easy', 70);
+		this.font('DynaPuff')
+			.fontSize(14)
+			.fillColor('#2acf90')
+			.text('test', this.x + 120, this.y, {
+				align: 'center',
+				baseline: 'bottom'
+			});
 	}
 
 	drawBorder({ x = 0, y = 0 }: { x?: number; y?: number } = {}) {

@@ -7,7 +7,7 @@ import {
 	displayCartoonImage,
 	displayStarImages,
 	drawOrangeBorder
-} from '$lib/server/drillvendor';
+} from '$lib/utils/draw';
 import { difficultyList } from '$lib/difficulty';
 import fontArial from '$lib/assets/fonts/Arial.ttf';
 

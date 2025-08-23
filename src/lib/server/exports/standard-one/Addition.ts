@@ -1,6 +1,4 @@
 import { DrillBase } from '../base/DrillBase';
-import fontArial from '$lib/assets/fonts/Arial.ttf';
-import { join } from 'path';
 import { getRandomNumber } from '$lib/helper';
 
 export default class Addition extends DrillBase {
@@ -12,7 +10,8 @@ export default class Addition extends DrillBase {
 		this.title.ms = 'Tahun 1 - Penambahan';
 		this.num_page = num_page;
 		this.layout.column = 2;
-
+		this.header.withPicture = true;
+		
 		this.generate();
 		this.generatePageNumbers();
 	}
@@ -29,7 +28,6 @@ export default class Addition extends DrillBase {
 		// y origin point of the first box
 		let y: number = this.y + 20 + y_shift;
 
-		this.registerFont('Arial', join(process.cwd(), fontArial));
 		this.font('Arial').fillColor('black');
 
 		// this.counter = 0;

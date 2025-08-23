@@ -36,7 +36,9 @@ export function displayCartoonImage(
 	PDFKit: PDFKit.PDFDocument,
 	x: number,
 	y: number,
-	difficulty: string
+	difficulty: string, 
+	height: number = 90,
+	width: number = 90,
 ) {
 	let allImagesPath: any;
 
@@ -60,9 +62,12 @@ export function displayCartoonImage(
 
 	let imagePath = join(process.cwd(), module.default as string);
 
+	console.log('displayCartoonImage');
 	PDFKit.image(imagePath, x, y, {
 		align: 'right',
-		height: 90
+		height,
+		width: height,
+		fit: [width, 50 ],
 	});
 }
 

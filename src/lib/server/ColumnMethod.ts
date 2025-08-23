@@ -7,7 +7,7 @@ import {
 	displayCartoonImage,
 	displayStarImages,
 	drawOrangeBorder
-} from '$lib/server/drillvendor';
+} from '$lib/utils/draw';
 import fontArial from '$lib/assets/fonts/Arial.ttf';
 
 import PDFDocument from 'pdfkit';
