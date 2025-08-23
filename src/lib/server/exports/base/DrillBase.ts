@@ -1,8 +1,4 @@
-import {
-	addHeader,
-	displayCartoonImage,
-	drawOrangeBorder
-} from '$lib/utils/draw';
+import { addHeader, displayCartoonImage, drawOrangeBorder } from '$lib/utils/draw';
 import PDFDocument from 'pdfkit';
 import imgStar8 from '$lib/assets/stars/star-8.png';
 import imgStar9 from '$lib/assets/stars/star-9.png';
@@ -10,13 +6,6 @@ import imgStar10 from '$lib/assets/stars/star-10.png';
 import fontDynaPuffVariable from '$lib/assets/fonts/DynaPuff-VariableFont.ttf';
 import fontArial from '$lib/assets/fonts/Arial.ttf';
 import { join } from 'path';
-
-export interface DrillLayout {
-	row: number;
-	column: number;
-	rowHeight: number;
-	columnWidth: number;
-}
 
 export class DrillBase extends PDFDocument {
 	/** The number of pages in the document. */
@@ -28,11 +17,18 @@ export class DrillBase extends PDFDocument {
 	/** The total number of questions. */
 	public total_questions: number = 0;
 	/** question layout */
-	public layout: DrillLayout = {
+	public layout: {
+		row: number;
+		column: number;
+		rowHeight: number;
+		columnWidth: number;
+		cellPadding: number;
+	} = {
 		row: 12,
 		column: 1,
 		rowHeight: 0,
-		columnWidth: 0
+		columnWidth: 0,
+		cellPadding: 0
 	};
 	public header: { withPicture: boolean } = {
 		withPicture: false
@@ -67,7 +63,7 @@ export class DrillBase extends PDFDocument {
 				right: 50
 			},
 			info,
-			bufferPages: true,
+			bufferPages: true
 		});
 		this.origin_x = this.x;
 
@@ -90,15 +86,12 @@ export class DrillBase extends PDFDocument {
 		if (this.header.withPicture) {
 			// displayCartoonImage(this, this.x, this.y - 13, 'easy', 60, this.page.width - this.page.margins.left - this.page.margins.right);
 			// displayCartoonImage(this, this.x, this.y - 13, 'easy', 60, this.page.width - this.page.margins.left - this.page.margins.right);
-			this.font('DynaPuff')
-				.fontSize(14)
-				.fillColor('#2acf90')
-				.text(this.title.eng, this.x, this.y, {
-					align: 'center',
-					// baseline: 'bottom'
-				});
+			this.font('DynaPuff').fontSize(14).fillColor('#2acf90').text(this.title.eng, this.x, this.y, {
+				align: 'center'
+				// baseline: 'bottom'
+			});
 			this.fontSize(11).fillColor('grey').text(`  ${this.title.ms}`, this.x, this.y, {
-				align: 'center',
+				align: 'center'
 				// baseline: 'top'
 			});
 			// this.moveDown(1);
@@ -243,10 +236,35 @@ export class DrillBase extends PDFDocument {
 		this.drawAnswers();
 	}
 
-	/** each drill might have multiple types of questions so each one need to be custom.
-	 * therefore, overwrite this function to add the specific logic for that drill
+	public drawAllQuestions() {
+		// x origin point of the first box
+		let x: number = this.origin_x + (this.cellPadding / 2);
+
+		// y origin point of the first box
+		let y: number = this.y + (this.cellPadding / 2);
+
+		this.font('Arial').fillColor('black');
+
+		for (let index = 0; index < this.layout.row; index++) {
+			for (let j = 0; j < this.layout.column; j++) {
+				let x_point = x + j * this.layout.columnWidth;
+				let y_point = y + index * this.layout.rowHeight;
+
+				this.drawQuestion(x_point, y_point);
+			}	
+		}
+	}
+
+	/**
+	 * overwrite this method to draw question specifically for each drill
+	 * Remember, for one question only. This function will be called multiple times in drawAllQuestions()
+	 * @param x coordinate x
+	 * @param y coordinate y
 	 */
-	public drawAllQuestions() {}
+	public drawQuestion(x: number, y: number): void {
+		console.log('Please overwrite this method to draw question specifically for each drill');
+		
+	}
 
 	/**
 	 * @param x coordinate x
@@ -334,5 +352,11 @@ export class DrillBase extends PDFDocument {
 				// 'Content-Disposition': 'attachment' // direct download
 			}
 		});
+	}
+
+	// ACCESSOR METHODS
+
+	public get cellPadding(): number {
+		return this.layout.cellPadding;
 	}
 }

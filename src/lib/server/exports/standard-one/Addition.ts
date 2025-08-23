@@ -11,48 +11,27 @@ export default class Addition extends DrillBase {
 		this.num_page = num_page;
 		this.layout.column = 2;
 		this.header.withPicture = true;
-		
+		this.layout.cellPadding = 30;
+
 		this.generate();
 		this.generatePageNumbers();
 	}
 
-	public drawAllQuestions() {
-		let layout_padding = 0;
-		let box_width: number = this.layout.columnWidth - layout_padding;
-		let x_shift: number = (this.layout.columnWidth - box_width) / 2;
-		// x origin point of the first box
-		let x: number = this.origin_x + 10 + x_shift;
+	public drawQuestion(x: number, y: number): void {
+		let addends = this.getAddends();
+		this.answers[this.counter] = addends.reduce((sum, addend) => sum + addend, 0);
+		let formatted_addends = addends.map((addend) => addend.toLocaleString());
 
-		let box_height: number = this.layout.rowHeight - layout_padding;
-		let y_shift: number = (this.layout.rowHeight - box_height) / 2;
-		// y origin point of the first box
-		let y: number = this.y + 20 + y_shift;
+		let question_string = formatted_addends.join(' + ') + ' = ';
 
-		this.font('Arial').fillColor('black');
-
-		// this.counter = 0;
-
-		for (let index = 0; index < this.layout.row; index++) {
-			for (let j = 0; j < this.layout.column; j++) {
-				let x_point = x + j * this.layout.columnWidth;
-				let y_point = y + index * this.layout.rowHeight;
-
-				let addends = this.getAddends();
-				this.answers[this.counter] = addends.reduce((sum, addend) => sum + addend, 0);
-				let formatted_addends = addends.map((addend) => addend.toLocaleString());
-
-				let question_string = formatted_addends.join(' + ') + ' = ';
-
-				this.fontSize(16)
-					.text(`${++this.counter})  `, x_point, y_point, {
-						continued: true
-					})
-					.text(`${question_string}`, {
-						// wordSpacing: 1,
-						characterSpacing: 2
-					});
-			}
-		}
+		this.fontSize(16)
+			.text(`${++this.counter})  `, x, y, {
+				continued: true
+			})
+			.text(`${question_string}`, {
+				// wordSpacing: 1,
+				characterSpacing: 2
+			});
 	}
 
 	private getAddends() {
