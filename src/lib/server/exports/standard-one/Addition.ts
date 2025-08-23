@@ -11,7 +11,6 @@ export default class Addition extends DrillBase {
 		this.num_page = num_page;
 		this.layout.column = 2;
 		this.header.withPicture = true;
-		this.layout.cellPadding = 30;
 
 		this.generate();
 		this.generatePageNumbers();

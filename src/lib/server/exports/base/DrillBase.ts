@@ -28,7 +28,7 @@ export class DrillBase extends PDFDocument {
 		column: 1,
 		rowHeight: 0,
 		columnWidth: 0,
-		cellPadding: 0
+		cellPadding: 30
 	};
 	public header: { withPicture: boolean } = {
 		withPicture: false

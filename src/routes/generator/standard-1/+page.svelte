@@ -10,6 +10,10 @@
 		{
 			title: 'Penambahan Bentuk Lazim',
 			type: 'addition-standard-form'
+		},
+		{
+			title: 'Penolakan',
+			type: 'subtraction'
 		}
 	];
 
