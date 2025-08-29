@@ -1,4 +1,4 @@
-import { addHeader, displayCartoonImage, drawOrangeBorder } from '$lib/utils/draw';
+import { addHeader, displayCartoonImage, drawAnimalImage, drawOrangeBorder } from '$lib/utils/draw';
 import PDFDocument from 'pdfkit';
 import imgStar8 from '$lib/assets/stars/star-8.png';
 import imgStar9 from '$lib/assets/stars/star-9.png';
@@ -84,6 +84,9 @@ export class DrillBase extends PDFDocument {
 		);
 
 		if (this.header.withPicture) {
+			drawAnimalImage(this,this.origin_x + (this.trueWidth/9), this.y-10, 90, 90);
+			drawAnimalImage(this,this.origin_x + (this.trueWidth * 7/9), this.y-10, 90, 90);
+			// drawAnimalImage(this,this.origin_x, this.y, 90, 90);
 			// displayCartoonImage(this, this.x, this.y - 13, 'easy', 60, this.page.width - this.page.margins.left - this.page.margins.right);
 			// displayCartoonImage(this, this.x, this.y - 13, 'easy', 60, this.page.width - this.page.margins.left - this.page.margins.right);
 			this.font('DynaPuff').fontSize(14).fillColor('#2acf90').text(this.title.eng, this.x, this.y, {
@@ -94,7 +97,7 @@ export class DrillBase extends PDFDocument {
 				align: 'center'
 				// baseline: 'top'
 			});
-			// this.moveDown(1);
+			this.moveDown(1);
 		} else {
 			this.registerFont('DynaPuff', join(process.cwd(), fontDynaPuffVariable)).font('DynaPuff');
 
@@ -358,5 +361,9 @@ export class DrillBase extends PDFDocument {
 
 	public get cellPadding(): number {
 		return this.layout.cellPadding;
+	}
+
+	public get trueWidth(): number {
+		return this.page.width - this.page.margins.left - this.page.margins.right;
 	}
 }

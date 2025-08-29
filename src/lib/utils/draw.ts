@@ -37,8 +37,7 @@ export function displayCartoonImage(
 	x: number,
 	y: number,
 	difficulty: string, 
-	height: number = 90,
-	width: number = 90,
+	height: number = 90
 ) {
 	let allImagesPath: any;
 
@@ -62,14 +61,54 @@ export function displayCartoonImage(
 
 	let imagePath = join(process.cwd(), module.default as string);
 
-	console.log('displayCartoonImage');
 	PDFKit.image(imagePath, x, y, {
 		align: 'right',
 		height,
-		width: height,
+	});
+}
+
+/** 
+ * draw animal images
+ */
+export function drawAnimalImage(
+	PDFKit: PDFKit.PDFDocument,
+	x: number,
+	y: number,
+	height: number = 90,
+	width: number = 90,
+) {
+	let allImagesPath: any; 
+	let paths: any;
+
+	switch (Math.floor(Math.random() * 3)) {
+		default:
+		case 0:
+			paths = import.meta.glob('/src/lib/assets/animals/easy/*.png', {eager: true});
+			break;
+		case 1:
+			paths = import.meta.glob('/src/lib/assets/animals/medium/*.png', {eager: true});
+			break;
+		case 2:
+			paths = import.meta.glob('/src/lib/assets/animals/hard/*.png', {eager: true});
+			break;
+	}
+
+	const imagePaths = Object.keys(paths);
+	const randomIndex = Math.floor(Math.random() * imagePaths.length);
+	const selectedImagePath = imagePaths[randomIndex];
+	const module = paths[selectedImagePath];
+
+	let imagePath = join(process.cwd(), module.default as string);
+
+	PDFKit.image(imagePath, x, y, {
+		// align: 'right',
+		height,
+		width,
 		fit: [width, 50 ],
 	});
 }
+
+
 
 export function addTitleBox(
 	PDFKit: PDFKit.PDFDocument,
