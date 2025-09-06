@@ -241,10 +241,10 @@ export class DrillBase extends PDFDocument {
 
 	public drawAllQuestions() {
 		// x origin point of the first box
-		let x: number = this.origin_x + (this.cellPadding / 2);
+		let x: number = this.origin_x + this.cellPadding;
 
 		// y origin point of the first box
-		let y: number = this.y + (this.cellPadding / 2);
+		let y: number = this.y + this.cellPadding;
 
 		this.font('Arial').fillColor('black');
 

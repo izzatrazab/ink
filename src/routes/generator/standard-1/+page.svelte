@@ -14,7 +14,11 @@
 		{
 			title: 'Penolakan',
 			type: 'subtraction'
-		}
+		},
+		{
+			title: 'Penolakan Bentuk Lazim',
+			type: 'subtraction-standard-form'
+		},
 	];
 
 	function action(type: string): string {
