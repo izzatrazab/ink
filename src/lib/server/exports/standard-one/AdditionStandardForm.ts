@@ -1,6 +1,4 @@
 import { DrillBase } from '../base/DrillBase';
-import { join } from 'path';
-import fontArial from '$lib/assets/fonts/Arial.ttf';
 import { getRandomNumber } from '$lib/helper';
 
 export default class AdditionStandardForm extends DrillBase {
@@ -14,8 +12,7 @@ export default class AdditionStandardForm extends DrillBase {
 		this.origin_x = this.x;
         this.layout.column = 3;
         this.layout.row = 5;
-
-		this.registerFont('Arial', join(process.cwd(), fontArial));
+		this.header.withPicture = true;
 
 		this.generate();
 		this.generatePageNumbers();
