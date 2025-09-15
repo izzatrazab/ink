@@ -35,15 +35,32 @@ export default class Subtraction extends DrillBase {
 	}
 
 	private getNumbers() {
-		return this.caseOne();
+		switch (Math.floor(Math.random() * 2)) {
+			default:
+			case 0:
+				return this.caseOne();
+			case 1:
+				return this.caseTwo();
+		}
 	}
+
 	private caseOne() {
-        let num1: number;
-        let num2: number;
-        do {
-            num1 = getRandomNumber(1);
-            num2 = getRandomNumber(1);
-        } while (num1 < num2);
+		let num1: number;
+		let num2: number;
+		do {
+			num1 = getRandomNumber(1);
+			num2 = getRandomNumber(1);
+		} while (num1 < num2);
+		return [num1, num2];
+	}
+
+	private caseTwo() {
+		let num1: number;
+		let num2: number;
+		do {
+			num1 = getRandomNumber(2);
+			num2 = getRandomNumber(1);
+		} while (num1 < num2);
 		return [num1, num2];
 	}
 }
