@@ -3,11 +3,11 @@ import { DrillBase } from '../base/DrillBase';
 
 export default class SubtractionStandardForm extends DrillBase {
 	constructor(num_page: number) {
-		let eng_title = 'Standard 1 - Subtraction';
+		let eng_title = 'Standard 1 - Subtraction Standard Form';
 		super({ Title: eng_title });
 
 		this.title.eng = eng_title;
-		this.title.ms = 'Tahun 1 - Penolakan';
+		this.title.ms = 'Tahun 1 - Penolakan Bentuk Lazim';
 		this.num_page = num_page;
 		this.layout.column = 3;
 		this.layout.row = 5;

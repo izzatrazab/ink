@@ -10,50 +10,31 @@ export default class AdditionStandardForm extends DrillBase {
 		this.title.ms = 'Tahun 1 - Penambahan Bentuk Lazim';
 		this.num_page = num_page;
 		this.origin_x = this.x;
-        this.layout.column = 3;
-        this.layout.row = 5;
+		this.layout.column = 3;
+		this.layout.row = 5;
 		this.header.withPicture = true;
 
 		this.generate();
 		this.generatePageNumbers();
 	}
 
-	public drawAllQuestions(): void {
-		let columnMethodWidth: number = this.layout.columnWidth / 1.5;
-        
-		let x_shift: number = (this.layout.columnWidth - columnMethodWidth) / 2;
-		let x: number = this.origin_x + x_shift;
+	public drawQuestion(x: number, y: number): void {
+		let numbers = this.getNumbers();
 
-		let columnMethodHeight: number = this.layout.rowHeight - 10;
-		let y_shift: number = (this.layout.rowHeight - columnMethodHeight) / 2;
-		let y: number = this.y + y_shift + 20;
+		this.answers[this.counter] = numbers.reduce((result, num) => result + num, 0);
 
-		this.font('Arial').fillColor('black');
-
-		for (let index = 0; index < this.layout.row; index++) {
-			for (let j = 0; j < this.layout.column; j++) {
-				let x_point = x + j * this.layout.columnWidth;
-				let y_point = y + index * this.layout.rowHeight;
-
-				let addends = this.getAddends();
-				this.answers[this.counter] = addends.reduce((sum, addend) => sum + addend, 0);
-
-				/** end of generating random a question */
-				
-				this.drawColumnMethod(
-					x_point,
-					y_point,
-					addends[0],
-					addends[1],
-					'+',
-					columnMethodWidth,
-					++this.counter
-				);
-			}
-		}
+		this.drawColumnMethod(
+			x,
+			y,
+			numbers[0],
+			numbers[1],
+			'+',
+			this.layout.columnWidth / 1.5,
+			++this.counter
+		);
 	}
 
-	private getAddends() {
+	private getNumbers() {
 		return this.caseOne();
 	}
 

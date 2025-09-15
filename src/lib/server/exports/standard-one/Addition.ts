@@ -1,5 +1,5 @@
-import { DrillBase } from '../base/DrillBase';
 import { getRandomNumber } from '$lib/helper';
+import { DrillBase } from '../base/DrillBase';
 
 export default class Addition extends DrillBase {
 	constructor(num_page: number) {
