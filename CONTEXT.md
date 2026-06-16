@@ -2,6 +2,15 @@
 
 Generates printable, bilingual (English / Malay) PDF maths worksheets for Malaysian primary-school grades. Each worksheet is a grid of arithmetic questions plus an answer sheet.
 
+## Architecture
+
+Two layers, separated by the **Question** seam:
+
+- **`src/lib/questions/`** — the pure layer. Generators pick operands; the Evaluator computes answers. No `pdfkit`, no server code. This is where the maths lives and where it is tested. (ADR-0001, ADR-0002)
+- **`src/lib/server/`** — the drawing layer. Drill classes extend `DrillBase` (a `pdfkit` document) and only render pre-generated Questions onto the page. Routes under `src/routes/exports/` turn a Drill into a PDF HTTP response.
+
+To understand a drill, read its Generator (the rules) and its drawing class (the layout) — they are separate on purpose. Long division is the one drill outside this seam (ADR-0003).
+
 ## Language
 
 **Drill**:
