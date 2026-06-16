@@ -1,7 +1,10 @@
-import { getRandomNumber } from '$lib/helper';
 import { DrillBase } from '../base/DrillBase';
+import { generateSubtractionStandardForm } from '$lib/questions/standard-one/subtractionStandardForm';
+import type { Question } from '$lib/questions/evaluate';
 
 export default class SubtractionStandardForm extends DrillBase {
+	private questions: Question[];
+
 	constructor(num_page: number) {
 		let eng_title = 'Standard 1 - Subtraction Standard Form';
 		super({ Title: eng_title });
@@ -13,37 +16,25 @@ export default class SubtractionStandardForm extends DrillBase {
 		this.layout.row = 5;
 		this.header.withPicture = true;
 
+		const total = this.layout.row * this.layout.column * this.num_page;
+		this.questions = Array.from({ length: total }, () => generateSubtractionStandardForm());
+
 		this.generate();
 		this.generatePageNumbers();
 	}
 
 	public drawQuestion(x: number, y: number): void {
-		let numbers = this.getNumbers();
-
-		this.answers[this.counter] = numbers.slice(1).reduce((result, num) => result - num, numbers[0]);
+		const q = this.questions[this.counter];
+		this.answers[this.counter] = q.answer;
 
 		this.drawColumnMethod(
 			x,
 			y,
-			numbers[0],
-			numbers[1],
-			'-',
+			q.operands[0],
+			q.operands[1],
+			q.operator,
 			this.layout.columnWidth / 1.5,
 			++this.counter
 		);
-	}
-
-	private getNumbers() {
-		return this.caseOne();
-	}
-
-	private caseOne() {
-		let num1: number;
-		let num2: number;
-		do {
-			num1 = getRandomNumber(1);
-			num2 = getRandomNumber(1);
-		} while (num1 < num2);
-		return [num1, num2];
 	}
 }
