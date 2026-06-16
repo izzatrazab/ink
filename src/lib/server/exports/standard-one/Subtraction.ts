@@ -25,17 +25,6 @@ export default class Subtraction extends DrillBase {
 	public drawQuestion(x: number, y: number): void {
 		const q = this.questions[this.counter];
 		this.answers[this.counter] = q.answer;
-		let formatted_addends = q.operands.map((n) => n.toLocaleString());
-
-		let question_string = formatted_addends.join(` ${q.operator} `) + ' = ';
-
-		this.fontSize(16)
-			.text(`${++this.counter})  `, x, y, {
-				continued: true
-			})
-			.text(`${question_string}`, {
-				// wordSpacing: 1,
-				characterSpacing: 2
-			});
+		this.drawInlineForm(x, y, q, ++this.counter);
 	}
 }

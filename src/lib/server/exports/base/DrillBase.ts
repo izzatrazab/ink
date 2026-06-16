@@ -5,6 +5,7 @@ import imgStar9 from '$lib/assets/stars/star-9.png';
 import imgStar10 from '$lib/assets/stars/star-10.png';
 import fontDynaPuffVariable from '$lib/assets/fonts/DynaPuff-VariableFont.ttf';
 import fontArial from '$lib/assets/fonts/Arial.ttf';
+import type { Question } from '$lib/questions/evaluate';
 import { join } from 'path';
 
 export class DrillBase extends PDFDocument {
@@ -267,6 +268,29 @@ export class DrillBase extends PDFDocument {
 	public drawQuestion(x: number, y: number): void {
 		console.log('Please overwrite this method to draw question specifically for each drill');
 		
+	}
+
+	/**
+	 * Draw one Question in inline form: `n)  a + b = `. The counterpart to
+	 * drawColumnMethod for the inline presentation; renders the Question's own
+	 * operands and operator on a single line.
+	 * @param x coordinate x
+	 * @param y coordinate y
+	 * @param question the Question to render
+	 * @param questionNumber the 1-based number shown before the equation
+	 */
+	public drawInlineForm(x: number, y: number, question: Question, questionNumber: number) {
+		const formatted = question.operands.map((n) => n.toLocaleString());
+		const question_string = formatted.join(` ${question.operator} `) + ' = ';
+
+		this.fontSize(16)
+			.text(`${questionNumber})  `, x, y, {
+				continued: true
+			})
+			.text(question_string, {
+				wordSpacing: 5,
+				characterSpacing: 2
+			});
 	}
 
 	/**
