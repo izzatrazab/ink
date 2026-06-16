@@ -24,12 +24,18 @@ export class DrillBase extends PDFDocument {
 		rowHeight: number;
 		columnWidth: number;
 		cellPadding: number;
+		/** X offset of the first question from the content origin. */
+		questionOriginX: number;
+		/** Y offset of the first question from the current Y. */
+		questionOriginY: number;
 	} = {
 		row: 12,
 		column: 1,
 		rowHeight: 0,
 		columnWidth: 0,
-		cellPadding: 30
+		cellPadding: 30,
+		questionOriginX: 30,
+		questionOriginY: 30
 	};
 	public header: { withPicture: boolean } = {
 		withPicture: false
@@ -242,10 +248,10 @@ export class DrillBase extends PDFDocument {
 
 	public drawAllQuestions() {
 		// x origin point of the first box
-		let x: number = this.origin_x + this.cellPadding;
+		let x: number = this.origin_x + this.layout.questionOriginX;
 
 		// y origin point of the first box
-		let y: number = this.y + this.cellPadding;
+		let y: number = this.y + this.layout.questionOriginY;
 
 		this.font('Arial').fillColor('black');
 
