@@ -1,9 +1,12 @@
-import { getRandomNumber } from '$lib/helper';
 import { DrillBase } from '../base/DrillBase';
 import { join } from 'path';
 import fontArial from '$lib/assets/fonts/Arial.ttf';
+import { generateDivision } from '$lib/questions/standard-6/division';
+import type { Question } from '$lib/questions/evaluate';
 
 export default class Division extends DrillBase {
+	private questions: Question[];
+
 	constructor(num_page: number) {
 		let eng_title = 'Standard 6 - Division';
 		super({ Title: eng_title });
@@ -12,6 +15,9 @@ export default class Division extends DrillBase {
 		this.title.ms = 'Tahun 6 - Pembahagian';
 		this.num_page = num_page;
 		this.origin_x = this.x;
+
+		const total = this.layout.row * this.layout.column * this.num_page;
+		this.questions = Array.from({ length: total }, () => generateDivision());
 
 		this.generate();
 		this.generatePageNumbers();
@@ -50,12 +56,11 @@ export default class Division extends DrillBase {
 				let x_point = x + j * this.layout.columnWidth;
 				let y_point = y + index * this.layout.rowHeight;
 
-				let nums = [getRandomNumber(7), getRandomNumber(1)];
+				const q = this.questions[this.counter];
+				this.answers[this.counter] = q.answer;
 
-				this.answers[this.counter] = nums[0] / nums[1];
-
-				let formatted_nums = nums.map((num) => num.toLocaleString());
-				let question_string = formatted_nums.join(' ÷ ') + ' = ';
+				let formatted_nums = q.operands.map((num) => num.toLocaleString());
+				let question_string = formatted_nums.join(` ${q.operator} `) + ' = ';
 
 				this.fontSize(16)
 					.text(`${++this.counter})  `, x_point, y_point, {
