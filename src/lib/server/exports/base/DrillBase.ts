@@ -41,8 +41,8 @@ export class DrillBase extends PDFDocument {
 		withPicture: false
 	};
 
-	/** store answers */
-	public answers: Array<number> = [];
+	/** the Questions this drill renders; the answer sheet is read from here */
+	protected questions: Question[] = [];
 	/** for question numbers */
 	public counter: number = 0;
 	public title = {
@@ -185,7 +185,7 @@ export class DrillBase extends PDFDocument {
 
 		//reset font and font color
 		this.font('Arial').fontSize(12).fillColor('black').moveDown(1);
-		let formatted_answers = this.answers.map((answer) => answer.toLocaleString());
+		let formatted_answers = this.questions.map((q) => q.answer.toLocaleString());
 
 		this.moveDown(1);
 

@@ -1,10 +1,6 @@
 import { DrillBase } from '../base/DrillBase';
 import { generateAdditionStandardForm } from '$lib/questions/standard-one/additionStandardForm';
-import type { Question } from '$lib/questions/evaluate';
-
 export default class AdditionStandardForm extends DrillBase {
-	private questions: Question[];
-
 	constructor(num_page: number) {
 		let eng_title = 'Standard 1 - Addition Standard Form';
 		super({ Title: eng_title });
@@ -26,7 +22,6 @@ export default class AdditionStandardForm extends DrillBase {
 
 	public drawQuestion(x: number, y: number): void {
 		const q = this.questions[this.counter];
-		this.answers[this.counter] = q.answer;
 
 		this.drawColumnMethod(
 			x,

@@ -1,10 +1,6 @@
 import { DrillBase } from '../base/DrillBase';
 import { generateSubtractionStandardForm } from '$lib/questions/standard-one/subtractionStandardForm';
-import type { Question } from '$lib/questions/evaluate';
-
 export default class SubtractionStandardForm extends DrillBase {
-	private questions: Question[];
-
 	constructor(num_page: number) {
 		let eng_title = 'Standard 1 - Subtraction Standard Form';
 		super({ Title: eng_title });
@@ -25,7 +21,6 @@ export default class SubtractionStandardForm extends DrillBase {
 
 	public drawQuestion(x: number, y: number): void {
 		const q = this.questions[this.counter];
-		this.answers[this.counter] = q.answer;
 
 		this.drawColumnMethod(
 			x,
