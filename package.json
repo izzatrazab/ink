@@ -17,30 +17,30 @@
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^3.3.1",
 		"@sveltejs/adapter-vercel": "^5.10.3",
-		"@sveltejs/kit": "^2.53.0",
+		"@sveltejs/kit": "^2.65.1",
 		"@sveltejs/vite-plugin-svelte": "^4.0.4",
 		"@types/eslint": "^9.6.1",
 		"@types/pdfkit": "^0.13.9",
-		"autoprefixer": "^10.4.24",
-		"daisyui": "^5.5.19",
-		"eslint": "^9.39.3",
+		"autoprefixer": "^10.5.0",
+		"daisyui": "^5.5.23",
+		"eslint": "^9.39.4",
 		"eslint-config-prettier": "^9.1.2",
 		"eslint-plugin-svelte": "^2.46.1",
 		"globals": "^15.15.0",
-		"prettier": "^3.8.1",
-		"prettier-plugin-svelte": "^3.5.0",
+		"prettier": "^3.8.4",
+		"prettier-plugin-svelte": "^3.5.2",
 		"prettier-plugin-tailwindcss": "^0.6.14",
-		"svelte": "^5.53.1",
-		"svelte-check": "^4.4.3",
+		"svelte": "^5.56.3",
+		"svelte-check": "^4.6.0",
 		"typescript": "^5.9.3",
-		"typescript-eslint": "^8.56.0",
+		"typescript-eslint": "^8.61.1",
 		"vite": "^5.4.21"
 	},
 	"dependencies": {
-		"@tailwindcss/vite": "^4.2.0",
+		"@tailwindcss/vite": "^4.3.1",
 		"esbuild": "^0.25.12",
 		"pdfkit": "^0.17.2",
-		"tailwindcss": "^4.2.0"
+		"tailwindcss": "^4.3.1"
 	},
 	"pnpm": {
 		"onlyBuiltDependencies": [
