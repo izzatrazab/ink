@@ -1,9 +1,12 @@
 import { DrillBase } from '../base/DrillBase';
 import fontArial from '$lib/assets/fonts/Arial.ttf';
 import { join } from 'path';
-import { getRandomNumber } from '$lib/helper';
+import { generateAddition } from '$lib/questions/standard-6/addition';
+import type { Question } from '$lib/questions/evaluate';
 
 export default class Addition extends DrillBase {
+	private questions: Question[];
+
 	constructor(num_page: number) {
 		let eng_title = 'Standard 6 - Addition';
 		super({ Title: eng_title });
@@ -12,6 +15,9 @@ export default class Addition extends DrillBase {
 		this.title.ms = 'Tahun 6 - Penambahan';
 		this.num_page = num_page;
 		this.origin_x = this.x;
+
+		const total = this.layout.row * this.layout.column * this.num_page;
+		this.questions = Array.from({ length: total }, () => generateAddition());
 
 		this.generate();
 		this.generatePageNumbers();
@@ -51,11 +57,11 @@ export default class Addition extends DrillBase {
 				let x_point = x + j * this.layout.columnWidth;
 				let y_point = y + index * this.layout.rowHeight;
 
-				let addends = [getRandomNumber(6), getRandomNumber(6), getRandomNumber(6)];
-				this.answers[this.counter] = addends.reduce((sum, addend) => sum + addend, 0);
-				let formatted_addends = addends.map((addend) => addend.toLocaleString());
+				const q = this.questions[this.counter];
+				this.answers[this.counter] = q.answer;
+				let formatted_addends = q.operands.map((n) => n.toLocaleString());
 
-				let question_string = formatted_addends.join(' + ') + ' = ';
+				let question_string = formatted_addends.join(` ${q.operator} `) + ' = ';
 
 				this.fontSize(16)
 					.text(`${++this.counter})  `, x_point, y_point, {

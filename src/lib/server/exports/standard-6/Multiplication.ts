@@ -1,9 +1,12 @@
 import { DrillBase } from '../base/DrillBase';
 import fontArial from '$lib/assets/fonts/Arial.ttf';
 import { join } from 'path';
-import { getRandomNumber, shuffleArray } from '$lib/helper';
+import { generateMultiplication } from '$lib/questions/standard-6/multiplication';
+import type { Question } from '$lib/questions/evaluate';
 
 export default class Multiplication extends DrillBase {
+	private questions: Question[];
+
 	constructor(num_page: number) {
 		let eng_title = 'Standard 6 - Multiplication';
 		super({ Title: eng_title });
@@ -12,6 +15,9 @@ export default class Multiplication extends DrillBase {
 		this.title.ms = 'Tahun 6 - Pendaraban';
 		this.num_page = num_page;
 		this.origin_x = this.x;
+
+		const total = this.layout.row * this.layout.column * this.num_page;
+		this.questions = Array.from({ length: total }, () => generateMultiplication());
 
 		this.generate();
 		this.generatePageNumbers();
@@ -50,13 +56,11 @@ export default class Multiplication extends DrillBase {
 				let x_point = x + j * this.layout.columnWidth;
 				let y_point = y + index * this.layout.rowHeight;
 
-				let nums = [getRandomNumber(1), getRandomNumber(7)];
-				nums = shuffleArray(nums);
+				const q = this.questions[this.counter];
+				this.answers[this.counter] = q.answer;
+				let formatted_nums = q.operands.map((n) => n.toLocaleString());
 
-				this.answers[this.counter] = nums.reduce((result, num) => result * num, 1);
-				let formatted_nums = nums.map((num) => num.toLocaleString());
-
-				let question_string = formatted_nums.join(' x ') + ' = ';
+				let question_string = formatted_nums.join(` ${q.operator} `) + ' = ';
 
 				this.fontSize(16)
 					.text(`${++this.counter})  `, x_point, y_point, {

@@ -1,7 +1,10 @@
-import { getRandomNumber } from '$lib/helper';
 import { DrillBase } from '../base/DrillBase';
+import { generateSubtraction } from '$lib/questions/standard-one/subtraction';
+import type { Question } from '$lib/questions/evaluate';
 
 export default class Subtraction extends DrillBase {
+	private questions: Question[];
+
 	constructor(num_page: number) {
 		let eng_title = 'Standard 1 - Subtraction';
 		super({ Title: eng_title });
@@ -12,17 +15,19 @@ export default class Subtraction extends DrillBase {
 		this.layout.column = 2;
 		this.header.withPicture = true;
 
+		const total = this.layout.row * this.layout.column * this.num_page;
+		this.questions = Array.from({ length: total }, () => generateSubtraction());
+
 		this.generate();
 		this.generatePageNumbers();
 	}
 
 	public drawQuestion(x: number, y: number): void {
-		let numbers = this.getNumbers();
+		const q = this.questions[this.counter];
+		this.answers[this.counter] = q.answer;
+		let formatted_addends = q.operands.map((n) => n.toLocaleString());
 
-		this.answers[this.counter] = numbers.slice(1).reduce((result, num) => result - num, numbers[0]);
-		let formatted_addends = numbers.map((num) => num.toLocaleString());
-
-		let question_string = formatted_addends.join(' - ') + ' = ';
+		let question_string = formatted_addends.join(` ${q.operator} `) + ' = ';
 
 		this.fontSize(16)
 			.text(`${++this.counter})  `, x, y, {
@@ -32,35 +37,5 @@ export default class Subtraction extends DrillBase {
 				// wordSpacing: 1,
 				characterSpacing: 2
 			});
-	}
-
-	private getNumbers() {
-		switch (Math.floor(Math.random() * 2)) {
-			default:
-			case 0:
-				return this.caseOne();
-			case 1:
-				return this.caseTwo();
-		}
-	}
-
-	private caseOne() {
-		let num1: number;
-		let num2: number;
-		do {
-			num1 = getRandomNumber(1);
-			num2 = getRandomNumber(1);
-		} while (num1 < num2);
-		return [num1, num2];
-	}
-
-	private caseTwo() {
-		let num1: number;
-		let num2: number;
-		do {
-			num1 = getRandomNumber(2);
-			num2 = getRandomNumber(1);
-		} while (num1 < num2);
-		return [num1, num2];
 	}
 }
