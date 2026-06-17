@@ -1,75 +1,71 @@
-# Math Drill Generator
+# Transformasi Isometri — Interactive Lessons
 
-Generates printable, bilingual (English / Malay) PDF maths worksheets for Malaysian primary-school grades. Each worksheet is a grid of arithmetic questions plus an answer sheet.
+An interactive web app that _teaches_ (not merely drills) Form 2 KSSM Mathematics **Chapter 11, Transformasi Isometri**, through manipulable SVG. Scope is deliberately one topic: **Translation** (Section 11.2), with **Transformation + Congruency** (Section 11.1) as its conceptual on-ramp. The other isometries are out of scope (ADR-0008).
 
-## Architecture
-
-Two layers, separated by the **Question** seam:
-
-- **`src/lib/questions/`** — the pure layer. Generators pick operands; the Evaluator computes answers. No `pdfkit`, no server code. This is where the maths lives and where it is tested. (ADR-0001, ADR-0002)
-- **`src/lib/server/`** — the drawing layer. Drill classes only render pre-generated Questions onto the page (most extend `DrillBase`, a `pdfkit` document; ColumnMethod is standalone — ADR-0004). Routes under `src/routes/exports/` turn a Drill into a PDF HTTP response. The grade Drills (Standard 1 and Standard 6) are reached through one **Drill registry** (`src/lib/server/exports/registry.ts`) behind a single `[type]` route per grade; ColumnMethod and LongDivisionMethod keep their own routes (ADR-0007).
-
-To understand a drill, read its Generator (the rules) and its drawing class (the layout) — they are separate on purpose. Long division sits in the seam too, but on its own shape (the **Long-division problem**, not the **Question**) with its own evaluator (ADR-0003).
+> The earlier PDF drill generator is superseded but its code is still in the repo, parked at `/generator`. ADR-0001–0007 describe that prior system, not this one.
 
 ## Language
 
-**Drill**:
-One kind of worksheet — a specific grade + operation + presentation (e.g. "Standard 1 Subtraction, standard form"). Implemented today as a class.
+Headwords are English (used in code); the Malay term in parentheses is what appears on screen, taken from the textbook.
 
-**Worksheet**:
-The rendered PDF a Drill produces: N question pages followed by an answer sheet.
-_Avoid_: document, sheet (when you mean the whole thing).
+**Transformation** (_Transformasi_):
+A change to an object's position, orientation, or size. Produces an **Image**.
+_Avoid_: move, change, manipulation.
 
-**Question**:
-The data for one arithmetic problem, independent of how it is drawn: a list of operands, one operator, and one answer. Shape: `{ operands: number[]; operator: string; answer: number }`.
-_Avoid_: problem, sum, equation.
+**Isometric transformation** (_Transformasi isometri_):
+A **Transformation** that preserves shape and size — so its **Image** is **congruent** to the **Object**. Translation, reflection, and rotation are isometric; enlargement is not.
+_Avoid_: rigid motion, isometry (in UI text — use the full term).
 
-**Generator**:
-The part of a Drill that picks a Question's operands and operator so they are valid for that grade (e.g. Standard-1 subtraction never goes negative; division divides evenly). It does not draw and does not compute the answer.
-_Avoid_: builder, factory.
+**Object** (_Objek_):
+The original figure, before a **Transformation** is applied.
+_Avoid_: original, source, pre-image.
 
-**Evaluator**:
-The single shared function that computes a Question's answer from its operands and operator (`+` sum, `-` fold-subtract, `×` product, `÷` fold-divide). One true source of answers.
+**Image** (_Imej_):
+The figure produced by applying a **Transformation** to an **Object**.
+_Avoid_: copy, result, output.
 
-**Long-division problem**:
-The data for one long-division item — its own shape, distinct from a **Question** because the answer is two numbers, not one (ADR-0003). Shape: `{ dividend: number; divisor: number; quotient: number; remainder: number }`. The `divisor` is single-digit and `≥ 2`; difficulty sizes the `dividend` only. `remainder > 0` exactly when the drill asks for remainder problems.
-_Avoid_: dividing the dividend and divisor into a generic `operands` array — their roles are asymmetric.
+**Congruency** (_Kekongruenan_):
+The property of two figures having the same shape and size, regardless of position or orientation. The textbook's touchstone: all 10-sen coins are congruent; a 20-sen and a 10-sen are _similar but not congruent_.
+_Avoid_: equality, sameness, similarity (similarity is a different concept — same shape, different size).
 
-**Long-division evaluator**:
-The shared `longDivide(dividend, divisor) → { quotient, remainder }` — the one true source of a **Long-division problem**'s answer, the same role the **Evaluator** plays for a **Question** (ADR-0002, ADR-0003). A long-division Generator picks a valid dividend/divisor; it never hand-writes the quotient or remainder.
+**Orientation** (_Orientasi_):
+The rotational/reflective "facing" of a figure. The distinguishing property among isometries: **Translation** preserves orientation; reflection reverses it.
+_Avoid_: direction, angle, rotation.
 
-**Operator**:
-The arithmetic symbol of a Question: `+`, `-`, `×`, `÷`.
-_Avoid_: operation symbol, sign.
+**Translation** (_Translasi_):
+The **Isometric transformation** that slides every point of a figure the same distance in the same direction. Preserves shape, size, **and** orientation. Described by a **Translation vector**.
+_Avoid_: slide, move, shift (in domain text).
 
-**Standard**:
-A Malaysian primary grade (Standard / Tahun 1–6). Sets the difficulty rules a Generator must satisfy.
-_Avoid_: grade, level, year (in code/identifiers).
+**Translation vector** (_Vektor translasi_):
+The data that fully describes a **Translation**: a direction and magnitude, written as a column vector (units right/left over units up/down) and drawn as an arrow. A translation _is_ its vector.
+_Avoid_: direction, arrow (when you mean the vector itself), offset.
 
-**Inline form**:
-A presentation style that draws a Question on one line: `n)  a + b = `.
+**Section**:
+One textbook subsection rendered as one screen and one route (e.g. Section 11.1 at `/transformasi-isometri/11-1`). The app's structure mirrors the textbook's numbering 1:1.
+_Avoid_: page, lesson, chapter (a chapter contains sections).
 
-**Column form** (a.k.a. standard form / _bentuk lazim_):
-A presentation style that stacks the operands vertically for column arithmetic.
-_Avoid_: vertical form.
-
-**Answer sheet**:
-The final section of a Worksheet listing every Question's answer.
-_Avoid_: answer key, marking scheme.
+**Explorable**:
+The interactive widget within a **Section** where the student manipulates something and the result updates live — the place where the visualization _is_ the explanation.
+_Avoid_: demo, widget, simulation.
 
 ## Relationships
 
-- A **Drill** owns a **Generator** and renders in either **Inline form** or **Column form**.
-- A **Generator** produces **Questions**; the **Evaluator** fills in each Question's answer.
-- A **Drill** produces one **Worksheet** = question pages (drawn from the Questions) + one **Answer sheet** (drawn from the same Questions).
-- A **Standard** constrains what operands a **Generator** may pick.
+- A **Transformation** maps one **Object** to one **Image**.
+- An **Isometric transformation** produces an **Image** that is **congruent** to its **Object**.
+- A **Translation** is an **Isometric transformation** described by exactly one **Translation vector**; it preserves shape, size, and **Orientation**.
+- A **Section** mirrors one textbook subsection and contains at most one primary **Explorable**.
+- Section 11.2's **Explorable** is vector-controlled: the student sets the **Translation vector**, and the **Image** slides to match while the **Object** stays fixed.
 
 ## Example dialogue
 
-> **Dev:** "Where does Standard-6 division make sure the answer is a whole number?"
-> **Domain expert:** "That's the **Generator's** job — it must only pick operands that divide evenly. The **Evaluator** just computes `a ÷ b`; it trusts the operands are valid."
+> **Dev:** "If a student drags the image somewhere random, is that still a translation?"
+> **Domain expert:** "Only if every point moved the same way — that's what a single **Translation vector** guarantees. If they could move just one corner, the **Image** would stop being **congruent** to the **Object**, and it wouldn't be a translation at all. The whole figure slides as one, or it isn't a translation."
+
+> **Dev:** "Why does reflection get its own section instead of being another vector?"
+> **Domain expert:** "Because reflection reverses **Orientation** — the image faces the other way. Translation never does. They're both isometric, but they're different transformations, so different sections (ADR-0008)."
 
 ## Flagged ambiguities
 
-- "Drill" was used loosely for both the class and the PDF — resolved: the class is a **Drill**, the PDF it produces is a **Worksheet**.
-- Long division does **not** fit the `{operands, operator, answer}` **Question** shape (it has a quotient *and* a remainder). Resolved: it has its own **Long-division problem** shape and its own **Long-division evaluator**, inside the same Generator/drawing seam (ADR-0003). Earlier the answer sheet printed a truncated decimal (`17 ÷ 5` → "3.40") and showed no remainder at all — that was a bug, not a decimal-division feature.
+- "Isometric translation" was used loosely to mean both _just translation_ and _the whole isometric-transformations chapter_. Resolved: the project scope is **Translation** (Section 11.2) plus its on-ramp (Section 11.1); reflection, rotation, glide reflection, and rotational symmetry are out of scope (ADR-0008).
+- "Image" in this domain means the transformed figure (_imej_), never a raster/picture file.
+- The previous `CONTEXT.md` and ADR-0001–0007 describe the superseded **Math Drill Generator**, not this context.
