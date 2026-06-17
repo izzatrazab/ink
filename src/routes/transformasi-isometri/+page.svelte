@@ -1,3 +1,7 @@
+<script lang="ts">
+	import SectionCard from '$lib/transformasi/SectionCard.svelte';
+</script>
+
 <svelte:head>
 	<title>Transformasi Isometri</title>
 	<meta name="description" content="Bab 11: Transformasi Isometri — pelajaran interaktif." />
@@ -16,29 +20,20 @@
 	<nav aria-label="Senarai bahagian">
 		<ul class="space-y-3">
 			<li>
-				<a
+				<SectionCard
+					number="11.1"
+					title="Transformasi dan Kekongruenan"
+					description="Apa itu transformasi, objek dan imej, serta maksud kekongruenan."
 					href="/transformasi-isometri/11-1"
-					class="card bg-base-200 hover:bg-base-300 block p-5 transition-colors"
-				>
-					<span class="text-primary text-sm font-semibold">11.1</span>
-					<span class="block text-lg font-bold">Transformasi dan Kekongruenan</span>
-					<span class="block opacity-70">
-						Apa itu transformasi, objek dan imej, serta maksud kekongruenan.
-					</span>
-				</a>
+				/>
 			</li>
 			<li>
-				<a
+				<SectionCard
+					number="11.2"
+					title="Translasi"
+					description="Bagaimana setiap titik beralih anjakan (a, b) yang sama, mengekalkan bentuk, saiz, dan orientasi."
 					href="/transformasi-isometri/11-2"
-					class="card bg-base-200 hover:bg-base-300 block p-5 transition-colors"
-				>
-					<span class="text-primary text-sm font-semibold">11.2</span>
-					<span class="block text-lg font-bold">Translasi</span>
-					<span class="block opacity-70">
-						Bagaimana setiap titik beralih anjakan (a, b) yang sama, mengekalkan bentuk, saiz, dan
-						orientasi.
-					</span>
-				</a>
+				/>
 			</li>
 		</ul>
 	</nav>

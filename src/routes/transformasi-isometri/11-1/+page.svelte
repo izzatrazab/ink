@@ -1,4 +1,6 @@
 <script lang="ts">
+	import LessonShell from '$lib/transformasi/LessonShell.svelte';
+	import FigureCard from '$lib/transformasi/FigureCard.svelte';
 	import Stage from '$lib/transformasi/Stage.svelte';
 	import Figure from '$lib/transformasi/Figure.svelte';
 	import SlideToOverlay from '$lib/transformasi/SlideToOverlay.svelte';
@@ -63,22 +65,12 @@
 	}
 </script>
 
-<svelte:head>
-	<title>11.1 Transformasi dan Kekongruenan</title>
-	<meta
-		name="description"
-		content="Bahagian 11.1: pengenalan kepada transformasi dan kekongruenan."
-	/>
-</svelte:head>
-
-<div class="container mx-auto max-w-2xl space-y-12 px-8 py-16">
-	<hgroup class="space-y-2">
-		<p class="text-sm font-semibold tracking-wide uppercase opacity-60">
-			Bab 11 · Transformasi Isometri
-		</p>
-		<h1 class="text-4xl font-bold">11.1 Transformasi dan Kekongruenan</h1>
-	</hgroup>
-
+<LessonShell
+	number="11.1"
+	title="Transformasi dan Kekongruenan"
+	description="Bahagian 11.1: pengenalan kepada transformasi dan kekongruenan."
+	next={{ href: '/transformasi-isometri/11-2', label: 'Seterusnya: 11.2 Translasi →' }}
+>
 	<!-- Beat 1 — Transformasi: what a transformation is, shown by an objek becoming
 	     an imej through a change in position. -->
 	<section class="space-y-4">
@@ -90,15 +82,13 @@
 		</p>
 
 		<figure class="space-y-4">
-			<div
-				class="border-base-300 bg-base-200 text-primary mx-auto aspect-[19/10] w-full max-w-xl rounded-2xl border p-4"
-			>
+			<FigureCard aspect="19/10">
 				<Stage viewBox="0 0 190 100" class="h-full w-full">
 					<!-- objek slides onto its imej; the slide-to-overlay derives the
 					     vector from the two figures, so the motion can't drift. -->
 					<SlideToOverlay object={objek} target={imej} play={moved} targetVariant="ghost" />
 				</Stage>
-			</div>
+			</FigureCard>
 
 			<figcaption class="text-center opacity-70">
 				Objek dan imejnya — bentuk dan saiz yang sama, hanya beralih kedudukan.
@@ -131,14 +121,12 @@
 		</p>
 
 		<figure class="space-y-4">
-			<div
-				class="border-base-300 bg-base-200 text-primary mx-auto aspect-[8/5] w-full max-w-xl rounded-2xl border p-4"
-			>
+			<FigureCard aspect="8/5">
 				<Stage viewBox="0 0 160 100" class="h-full w-full">
 					<Figure shape={rajahA} />
 					<Figure shape={rajahB} />
 				</Stage>
-			</div>
+			</FigureCard>
 
 			<figcaption class="text-center opacity-70">
 				Dua rajah kongruen — satu ialah balikan (pantulan) yang satu lagi, namun bentuk dan saiznya
@@ -161,9 +149,7 @@
 		</p>
 
 		<figure>
-			<div
-				class="border-base-300 bg-base-200 text-primary mx-auto aspect-[2/1] w-full max-w-xl rounded-2xl border p-4"
-			>
+			<FigureCard aspect="2/1">
 				{#key quiz.index}
 					<Stage viewBox="0 0 200 100" class="h-full w-full">
 						<!-- objek (filled) slides onto the comparand outline when the "why"
@@ -176,7 +162,7 @@
 						/>
 					</Stage>
 				{/key}
-			</div>
+			</FigureCard>
 		</figure>
 
 		<div class="flex justify-center gap-3">
@@ -217,10 +203,4 @@
 			</div>
 		{/if}
 	</section>
-
-	<nav class="flex justify-end" aria-label="Bahagian seterusnya">
-		<a href="/transformasi-isometri/11-2" class="btn btn-outline btn-primary">
-			Seterusnya: 11.2 Translasi →
-		</a>
-	</nav>
-</div>
+</LessonShell>
