@@ -104,8 +104,8 @@ export default class longDivisionMethod extends PDFKit {
 			generateLongDivision(this.difficulty, this.has_remainder)
 		);
 
-		let instruction = `Solve the following questions using the ${this.operation_method_eng} function.`;
-		let instruction_translation = `Selesaikan soalan-soalan berikut dengan menggunakan fungsi ${this.operation_method_malay}.`;
+		const instruction = `Solve the following questions using the ${this.operation_method_eng} function.`;
+		const instruction_translation = `Selesaikan soalan-soalan berikut dengan menggunakan fungsi ${this.operation_method_malay}.`;
 		for (let i = 0; i < this.num_page; i++) {
 			addHeader(this, this.x, this.y, this.origin_x);
 			this.addTitle(this.x, this.y);
@@ -123,16 +123,16 @@ export default class longDivisionMethod extends PDFKit {
 
 	/** title includes cartoon image, and title */
 	addTitle(x: number, y: number) {
-		let eng_title: string = `Worksheet: ${this.label_eng} Level (${this.first_number_of_digits} digits ${this.operation_symbol} ${this.second_number_of_digits} digit(s))`;
-		let malay_title: string = `Latihan: Tahap ${this.label_malay} (${this.first_number_of_digits} digit ${this.operation_symbol} ${this.second_number_of_digits} digit)`;
+		const eng_title: string = `Worksheet: ${this.label_eng} Level (${this.first_number_of_digits} digits ${this.operation_symbol} ${this.second_number_of_digits} digit(s))`;
+		const malay_title: string = `Latihan: Tahap ${this.label_malay} (${this.first_number_of_digits} digit ${this.operation_symbol} ${this.second_number_of_digits} digit)`;
 
 		displayCartoonImage(this, this.x, this.y - 13, this.difficulty);
 
 		/** + 120 to shift to the right (avoid overlapped with the cartoon image */
-		let x_title_box = x + 120;
+		const x_title_box = x + 120;
 		/** page width tolak x coordinate of title box tolak margin kanan */
-		let width_title_box = this.page.width - x_title_box - this.page.margins.right;
-		let height_title_box = 70;
+		const width_title_box = this.page.width - x_title_box - this.page.margins.right;
+		const height_title_box = 70;
 
 		addTitleBox(this, x_title_box, y, width_title_box, height_title_box, eng_title, malay_title);
 	}
@@ -143,11 +143,11 @@ export default class longDivisionMethod extends PDFKit {
 	}
 
 	private drawAllQuestions() {
-		let columnMethodWidth: number = this.layout.columnWidth - 10;
-		let x_shift: number = (this.layout.columnWidth - columnMethodWidth) / 2;
+		const columnMethodWidth: number = this.layout.columnWidth - 10;
+		const x_shift: number = (this.layout.columnWidth - columnMethodWidth) / 2;
 
-		let origin_x: number = this.origin_x;
-		let origin_y: number = this.y;
+		const origin_x: number = this.origin_x;
+		const origin_y: number = this.y;
 
 		this.registerFont('Arial', join(process.cwd(), fontArial));
 		this.font('Arial').fillColor('black');
@@ -232,11 +232,11 @@ export default class longDivisionMethod extends PDFKit {
 		this.answerSheetLayout();
 
 		let counter = 0;
-		let columnMethodWidth: number = this.layout.columnWidth - 10;
-		let x_shift: number = (this.layout.columnWidth - columnMethodWidth) / 2;
+		const columnMethodWidth: number = this.layout.columnWidth - 10;
+		const x_shift: number = (this.layout.columnWidth - columnMethodWidth) / 2;
 
 		for (let index = 0; index < this.num_page * this.layout.row; index++) {
-			let y = this.y;
+			const y = this.y;
 			for (let j = 0; j < this.layout.column; j++) {
 				this.printAnswers(
 					this.origin_x + x_shift + j * this.layout.columnWidth,

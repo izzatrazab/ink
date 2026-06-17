@@ -2,7 +2,7 @@ import { DrillBase } from '../base/DrillBase';
 import { generateAdditionStandardForm } from '$lib/questions/standard-one/additionStandardForm';
 export default class AdditionStandardForm extends DrillBase {
 	constructor(num_page: number) {
-		let eng_title = 'Standard 1 - Addition Standard Form';
+		const eng_title = 'Standard 1 - Addition Standard Form';
 		super({ Title: eng_title });
 
 		this.title.eng = eng_title;

@@ -28,6 +28,16 @@ export default ts.config(
 		}
 	},
 	{
-		ignores: ['build/', '.svelte-kit/', 'dist/']
+		// Parked legacy drill-generator code (ADR-0008): the PDF/pdfkit seam is
+		// superseded and slated for removal, so it is not held to the strict rules
+		// applied to the new Transformasi Isometri lesson code.
+		files: ['src/lib/server/**', 'src/lib/utils/draw.ts', 'src/lib/utils/pdfResponse.ts'],
+		rules: {
+			'@typescript-eslint/no-explicit-any': 'off',
+			'@typescript-eslint/no-unused-vars': 'off'
+		}
+	},
+	{
+		ignores: ['build/', '.svelte-kit/', 'dist/', '.vercel/', '.output/']
 	}
 );

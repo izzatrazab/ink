@@ -6,8 +6,8 @@ export const GET: RequestHandler = async ({ url }) => {
 	const operation = url.searchParams.get('operation') ?? 'addition';
 	const difficulty = url.searchParams.get('difficulty') ?? 'easy';
 	const number_of_pages = Number(url.searchParams.get('nop') ?? '1');
-	const fileName = `Column Method - ${operation} - ${difficulty} - ${number_of_pages} question pages.pdf`
-	
+	const fileName = `Column Method - ${operation} - ${difficulty} - ${number_of_pages} question pages.pdf`;
+
 	const doc = new ColumnMethod(operation, difficulty, number_of_pages);
 	return pdfResponse(doc, fileName);
 };

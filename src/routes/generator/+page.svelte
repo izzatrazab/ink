@@ -19,8 +19,8 @@
 		<hgroup>
 			<h1 class="text-4xl font-bold">! Kami masih dalam fasa pembinaan !</h1>
 			<p class="mt-8">
-				Peringatan: Sistem ini masih dalam proses pembinaan. Masih banyak pembaikian dan penambahan perlu
-				dilakukan.
+				Peringatan: Sistem ini masih dalam proses pembinaan. Masih banyak pembaikian dan penambahan
+				perlu dilakukan.
 			</p>
 		</hgroup>
 	</section>

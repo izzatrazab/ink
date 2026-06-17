@@ -4,21 +4,20 @@
 
 	let {
 		action = '#',
-		id = '',
+		id = ''
 	}: {
 		action: string;
 		id?: string;
 	} = $props();
 
 	const uid = $props.id();
-	
+
 	onMount(() => {
 		id = `${uid}-${id}`;
 	});
-
 </script>
 
-<form {action} method="GET" {id} class="flex flex-row gap-2" target="_blank" >
+<form {action} method="GET" {id} class="flex flex-row gap-2" target="_blank">
 	<fieldset class="max-w-[200px] flex-1 text-right">
 		<input
 			type="number"

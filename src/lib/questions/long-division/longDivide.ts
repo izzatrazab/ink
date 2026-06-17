@@ -17,7 +17,10 @@ export type LongDivisionProblem = {
  * picks a valid dividend/divisor; this computes the one true quotient and
  * remainder from them. Callers guarantee `divisor >= 1`.
  */
-export function longDivide(dividend: number, divisor: number): { quotient: number; remainder: number } {
+export function longDivide(
+	dividend: number,
+	divisor: number
+): { quotient: number; remainder: number } {
 	return {
 		quotient: Math.floor(dividend / divisor),
 		remainder: dividend % divisor

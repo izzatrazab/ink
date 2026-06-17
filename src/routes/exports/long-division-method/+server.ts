@@ -4,13 +4,11 @@ import { pdfResponse } from '$lib/utils/pdfResponse';
 import type { RequestHandler } from '@sveltejs/kit';
 
 export const GET: RequestHandler = async ({ url }) => {
-	
 	const difficulty = url.searchParams.get('difficulty') ?? 'easy';
 	const has_remainder = url.searchParams.get('remainder') ?? 'false';
 	const number_of_pages = Number(url.searchParams.get('nop') ?? '1');
-	const fileName = `Long Division Method - ${((has_remainder == 'true') ? 'has remainder' : 'no remainder')} - ${difficulty} - ${number_of_pages} question pages.pdf`
+	const fileName = `Long Division Method - ${has_remainder == 'true' ? 'has remainder' : 'no remainder'} - ${difficulty} - ${number_of_pages} question pages.pdf`;
 
-
-	const doc = new LongDivisionMethod(difficulty, number_of_pages, (has_remainder === 'true'));
+	const doc = new LongDivisionMethod(difficulty, number_of_pages, has_remainder === 'true');
 	return pdfResponse(doc, fileName);
 };

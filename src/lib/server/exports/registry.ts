@@ -30,7 +30,10 @@ export type DrillEntry = {
 export const standard6Drills: Record<string, DrillEntry> = {
 	addition: { label: 'Standard 6 Addition', make: (n) => new Standard6Addition(n) },
 	subtraction: { label: 'Standard 6 Subtraction', make: (n) => new Standard6Subtraction(n) },
-	multiplication: { label: 'Standard 6 Multiplication', make: (n) => new Standard6Multiplication(n) },
+	multiplication: {
+		label: 'Standard 6 Multiplication',
+		make: (n) => new Standard6Multiplication(n)
+	},
 	division: { label: 'Standard 6 Division', make: (n) => new Standard6Division(n) }
 };
 

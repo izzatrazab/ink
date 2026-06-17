@@ -1,4 +1,10 @@
-import { addHeader, displayCartoonImage, drawAnimalImage, drawColumnForm, drawOrangeBorder } from '$lib/utils/draw';
+import {
+	addHeader,
+	displayCartoonImage,
+	drawAnimalImage,
+	drawColumnForm,
+	drawOrangeBorder
+} from '$lib/utils/draw';
 import PDFDocument from 'pdfkit';
 import imgStar8 from '$lib/assets/stars/star-8.png';
 import imgStar9 from '$lib/assets/stars/star-9.png';
@@ -86,8 +92,8 @@ export class DrillBase extends PDFDocument {
 		);
 
 		if (this.header.withPicture) {
-			drawAnimalImage(this,this.origin_x + (this.trueWidth/9), this.y-10, 90, 90);
-			drawAnimalImage(this,this.origin_x + (this.trueWidth * 7/9), this.y-10, 90, 90);
+			drawAnimalImage(this, this.origin_x + this.trueWidth / 9, this.y - 10, 90, 90);
+			drawAnimalImage(this, this.origin_x + (this.trueWidth * 7) / 9, this.y - 10, 90, 90);
 			// drawAnimalImage(this,this.origin_x, this.y, 90, 90);
 			// displayCartoonImage(this, this.x, this.y - 13, 'easy', 60, this.page.width - this.page.margins.left - this.page.margins.right);
 			// displayCartoonImage(this, this.x, this.y - 13, 'easy', 60, this.page.width - this.page.margins.left - this.page.margins.right);
@@ -128,16 +134,16 @@ export class DrillBase extends PDFDocument {
 	drawBorder({ x = 0, y = 0 }: { x?: number; y?: number } = {}) {
 		this.strokeColor('orange').lineWidth(2);
 
-		let width = this.getContentWidth();
-		let height = this.page.height - 50 - y;
-		let radius = 8;
+		const width = this.getContentWidth();
+		const height = this.page.height - 50 - y;
+		const radius = 8;
 
 		this.roundedRect(x, y, width, height, radius).stroke();
 
-		let star_size = 30;
-		let y_gap = 40;
+		const star_size = 30;
+		const y_gap = 40;
 
-		let start_3_y = this.page.height - this.page.margins.bottom - star_size;
+		const start_3_y = this.page.height - this.page.margins.bottom - star_size;
 		this.image(
 			join(process.cwd(), imgStar8),
 			this.page.width - (this.page.margins.right * 7) / 8,
@@ -161,9 +167,9 @@ export class DrillBase extends PDFDocument {
 	}
 
 	initDrillLayout() {
-		let padding = 10;
+		const padding = 10;
 		this.layout.columnWidth = (this.getContentWidth() - padding * 2) / this.layout.column;
-		let remaining_available_height =
+		const remaining_available_height =
 			this.page.height - this.y - this.page.margins.bottom - padding * 2;
 		this.layout.rowHeight = remaining_available_height / this.layout.row;
 	}
@@ -180,15 +186,15 @@ export class DrillBase extends PDFDocument {
 
 		//reset font and font color
 		this.font('Arial').fontSize(12).fillColor('black').moveDown(1);
-		let formatted_answers = this.questions.map((q) => q.answer.toLocaleString());
+		const formatted_answers = this.questions.map((q) => q.answer.toLocaleString());
 
 		this.moveDown(1);
 
-		let string = formatted_answers.map(function (value, index) {
+		const string = formatted_answers.map(function (value, index) {
 			return index + 1 + ')  ' + value;
 		});
 
-		let final = string.reduce((result, item) => (result += item + '\n'), '');
+		const final = string.reduce((result, item) => (result += item + '\n'), '');
 
 		this.text(final, {
 			columns: 3,
@@ -257,20 +263,20 @@ export class DrillBase extends PDFDocument {
 
 	public drawAllQuestions() {
 		// x origin point of the first box
-		let x: number = this.origin_x + this.layout.questionOriginX;
+		const x: number = this.origin_x + this.layout.questionOriginX;
 
 		// y origin point of the first box
-		let y: number = this.y + this.layout.questionOriginY;
+		const y: number = this.y + this.layout.questionOriginY;
 
 		this.font('Arial').fillColor('black');
 
 		for (let index = 0; index < this.layout.row; index++) {
 			for (let j = 0; j < this.layout.column; j++) {
-				let x_point = x + j * this.layout.columnWidth;
-				let y_point = y + index * this.layout.rowHeight;
+				const x_point = x + j * this.layout.columnWidth;
+				const y_point = y + index * this.layout.rowHeight;
 
 				this.drawQuestion(x_point, y_point);
-			}	
+			}
 		}
 	}
 
@@ -282,7 +288,6 @@ export class DrillBase extends PDFDocument {
 	 */
 	public drawQuestion(x: number, y: number): void {
 		console.log('Please overwrite this method to draw question specifically for each drill');
-		
 	}
 
 	/**

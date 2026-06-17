@@ -110,8 +110,8 @@ export default class ColumnMethod extends PDFDocument {
 			generateColumnMethod(operation, difficulty)
 		);
 
-		let instruction = `Solve the following questions using the ${this.operation_method_eng} function.`;
-		let instruction_translation = `Selesaikan soalan-soalan berikut dengan menggunakan fungsi ${this.operation_method_malay}.`;
+		const instruction = `Solve the following questions using the ${this.operation_method_eng} function.`;
+		const instruction_translation = `Selesaikan soalan-soalan berikut dengan menggunakan fungsi ${this.operation_method_malay}.`;
 
 		/** to determine the number of worksheets created */
 		for (let i = 0; i < this.num_page; i++) {
@@ -132,16 +132,16 @@ export default class ColumnMethod extends PDFDocument {
 
 	/** title includes cartoon image, and title */
 	addTitle(x: number, y: number, operation: string) {
-		let eng_title: string = `Worksheet: ${this.label_eng} Level (${this.first_number_of_digits} digits ${this.operation_symbol} ${this.second_number_of_digits} digit(s))`;
-		let malay_title: string = `Latihan: Tahap ${this.label_malay} (${this.first_number_of_digits} digit ${this.operation_symbol} ${this.second_number_of_digits} digit)`;
+		const eng_title: string = `Worksheet: ${this.label_eng} Level (${this.first_number_of_digits} digits ${this.operation_symbol} ${this.second_number_of_digits} digit(s))`;
+		const malay_title: string = `Latihan: Tahap ${this.label_malay} (${this.first_number_of_digits} digit ${this.operation_symbol} ${this.second_number_of_digits} digit)`;
 
 		displayCartoonImage(this, this.x, this.y - 13, this.difficulty);
 
 		/** + 120 to shift to the right (avoid overlapped with the cartoon image */
-		let x_title_box = x + 120;
+		const x_title_box = x + 120;
 		/** page width tolak x coordinate of title box tolak margin kanan */
-		let width_title_box = this.page.width - x_title_box - this.page.margins.right;
-		let height_title_box = 70;
+		const width_title_box = this.page.width - x_title_box - this.page.margins.right;
+		const height_title_box = 70;
 
 		addTitleBox(this, x_title_box, y, width_title_box, height_title_box, eng_title, malay_title);
 	}
@@ -152,13 +152,13 @@ export default class ColumnMethod extends PDFDocument {
 	}
 
 	private drawAllQuestions() {
-		let columnMethodWidth: number = this.layout.columnWidth - 10;
-		let x_shift: number = (this.layout.columnWidth - columnMethodWidth) / 2;
-		let x: number = this.origin_x + x_shift;
+		const columnMethodWidth: number = this.layout.columnWidth - 10;
+		const x_shift: number = (this.layout.columnWidth - columnMethodWidth) / 2;
+		const x: number = this.origin_x + x_shift;
 
-		let columnMethodHeight: number = this.layout.rowHeight - 10;
-		let y_shift: number = (this.layout.rowHeight - columnMethodHeight) / 2;
-		let y: number = this.y + y_shift;
+		const columnMethodHeight: number = this.layout.rowHeight - 10;
+		const y_shift: number = (this.layout.rowHeight - columnMethodHeight) / 2;
+		const y: number = this.y + y_shift;
 
 		this.registerFont('Arial', join(process.cwd(), fontArial));
 		this.font('Arial').fillColor('black');
@@ -216,15 +216,15 @@ export default class ColumnMethod extends PDFDocument {
 		this.answerSheetLayout();
 
 		let counter = 0;
-		let columnMethodWidth: number = this.layout.columnWidth - 10;
-		let x_shift: number = (this.layout.columnWidth - columnMethodWidth) / 2;
-		let x = this.origin_x + x_shift;
+		const columnMethodWidth: number = this.layout.columnWidth - 10;
+		const x_shift: number = (this.layout.columnWidth - columnMethodWidth) / 2;
+		const x = this.origin_x + x_shift;
 
-		let columnMethodHeight: number = this.layout.rowHeight - 10;
-		let y_shift: number = (this.layout.rowHeight - columnMethodHeight) / 2;
+		const columnMethodHeight: number = this.layout.rowHeight - 10;
+		const y_shift: number = (this.layout.rowHeight - columnMethodHeight) / 2;
 
 		for (let index = 0; index < this.num_page * this.layout.row; index++) {
-			let y = this.y + y_shift;
+			const y = this.y + y_shift;
 			for (let j = 0; j < this.layout.column; j++) {
 				this.printAnswers(
 					x + j * this.layout.columnWidth,

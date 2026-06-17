@@ -2,7 +2,7 @@ import { DrillBase } from '../base/DrillBase';
 import { generateDivision } from '$lib/questions/standard-6/division';
 export default class Division extends DrillBase {
 	constructor(num_page: number) {
-		let eng_title = 'Standard 6 - Division';
+		const eng_title = 'Standard 6 - Division';
 		super({ Title: eng_title });
 
 		this.title.eng = eng_title;

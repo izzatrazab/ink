@@ -2,7 +2,7 @@ import { DrillBase } from '../base/DrillBase';
 import { generateSubtractionStandardForm } from '$lib/questions/standard-one/subtractionStandardForm';
 export default class SubtractionStandardForm extends DrillBase {
 	constructor(num_page: number) {
-		let eng_title = 'Standard 1 - Subtraction Standard Form';
+		const eng_title = 'Standard 1 - Subtraction Standard Form';
 		super({ Title: eng_title });
 
 		this.title.eng = eng_title;

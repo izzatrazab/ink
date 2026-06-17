@@ -1,8 +1,7 @@
 <script lang="ts">
-    import type { HTMLAttributes } from "svelte/elements";
-    let { style, class: className } : Partial<HTMLAttributes<HTMLElement>> = $props();
+	import type { HTMLAttributes } from 'svelte/elements';
+	let { style, class: className }: Partial<HTMLAttributes<HTMLElement>> = $props();
 </script>
-
 
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" {style} class={className}
 	><rect width="256" height="256" fill="none" /><line

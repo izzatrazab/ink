@@ -2,7 +2,7 @@ import { DrillBase } from '../base/DrillBase';
 import { generateAddition } from '$lib/questions/standard-6/addition';
 export default class Addition extends DrillBase {
 	constructor(num_page: number) {
-		let eng_title = 'Standard 6 - Addition';
+		const eng_title = 'Standard 6 - Addition';
 		super({ Title: eng_title });
 
 		this.title.eng = eng_title;

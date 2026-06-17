@@ -16,7 +16,10 @@ import { longDivide, type LongDivisionProblem } from './longDivide';
  * Unknown difficulty falls back to a single-digit dividend, matching the drill's
  * historical default.
  */
-export function generateLongDivision(difficulty: string, hasRemainder: boolean): LongDivisionProblem {
+export function generateLongDivision(
+	difficulty: string,
+	hasRemainder: boolean
+): LongDivisionProblem {
 	const dividendDigits = difficultyList.get(difficulty)?.first_number_of_digits ?? 1;
 
 	let dividend = 0;

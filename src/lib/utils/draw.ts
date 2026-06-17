@@ -7,7 +7,13 @@ import imgStar10 from '$lib/assets/stars/star-10.png';
 import { join } from 'path';
 
 /** add header in the page. header includes name field (top left) and marks field (top right) */
-export function addHeader(PDFKit: PDFKit.PDFDocument, x: number, y: number, origin_x: number, total_marks: number = 16) {
+export function addHeader(
+	PDFKit: PDFKit.PDFDocument,
+	x: number,
+	y: number,
+	origin_x: number,
+	total_marks: number = 16
+) {
 	PDFKit.registerFont('Chilanka', join(process.cwd(), fontChilankaRegular));
 	PDFKit.font('Chilanka')
 		.fontSize(14)
@@ -36,7 +42,7 @@ export function displayCartoonImage(
 	PDFKit: PDFKit.PDFDocument,
 	x: number,
 	y: number,
-	difficulty: string, 
+	difficulty: string,
 	height: number = 90
 ) {
 	let allImagesPath: any;
@@ -59,15 +65,15 @@ export function displayCartoonImage(
 	const selectedImagePath = imagePaths[randomIndex];
 	const module = allImagesPath[selectedImagePath];
 
-	let imagePath = join(process.cwd(), module.default as string);
+	const imagePath = join(process.cwd(), module.default as string);
 
 	PDFKit.image(imagePath, x, y, {
 		align: 'right',
-		height,
+		height
 	});
 }
 
-/** 
+/**
  * draw animal images
  */
 export function drawAnimalImage(
@@ -75,21 +81,21 @@ export function drawAnimalImage(
 	x: number,
 	y: number,
 	height: number = 90,
-	width: number = 90,
+	width: number = 90
 ) {
-	let allImagesPath: any; 
+	let allImagesPath: any;
 	let paths: any;
 
 	switch (Math.floor(Math.random() * 3)) {
 		default:
 		case 0:
-			paths = import.meta.glob('/src/lib/assets/animals/easy/*.png', {eager: true});
+			paths = import.meta.glob('/src/lib/assets/animals/easy/*.png', { eager: true });
 			break;
 		case 1:
-			paths = import.meta.glob('/src/lib/assets/animals/medium/*.png', {eager: true});
+			paths = import.meta.glob('/src/lib/assets/animals/medium/*.png', { eager: true });
 			break;
 		case 2:
-			paths = import.meta.glob('/src/lib/assets/animals/hard/*.png', {eager: true});
+			paths = import.meta.glob('/src/lib/assets/animals/hard/*.png', { eager: true });
 			break;
 	}
 
@@ -98,17 +104,15 @@ export function drawAnimalImage(
 	const selectedImagePath = imagePaths[randomIndex];
 	const module = paths[selectedImagePath];
 
-	let imagePath = join(process.cwd(), module.default as string);
+	const imagePath = join(process.cwd(), module.default as string);
 
 	PDFKit.image(imagePath, x, y, {
 		// align: 'right',
 		height,
 		width,
-		fit: [width, 50 ],
+		fit: [width, 50]
 	});
 }
-
-
 
 export function addTitleBox(
 	PDFKit: PDFKit.PDFDocument,
@@ -119,7 +123,7 @@ export function addTitleBox(
 	eng_title: string,
 	malay_title: string
 ) {
-	let halfHeight = height / 2;
+	const halfHeight = height / 2;
 
 	PDFKit.strokeColor('#737373').lineWidth(2);
 	PDFKit.rect(x, y, width, height).stroke();
@@ -165,12 +169,12 @@ export function drawOrangeBorder(
 	//	Set the stroke color and line width for the border
 	PDFKit.strokeColor('orange').lineWidth(2);
 
-	let padding = 8;
-	let rect_x_coordinate = x - padding / 2; // shift to the left half of the padding to add the x-padding
-	let rect_y_coordinate = PDFKit.y - padding / 2; // shift to the top half of the padding to add the y-padding
-	let rect_width = content_width + padding; // add padding length to the width
-	let rect_height = content_height - (PDFKit.y - y) + padding; // add padding length to the height
-	let radius = 10;
+	const padding = 8;
+	const rect_x_coordinate = x - padding / 2; // shift to the left half of the padding to add the x-padding
+	const rect_y_coordinate = PDFKit.y - padding / 2; // shift to the top half of the padding to add the y-padding
+	const rect_width = content_width + padding; // add padding length to the width
+	const rect_height = content_height - (PDFKit.y - y) + padding; // add padding length to the height
+	const radius = 10;
 
 	PDFKit.roundedRect(
 		rect_x_coordinate,
@@ -261,7 +265,7 @@ export function drawColumnForm(
 
 export function displayStarImages(PDFKit: PDFKit.PDFDocument, star_size: number, y_gap: number) {
 	// let y_gap = 40;
-	let start_3_y = PDFKit.page.height - PDFKit.page.margins.bottom - star_size;
+	const start_3_y = PDFKit.page.height - PDFKit.page.margins.bottom - star_size;
 	PDFKit.image(
 		join(process.cwd(), imgStar8),
 		PDFKit.page.width - (PDFKit.page.margins.right * 7) / 8,
