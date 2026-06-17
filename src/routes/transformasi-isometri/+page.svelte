@@ -27,6 +27,19 @@
 					</span>
 				</a>
 			</li>
+			<li>
+				<a
+					href="/transformasi-isometri/11-2"
+					class="card bg-base-200 hover:bg-base-300 block p-5 transition-colors"
+				>
+					<span class="text-primary text-sm font-semibold">11.2</span>
+					<span class="block text-lg font-bold">Translasi</span>
+					<span class="block opacity-70">
+						Bagaimana setiap titik beralih anjakan (a, b) yang sama, mengekalkan bentuk, saiz, dan
+						orientasi.
+					</span>
+				</a>
+			</li>
 		</ul>
 	</nav>
 </div>

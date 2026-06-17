@@ -217,4 +217,10 @@
 			</div>
 		{/if}
 	</section>
+
+	<nav class="flex justify-end" aria-label="Bahagian seterusnya">
+		<a href="/transformasi-isometri/11-2" class="btn btn-outline btn-primary">
+			Seterusnya: 11.2 Translasi →
+		</a>
+	</nav>
 </div>

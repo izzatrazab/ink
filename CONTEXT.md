@@ -40,6 +40,10 @@ _Avoid_: slide, move, shift (in domain text).
 The data that fully describes a **Translation**: a direction and magnitude, written as a column vector (units right/left over units up/down) and drawn as an arrow. A translation _is_ its vector.
 _Avoid_: direction, arrow (when you mean the vector itself), offset.
 
+**Coordinate grid** (_Satah Cartes_):
+The Cartesian plane the figures live on: signed `(x, y)` coordinates, an origin, and four quadrants. It is the frame a **Translation vector** is read against — `a` units right/left, `b` units up/down, where up is positive. Introduced in Section 11.2; Section 11.1 deliberately has none, because **Congruency** is about shape and size, not position.
+_Avoid_: graph, chart, axes (when you mean the whole plane).
+
 **Section**:
 One textbook subsection rendered as one screen and one route (e.g. Section 11.1 at `/transformasi-isometri/11-1`). The app's structure mirrors the textbook's numbering 1:1.
 _Avoid_: page, lesson, chapter (a chapter contains sections).
