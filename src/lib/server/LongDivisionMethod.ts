@@ -1,4 +1,5 @@
-import { getRandomNumber } from '$lib/helper';
+import { generateLongDivision } from '$lib/questions/long-division/longDivision';
+import type { LongDivisionProblem } from '$lib/questions/long-division/longDivide';
 import PDFKit from 'pdfkit';
 import {
 	addHeader,
@@ -47,10 +48,8 @@ export default class longDivisionMethod extends PDFKit {
 	public operation_method_malay: string = 'bahagi';
 	/** number of digits of the second number in a question */
 	public second_number_of_digits: number = 1;
-	/** array containing first number in the column method */
-	public array_num_1: Array<number> = [];
-	/** array containing second number in the column method */
-	public array_num_2: Array<number> = [];
+	/** the pre-generated Long-division problems this drill renders (ADR-0006) */
+	public problems: LongDivisionProblem[] = [];
 	/** has remainder */
 	public has_remainder: boolean = false;
 	/** total number of questions */
@@ -97,6 +96,13 @@ export default class longDivisionMethod extends PDFKit {
 		this.label_malay = difficultyList.get(difficulty)?.level_malay ?? 'mudah';
 		this.has_remainder = has_remainder;
 		this.num_page = num_page;
+
+		// Pull every Question from the pure Generator up front (ADR-0001, ADR-0006);
+		// the drawing code below only renders them, it no longer picks operands.
+		const total = this.layout.row * this.layout.column * this.num_page;
+		this.problems = Array.from({ length: total }, () =>
+			generateLongDivision(this.difficulty, this.has_remainder)
+		);
 
 		let instruction = `Solve the following questions using the ${this.operation_method_eng} function.`;
 		let instruction_translation = `Selesaikan soalan-soalan berikut dengan menggunakan fungsi ${this.operation_method_malay}.`;
@@ -148,35 +154,13 @@ export default class longDivisionMethod extends PDFKit {
 
 		for (let index = 0; index < this.layout.row; index++) {
 			for (let j = 0; j < this.layout.column; j++) {
-				/** start generating random a question */
-				var firstNum = 0;
-				var secondNum = 0;
-
-				firstNum = getRandomNumber(this.first_number_of_digits);
-				secondNum = getRandomNumber(this.second_number_of_digits);
-
-				if (this.has_remainder) {
-					while (secondNum < 2 || firstNum % secondNum == 0) {
-						firstNum = getRandomNumber(this.first_number_of_digits);
-						secondNum = getRandomNumber(this.second_number_of_digits);
-					}
-				} else {
-					// for non-remainder question
-					while (secondNum < 2 || firstNum % secondNum != 0) {
-						firstNum = getRandomNumber(this.first_number_of_digits);
-						secondNum = getRandomNumber(this.second_number_of_digits);
-					}
-				}
-
-				this.array_num_1.push(firstNum);
-				this.array_num_2.push(secondNum);
-				/** end of generating random a question */
+				const problem = this.problems[this.total_questions];
 
 				this.drawLongDivisionMethod(
 					origin_x + x_shift + j * this.layout.columnWidth,
 					origin_y + index * this.layout.rowHeight,
-					this.array_num_1[this.total_questions],
-					this.array_num_2[this.total_questions],
+					problem.dividend,
+					problem.divisor,
 					columnMethodWidth,
 					++this.total_questions
 				);
@@ -257,8 +241,7 @@ export default class longDivisionMethod extends PDFKit {
 				this.printAnswers(
 					this.origin_x + x_shift + j * this.layout.columnWidth,
 					y,
-					this.array_num_1[counter],
-					this.array_num_2[counter],
+					this.problems[counter],
 					columnMethodWidth,
 					++counter
 				);
@@ -285,8 +268,7 @@ export default class longDivisionMethod extends PDFKit {
 	printAnswers(
 		x: number,
 		y: number,
-		num: number,
-		divisor: number,
+		problem: LongDivisionProblem,
 		width: number,
 		questionNumber: number,
 		padding: number = 5
@@ -301,10 +283,14 @@ export default class longDivisionMethod extends PDFKit {
 			align: 'left'
 		});
 
-		// Calculate and write the answer
-		let result: number =  Math.floor((num / divisor) * 100)/100 ;
+		// Write the answer from the pure layer (ADR-0006): the quotient, plus the
+		// remainder when there is one. A clean division renders as a bare quotient.
+		const answer =
+			problem.remainder === 0
+				? problem.quotient.toString()
+				: `${problem.quotient} r ${problem.remainder}`;
 
-		this.text(result.toFixed(this.has_remainder ? 2: 0), content_x + 30, content_y, {
+		this.text(answer, content_x + 30, content_y, {
 			width: content_width,
 			align: 'left'
 		});
