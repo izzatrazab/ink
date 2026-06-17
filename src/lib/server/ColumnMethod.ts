@@ -1,5 +1,6 @@
-import { getRandomNumber } from '$lib/helper';
 import { difficultyList } from '$lib/difficulty';
+import { generateColumnMethod } from '$lib/questions/column-method/columnMethod';
+import type { Question } from '$lib/questions/evaluate';
 import {
 	addHeader,
 	addInstruction,
@@ -53,10 +54,8 @@ export default class ColumnMethod extends PDFDocument {
 	public first_number_of_digits: number = 1;
 	/** number of digits of the second number in a question */
 	public second_number_of_digits: number = 1;
-	/** array containing first number in the column method */
-	public array_num_1: Array<number> = [];
-	/** array containing second number in the column method */
-	public array_num_2: Array<number> = [];
+	/** the Questions this worksheet renders; the answer sheet is read from here */
+	public questions: Question[] = [];
 	/** drills layout information */
 	public layout: DrillLayout = {
 		row: 4,
@@ -104,6 +103,11 @@ export default class ColumnMethod extends PDFDocument {
 		this.label_eng = difficultyList.get(difficulty)?.level_eng ?? 'easy';
 		this.label_malay = difficultyList.get(difficulty)?.level_malay ?? 'mudah';
 		this.num_page = num_page;
+
+		const total = this.num_page * this.layout.row * this.layout.column;
+		this.questions = Array.from({ length: total }, () =>
+			generateColumnMethod(operation, difficulty)
+		);
 
 		let instruction = `Solve the following questions using the ${this.operation_method_eng} function.`;
 		let instruction_translation = `Selesaikan soalan-soalan berikut dengan menggunakan fungsi ${this.operation_method_malay}.`;
@@ -160,24 +164,13 @@ export default class ColumnMethod extends PDFDocument {
 
 		for (let index = 0; index < this.layout.row; index++) {
 			for (let j = 0; j < this.layout.column; j++) {
-				/** start generating random a question */
-
-				var firstNum = 0;
-				var secondNum = 0;
-
-				firstNum = getRandomNumber(this.first_number_of_digits);
-				secondNum = getRandomNumber(this.second_number_of_digits);
-
-				this.array_num_1.push(firstNum);
-				this.array_num_2.push(secondNum);
-
-				/** end of generating random a question */
+				const q = this.questions[this.total_questions];
 
 				this.drawColumnMethod(
 					x + j * this.layout.columnWidth,
 					y + index * this.layout.rowHeight,
-					this.array_num_1[this.total_questions],
-					this.array_num_2[this.total_questions],
+					q.operands[0],
+					q.operands[1],
 					this.operation_symbol,
 					columnMethodWidth,
 					++this.total_questions
@@ -273,8 +266,7 @@ export default class ColumnMethod extends PDFDocument {
 				this.printAnswers(
 					x + j * this.layout.columnWidth,
 					y,
-					this.array_num_1[counter],
-					this.array_num_2[counter],
+					this.questions[counter].answer,
 					columnMethodWidth,
 					++counter
 				);
@@ -293,16 +285,13 @@ export default class ColumnMethod extends PDFDocument {
 	/**
 	 * @param x coordinate x
 	 * @param y coordinate y
-	 * @param num1 first number in the equation
-	 * @param num2 second number in the equation
-	 * @param operation the operation symbol (+, -, x)
+	 * @param answer the pre-computed answer from the Question (see evaluate)
 	 * @param width width of the column method (box ??, ibarat mcm kotak).
 	 */
 	printAnswers(
 		x: number,
 		y: number,
-		num1: number,
-		num2: number,
+		answer: number,
 		width: number,
 		questionNumber: number,
 		padding: number = 5
@@ -317,23 +306,7 @@ export default class ColumnMethod extends PDFDocument {
 			align: 'left'
 		});
 
-		// Calculate and write the answer
-		let result: number;
-
-		switch (this.operation_method_eng) {
-			default:
-			case 'addition':
-				result = num1 + num2;
-				break;
-			case 'subtraction':
-				result = num1 - num2;
-				break;
-			case 'multiplication':
-				result = num1 * num2;
-				break;
-		}
-
-		this.text(result.toString(), content_x + 30, content_y, {
+		this.text(answer.toString(), content_x + 30, content_y, {
 			width: content_width,
 			align: 'left'
 		});
