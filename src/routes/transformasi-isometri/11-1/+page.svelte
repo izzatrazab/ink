@@ -168,7 +168,7 @@
 		<div class="flex justify-center gap-3">
 			<button
 				class="btn btn-outline btn-primary"
-				class:btn-active={answered && quiz.selected === 'kongruen'}
+				class:btn-active={answered && quiz.committed === 'kongruen'}
 				disabled={answered}
 				onclick={() => answer('kongruen')}
 			>
@@ -176,7 +176,7 @@
 			</button>
 			<button
 				class="btn btn-outline btn-primary"
-				class:btn-active={answered && quiz.selected === 'tak-kongruen'}
+				class:btn-active={answered && quiz.committed === 'tak-kongruen'}
 				disabled={answered}
 				onclick={() => answer('tak-kongruen')}
 			>

@@ -56,12 +56,16 @@ _Avoid_: demo, widget, simulation.
 The reveal in which an **Object** slides onto a target figure by the **Translation vector** that maps one onto the other, making "same shape and size, just moved" visible. The motion is always derived from the two figures actually on screen — never a separately-authored vector — so the visual and the geometry cannot drift. In Section 11.1 it is _scripted_ (driven by a button or a committed answer); in Section 11.2 the same mechanic becomes the student-driven **Explorable** (the student sets the **Translation vector**). A non-congruent target lands anchor-on-anchor but visibly fails to coincide — that mismatch is the lesson.
 _Avoid_: animation, transition, tween (those name the CSS, not the concept).
 
+**Latihan**:
+The graded exercise that closes a **Section**: a deck of authored pairs walked one at a time, where the student commits a single answer, sees whether it is correct and a **Slide-to-overlay** "why", then advances to the next pair. The commitment is final — a second answer for the same pair is ignored. Every **Section** has one. What varies between Sections is only the answer (a congruency verdict in 11.1, a **Translation vector** in 11.2), how the correct answer is derived from the pair (never authored separately), and which pairs reveal the "why" on commit; the stepping itself is shared (`latihan.ts`).
+_Avoid_: quiz, drill, test, exercise engine.
+
 ## Relationships
 
 - A **Transformation** maps one **Object** to one **Image**.
 - An **Isometric transformation** produces an **Image** that is **congruent** to its **Object**.
 - A **Translation** is an **Isometric transformation** described by exactly one **Translation vector**; it preserves shape, size, and **Orientation**.
-- A **Section** mirrors one textbook subsection and contains at most one primary **Explorable**.
+- A **Section** mirrors one textbook subsection and contains at most one primary **Explorable** and one **Latihan**.
 - Section 11.2's **Explorable** is vector-controlled: the student sets the **Translation vector**, and the **Image** slides to match while the **Object** stays fixed.
 - The **Slide-to-overlay** reveal derives its motion from the geometry seam (`translate`/`translationVector`); Section 11.2's **Explorable** is the same mechanic with a student-controlled **Translation vector** instead of a scripted one.
 
@@ -78,3 +82,4 @@ _Avoid_: animation, transition, tween (those name the CSS, not the concept).
 - "Isometric translation" was used loosely to mean both _just translation_ and _the whole isometric-transformations chapter_. Resolved: the project scope is **Translation** (Section 11.2) plus its on-ramp (Section 11.1); reflection, rotation, glide reflection, and rotational symmetry are out of scope (ADR-0008).
 - "Image" in this domain means the transformed figure (_imej_), never a raster/picture file.
 - The previous `CONTEXT.md` and ADR-0001–0007 describe the superseded **Math Drill Generator**, not this context.
+- The **Slide-to-overlay** entry says a non-congruent target's visible failure-to-coincide "is the lesson," implying the reveal should play for non-congruent **Latihan** pairs in Section 11.1. The shipped 11.1 **Latihan** plays it _only_ for congruent pairs (its `revealsWhy`), so a non-congruent pair currently shows no slide. Unresolved: either 11.1 should play the reveal for every pair (and `revealsWhy` becomes always-true there, matching 11.2), or the doc overstates and the congruent-only rule stands. The `latihan.ts` seam accommodates either — it is a one-line change to the Section's `revealsWhy`.

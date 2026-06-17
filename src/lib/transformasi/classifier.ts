@@ -1,12 +1,17 @@
-// The congruency classifier for Section 11.1: authored content plus a pure,
-// framework-free interaction state machine. It imports only the geometry types,
+// The congruency classifier for Section 11.1: authored content specialising the
+// shared Latihan deck-walker. It imports only the geometry types and latihan.ts,
 // so it stays independently testable (the page wires it to Svelte runes).
 //
 // Per the PRD the authored pairs are trusted — there is no `classifyRelationship`
 // validator. `correctAnswer` derives the verdict from the authored relationship
-// so a pair's answer can never drift from its kind.
+// so a pair's answer can never drift from its kind. The interaction itself — step,
+// commit, reveal, advance — is the generic latihan machine; this Section supplies
+// only what differs: that verdict derivation, and that the slide-to-overlay "why"
+// plays only for congruent pairs (a non-congruent pair shows no slide today; see
+// CONTEXT.md's flagged ambiguity on whether the visible mismatch should also play).
 
 import type { Shape } from './geometry';
+import { createLatihan, type LatihanState } from './latihan';
 
 /** How a comparand figure relates to its object. */
 export type Relationship = 'congruent' | 'different-size' | 'different-shape';
@@ -31,57 +36,17 @@ export function correctAnswer(pair: ClassifierPair): Answer {
 }
 
 /** A snapshot of the exercise: which pair, the committed answer, the "why" overlay. */
-export interface ClassifierState {
-	pairs: ClassifierPair[];
-	index: number;
-	/** The student's committed answer for the current pair, or null if unanswered. */
-	selected: Answer | null;
-	/** Whether the slide-to-overlay "why" is currently playing (congruent pairs). */
-	overlayPlaying: boolean;
-}
+export type ClassifierState = LatihanState<ClassifierPair, Answer>;
 
-export function initialState(pairs: ClassifierPair[]): ClassifierState {
-	return { pairs, index: 0, selected: null, overlayPlaying: false };
-}
+const machine = createLatihan<ClassifierPair, Answer>({
+	correctAnswer,
+	// Verdicts are string enums, so the default `===` comparison is exactly right;
+	// the only Section-specific rule is that the "why" plays for congruent pairs.
+	revealsWhy: (pair) => pair.relationship === 'congruent'
+});
 
-export function currentPair(state: ClassifierState): ClassifierPair {
-	return state.pairs[state.index];
-}
-
-export function isAnswered(state: ClassifierState): boolean {
-	return state.selected !== null;
-}
-
-export function isCorrect(state: ClassifierState): boolean {
-	return isAnswered(state) && state.selected === correctAnswer(currentPair(state));
-}
-
-export function isLast(state: ClassifierState): boolean {
-	return state.index === state.pairs.length - 1;
-}
-
-/**
- * Commits the student's answer for the current pair. A second answer is ignored
- * (the commitment is final). For congruent pairs the slide-to-overlay starts so
- * the student sees, visually, why "same shape and size, just moved" holds.
- */
-export function submitAnswer(state: ClassifierState, answer: Answer): ClassifierState {
-	if (isAnswered(state)) return state;
-	return {
-		...state,
-		selected: answer,
-		overlayPlaying: currentPair(state).relationship === 'congruent'
-	};
-}
-
-/**
- * Advances to the next pair, resetting the answer and the overlay. A no-op until
- * the current pair is answered, and a no-op once the last pair is reached.
- */
-export function nextPair(state: ClassifierState): ClassifierState {
-	if (!isAnswered(state) || isLast(state)) return state;
-	return { ...state, index: state.index + 1, selected: null, overlayPlaying: false };
-}
+export const { initialState, currentPair, isAnswered, isCorrect, isLast, submitAnswer, nextPair } =
+	machine;
 
 // Authored deck — four clean cases: two congruent (same orientation, only
 // translated apart), one different-size (similar, not congruent), one
