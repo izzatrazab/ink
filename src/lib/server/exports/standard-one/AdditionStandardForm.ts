@@ -13,11 +13,7 @@ export default class AdditionStandardForm extends DrillBase {
 		this.layout.row = 5;
 		this.header.withPicture = true;
 
-		const total = this.layout.row * this.layout.column * this.num_page;
-		this.questions = Array.from({ length: total }, () => generateAdditionStandardForm());
-
-		this.generate();
-		this.generatePageNumbers();
+		this.produceWorksheet(generateAdditionStandardForm);
 	}
 
 	public drawQuestion(x: number, y: number): void {

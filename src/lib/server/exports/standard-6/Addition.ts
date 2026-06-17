@@ -12,11 +12,7 @@ export default class Addition extends DrillBase {
 		this.layout.questionOriginX = 10;
 		this.layout.questionOriginY = 20;
 
-		const total = this.layout.row * this.layout.column * this.num_page;
-		this.questions = Array.from({ length: total }, () => generateAddition());
-
-		this.generate();
-		this.generatePageNumbers();
+		this.produceWorksheet(generateAddition);
 	}
 
 	public drawQuestion(x: number, y: number): void {

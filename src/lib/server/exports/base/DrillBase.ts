@@ -229,6 +229,20 @@ export class DrillBase extends PDFDocument {
 		}
 	}
 
+	/**
+	 * Produce the Worksheet from this Drill's Generator: fill one Question per
+	 * grid cell across every page, render the question pages and answer sheet,
+	 * then number the pages. Call once, after configuring layout/title/header.
+	 * @param generate the Drill's Generator (e.g. generateAddition)
+	 */
+	protected produceWorksheet(generate: () => Question) {
+		const total = this.layout.row * this.layout.column * this.num_page;
+		this.questions = Array.from({ length: total }, generate);
+
+		this.generate();
+		this.generatePageNumbers();
+	}
+
 	public generate() {
 		this.addHeader();
 		this.moveDown(0.5);

@@ -12,11 +12,7 @@ export default class Subtraction extends DrillBase {
 		this.layout.questionOriginX = 10;
 		this.layout.questionOriginY = 20;
 
-		const total = this.layout.row * this.layout.column * this.num_page;
-		this.questions = Array.from({ length: total }, () => generateSubtraction());
-
-		this.generate();
-		this.generatePageNumbers();
+		this.produceWorksheet(generateSubtraction);
 	}
 
 	public drawQuestion(x: number, y: number): void {
