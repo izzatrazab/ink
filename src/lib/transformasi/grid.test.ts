@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { toPx, toCartesian, snap, clamp, RANGE, UNIT } from './grid';
+import { toPx, toPxShape, toCartesian, snap, clamp, RANGE, UNIT } from './grid';
 import { translate, type Shape, type Point } from './geometry';
 
 // A deterministic pseudo-random generator so the property checks are repeatable.
@@ -50,6 +50,18 @@ describe('toPx', () => {
 		const o = toPx({ x: 0, y: 0 });
 		expect(toPx({ x: 1, y: 0 }).x - o.x).toBe(UNIT);
 		expect(o.y - toPx({ x: 0, y: 1 }).y).toBe(UNIT);
+	});
+});
+
+describe('toPxShape', () => {
+	it('maps every vertex through toPx', () => {
+		expect(toPxShape(square)).toEqual({ points: square.points.map(toPx) });
+	});
+
+	it('does not mutate its input', () => {
+		const before = structuredClone(square);
+		toPxShape(square);
+		expect(square).toEqual(before);
 	});
 });
 

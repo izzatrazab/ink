@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { translate, translationVector, type Shape, type Vector } from './geometry';
+import { anchor, translate, translationVector, type Shape, type Vector } from './geometry';
 
 // A deterministic pseudo-random generator so the property checks are repeatable.
 function makeRng(seed: number) {
@@ -36,6 +36,19 @@ const square: Shape = {
 		{ x: 0, y: 10 }
 	]
 };
+
+describe('anchor', () => {
+	it('is the first vertex — the point translationVector measures from', () => {
+		const rng = makeRng(7);
+		for (let i = 0; i < 2_000; i++) {
+			const a = randomShape(rng);
+			const b = randomShape(rng);
+			// translationVector slides a's anchor exactly onto b's, by construction.
+			expect(translate(a, translationVector(a, b)).points[0]).toEqual(anchor(b));
+			expect(anchor(a)).toBe(a.points[0]);
+		}
+	});
+});
 
 describe('translate', () => {
 	it('moves every vertex by the vector', () => {

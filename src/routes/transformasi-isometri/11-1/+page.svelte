@@ -1,5 +1,6 @@
 <script lang="ts">
 	import LessonShell from '$lib/transformasi/LessonShell.svelte';
+	import LatihanShell from '$lib/transformasi/LatihanShell.svelte';
 	import FigureCard from '$lib/transformasi/FigureCard.svelte';
 	import Stage from '$lib/transformasi/Stage.svelte';
 	import Figure from '$lib/transformasi/Figure.svelte';
@@ -144,63 +145,45 @@
 			Lihat setiap pasangan rajah, kemudian tentukan sama ada kedua-duanya kongruen.
 		</p>
 
-		<p class="text-sm font-semibold tracking-wide uppercase opacity-60">
-			Pasangan {quiz.index + 1} daripada {pairs.length}
-		</p>
-
-		<figure>
-			<FigureCard aspect="2/1">
-				{#key quiz.index}
-					<Stage viewBox="0 0 200 100" class="h-full w-full">
-						<!-- objek (filled) slides onto the comparand outline when the "why"
-						     plays; for non-congruent pairs it visibly fails to line up. -->
-						<SlideToOverlay
-							object={pair.objek}
-							target={pair.banding}
-							play={quiz.overlayPlaying}
-							targetVariant="outline"
-						/>
-					</Stage>
-				{/key}
-			</FigureCard>
-		</figure>
-
-		<div class="flex justify-center gap-3">
-			<button
-				class="btn btn-outline btn-primary"
-				class:btn-active={answered && quiz.committed === 'kongruen'}
-				disabled={answered}
-				onclick={() => answer('kongruen')}
-			>
-				Kongruen
-			</button>
-			<button
-				class="btn btn-outline btn-primary"
-				class:btn-active={answered && quiz.committed === 'tak-kongruen'}
-				disabled={answered}
-				onclick={() => answer('tak-kongruen')}
-			>
-				Tak kongruen
-			</button>
-		</div>
-
-		{#if answered}
-			<div class="alert" class:alert-success={correct} class:alert-error={!correct} role="status">
-				<span>
-					<strong>{correct ? 'Betul!' : 'Belum tepat.'}</strong>
-					{pair.explanation}
-				</span>
-			</div>
-
-			<div class="text-center">
-				{#if last}
-					<p class="opacity-70">Tahniah — anda telah menyelesaikan semua pasangan.</p>
-				{:else}
-					<button class="btn btn-primary" onclick={() => (quiz = nextPair(quiz))}>
-						Pasangan seterusnya
+		<!-- objek (filled) slides onto the comparand outline when the "why" plays;
+		     for non-congruent pairs it visibly fails to line up. -->
+		<LatihanShell
+			index={quiz.index}
+			total={pairs.length}
+			{answered}
+			{correct}
+			{last}
+			overlayPlaying={quiz.overlayPlaying}
+			object={pair.objek}
+			target={pair.banding}
+			aspect="2/1"
+			viewBox="0 0 200 100"
+			onnext={() => (quiz = nextPair(quiz))}
+		>
+			{#snippet input(committed)}
+				<div class="flex justify-center gap-3">
+					<button
+						class="btn btn-outline btn-primary"
+						class:btn-active={committed && quiz.committed === 'kongruen'}
+						disabled={committed}
+						onclick={() => answer('kongruen')}
+					>
+						Kongruen
 					</button>
-				{/if}
-			</div>
-		{/if}
+					<button
+						class="btn btn-outline btn-primary"
+						class:btn-active={committed && quiz.committed === 'tak-kongruen'}
+						disabled={committed}
+						onclick={() => answer('tak-kongruen')}
+					>
+						Tak kongruen
+					</button>
+				</div>
+			{/snippet}
+
+			{#snippet feedback()}
+				{pair.explanation}
+			{/snippet}
+		</LatihanShell>
 	</section>
 </LessonShell>

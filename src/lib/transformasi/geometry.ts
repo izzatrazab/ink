@@ -17,8 +17,13 @@ export type Shape = {
 /** A translation: how far to slide, right/left over up/down (a column vector). */
 export type Vector = { dx: number; dy: number };
 
-/** A figure's reference point — the vertex a translation is measured against. */
-function anchor(shape: Shape): Point {
+/**
+ * A figure's reference point — the vertex a translation is measured against.
+ * Exported so callers that draw the Translation vector (e.g. the 11.2 arrow)
+ * read the anchor from the seam instead of re-deriving `points[0]`, keeping the
+ * "where a translation starts" rule single-source and undriftable (ADR-0002).
+ */
+export function anchor(shape: Shape): Point {
 	return shape.points[0];
 }
 

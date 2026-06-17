@@ -1,5 +1,6 @@
 <script lang="ts">
 	import LessonShell from '$lib/transformasi/LessonShell.svelte';
+	import LatihanShell from '$lib/transformasi/LatihanShell.svelte';
 	import FigureCard from '$lib/transformasi/FigureCard.svelte';
 	import Stage from '$lib/transformasi/Stage.svelte';
 	import Figure from '$lib/transformasi/Figure.svelte';
@@ -7,8 +8,8 @@
 	import VectorStepper from '$lib/transformasi/VectorStepper.svelte';
 	import VectorArrow from '$lib/transformasi/VectorArrow.svelte';
 	import ColumnVector from '$lib/transformasi/ColumnVector.svelte';
-	import { translate, type Shape, type Vector } from '$lib/transformasi/geometry';
-	import { toPx, toCartesian, snap, clamp } from '$lib/transformasi/grid';
+	import { anchor, translate, type Shape, type Vector } from '$lib/transformasi/geometry';
+	import { toPx, toPxShape, toCartesian, snap, clamp } from '$lib/transformasi/grid';
 	import {
 		pairs as vqPairs,
 		initialState,
@@ -48,7 +49,7 @@
 			{ x: -5, y: -1 }
 		]
 	};
-	const objekPx: Shape = { points: objekCartes.points.map(toPx) };
+	const objekPx: Shape = toPxShape(objekCartes);
 
 	// The Translation vector is the single source of truth: one $state rune the
 	// stepper writes (clamped so the Image can never leave the grid). The Image,
@@ -62,10 +63,11 @@
 
 	// Effect: the Image is the geometry seam applied live, then mapped to px.
 	const imejCartes = $derived(translate(objekCartes, vektor));
-	const imejPx = $derived<Shape>({ points: imejCartes.points.map(toPx) });
+	const imejPx = $derived(toPxShape(imejCartes));
 
-	// The arrow runs from the Object's anchor to anchor + vector, in px.
-	const anchorCartes = objekCartes.points[0];
+	// The arrow runs from the Object's anchor to anchor + vector, in px. The anchor
+	// comes from the geometry seam, the same point translationVector measures from.
+	const anchorCartes = anchor(objekCartes);
 	const arrowFrom = $derived(toPx(anchorCartes));
 	const arrowTo = $derived(toPx({ x: anchorCartes.x + vektor.dx, y: anchorCartes.y + vektor.dy }));
 
@@ -134,8 +136,8 @@
 	// The pair drawn on the grid: both figures mapped Cartesian → px (ADR-0009).
 	// The slide-to-overlay derives its motion from these two px figures, so the
 	// "why" always slides along the genuine translation.
-	const vqObjekPx = $derived<Shape>({ points: vqPair.objek.points.map(toPx) });
-	const vqImejPx = $derived<Shape>({ points: vqPair.imej.points.map(toPx) });
+	const vqObjekPx = $derived(toPxShape(vqPair.objek));
+	const vqImejPx = $derived(toPxShape(vqPair.imej));
 
 	function submitGuess() {
 		quiz = submitAnswer(quiz, guess);
@@ -159,8 +161,8 @@
 	<section class="space-y-4">
 		<h2 class="text-2xl font-semibold">Translasi</h2>
 		<p class="leading-relaxed">
-			<strong>Translasi</strong> ialah transformasi yang menggelongsorkan setiap titik objek
-			jarak yang sama dalam arah yang sama. Setiap titik beralih mengikut anjakan
+			<strong>Translasi</strong> ialah transformasi yang menggelongsorkan setiap titik objek jarak
+			yang sama dalam arah yang sama. Setiap titik beralih mengikut anjakan
 			<strong>(a, b)</strong> yang serupa — <em>a</em> unit ke kiri atau kanan, dan
 			<em>b</em> unit ke atas atau ke bawah.
 		</p>
@@ -247,7 +249,9 @@
 		<div class="flex flex-wrap items-center justify-center gap-8">
 			<VectorStepper value={vektor} onchange={setVektor} />
 			<div class="flex flex-col items-center gap-2">
-				<span class="text-sm font-semibold tracking-wide uppercase opacity-60">Vektor translasi</span>
+				<span class="text-sm font-semibold tracking-wide uppercase opacity-60"
+					>Vektor translasi</span
+				>
 				<ColumnVector value={vektor} />
 			</div>
 		</div>
@@ -261,63 +265,53 @@
 		<h2 class="text-2xl font-semibold">Latihan: Cari vektor translasi</h2>
 		<p class="leading-relaxed">
 			Setiap pasangan menunjukkan sebuah <strong>objek</strong> dan <strong>imej</strong>nya.
-			Tentukan <strong>vektor translasi</strong> <strong>(a, b)</strong> yang memetakan objek kepada
-			imej, kemudian sahkan jawapan anda.
+			Tentukan <strong>vektor translasi</strong> <strong>(a, b)</strong> yang memetakan objek kepada imej,
+			kemudian sahkan jawapan anda.
 		</p>
 
-		<p class="text-sm font-semibold tracking-wide uppercase opacity-60">
-			Pasangan {quiz.index + 1} daripada {vqPairs.length}
-		</p>
-
-		<figure>
-			<FigureCard aspect="1/1" class="max-w-md">
-				{#key quiz.index}
-					<Stage range={6} class="h-full w-full">
-						<!-- objek (filled) slides onto the imej outline when the "why" plays;
-						     the slide derives its vector from the two px figures. -->
-						<SlideToOverlay
-							object={vqObjekPx}
-							target={vqImejPx}
-							play={quiz.overlayPlaying}
-							targetVariant="outline"
-						/>
-					</Stage>
-				{/key}
-			</FigureCard>
-		</figure>
-
-		{#if !vqAnswered}
-			<div class="flex flex-wrap items-center justify-center gap-8">
-				<VectorStepper value={guess} onchange={(next) => (guess = next)} />
-				<div class="flex flex-col items-center gap-2">
-					<span class="text-sm font-semibold tracking-wide uppercase opacity-60">Jawapan anda</span>
-					<ColumnVector value={guess} />
-				</div>
-			</div>
-			<div class="text-center">
-				<button class="btn btn-primary" onclick={submitGuess}>Sahkan jawapan</button>
-			</div>
-		{:else}
-			<div class="alert" class:alert-success={vqCorrect} class:alert-error={!vqCorrect} role="status">
-				<span>
-					<strong>{vqCorrect ? 'Betul!' : 'Belum tepat.'}</strong>
-					{#if vqCorrect}
-						Vektor translasinya ialah ({vqAnswer.dx}, {vqAnswer.dy}) — perhatikan objek bertindih
-						tepat dengan imej.
-					{:else}
-						Anda menjawab ({guess.dx}, {guess.dy}); vektor translasi yang betul ialah ({vqAnswer.dx},
-						{vqAnswer.dy}).
-					{/if}
-				</span>
-			</div>
-
-			<div class="text-center">
-				{#if vqLast}
-					<p class="opacity-70">Tahniah — anda telah menyelesaikan semua pasangan.</p>
-				{:else}
-					<button class="btn btn-primary" onclick={advancePair}>Pasangan seterusnya</button>
+		<!-- objek (filled) slides onto the imej outline when the "why" plays; the
+		     slide derives its vector from the two px figures. The stepper is the
+		     same control as the Explorable, so entry and exploration look alike. -->
+		<LatihanShell
+			index={quiz.index}
+			total={vqPairs.length}
+			answered={vqAnswered}
+			correct={vqCorrect}
+			last={vqLast}
+			overlayPlaying={quiz.overlayPlaying}
+			object={vqObjekPx}
+			target={vqImejPx}
+			aspect="1/1"
+			cardClass="max-w-md"
+			range={6}
+			onnext={advancePair}
+		>
+			{#snippet input(committed)}
+				{#if !committed}
+					<div class="flex flex-wrap items-center justify-center gap-8">
+						<VectorStepper value={guess} onchange={(next) => (guess = next)} />
+						<div class="flex flex-col items-center gap-2">
+							<span class="text-sm font-semibold tracking-wide uppercase opacity-60">
+								Jawapan anda
+							</span>
+							<ColumnVector value={guess} />
+						</div>
+					</div>
+					<div class="text-center">
+						<button class="btn btn-primary" onclick={submitGuess}>Sahkan jawapan</button>
+					</div>
 				{/if}
-			</div>
-		{/if}
+			{/snippet}
+
+			{#snippet feedback()}
+				{#if vqCorrect}
+					Vektor translasinya ialah ({vqAnswer.dx}, {vqAnswer.dy}) — perhatikan objek bertindih
+					tepat dengan imej.
+				{:else}
+					Anda menjawab ({guess.dx}, {guess.dy}); vektor translasi yang betul ialah ({vqAnswer.dx},
+					{vqAnswer.dy}).
+				{/if}
+			{/snippet}
+		</LatihanShell>
 	</section>
 </LessonShell>

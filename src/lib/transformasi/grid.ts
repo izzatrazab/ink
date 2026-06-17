@@ -40,6 +40,16 @@ export function toPx(point: Point): Point {
 	};
 }
 
+/**
+ * Maps a whole Shape from Cartesian to SVG px — the render-boundary operation
+ * ADR-0009 names ("pages compute everything in Cartesian and map shapes through
+ * `toPx` just before handing them to <Figure>"). Pages call this instead of
+ * re-spelling `{ points: shape.points.map(toPx) }` at each figure.
+ */
+export function toPxShape(shape: Shape): Shape {
+	return { points: shape.points.map(toPx) };
+}
+
 /** The exact inverse of `toPx`: maps an SVG px point back to Cartesian (unsnapped). */
 export function toCartesian(px: Point): Point {
 	return {

@@ -57,7 +57,7 @@ The reveal in which an **Object** slides onto a target figure by the **Translati
 _Avoid_: animation, transition, tween (those name the CSS, not the concept).
 
 **Latihan**:
-The graded exercise that closes a **Section**: a deck of authored pairs walked one at a time, where the student commits a single answer, sees whether it is correct and a **Slide-to-overlay** "why", then advances to the next pair. The commitment is final — a second answer for the same pair is ignored. Every **Section** has one. What varies between Sections is only the answer (a congruency verdict in 11.1, a **Translation vector** in 11.2), how the correct answer is derived from the pair (never authored separately), and which pairs reveal the "why" on commit; the stepping itself is shared (`latihan.ts`).
+The graded exercise that closes a **Section**: a deck of authored pairs walked one at a time, where the student commits a single answer, sees whether it is correct and a **Slide-to-overlay** "why", then advances to the next pair. The commitment is final — a second answer for the same pair is ignored. Every **Section** has one. What varies between Sections is only the answer (a congruency verdict in 11.1, a **Translation vector** in 11.2), how the correct answer is derived from the pair (never authored separately), and which pairs reveal the "why" on commit. Everything else is shared: the stepping (`latihan.ts`) and the rendered chrome — progress counter, the **Slide-to-overlay** replay, the verdict, the advance — (`LatihanShell.svelte`), which takes each Section's answer input and feedback sentence as snippets.
 _Avoid_: quiz, drill, test, exercise engine.
 
 ## Relationships
