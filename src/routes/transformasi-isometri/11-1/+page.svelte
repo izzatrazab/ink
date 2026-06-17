@@ -1,12 +1,8 @@
 <script lang="ts">
 	import Stage from '$lib/transformasi/Stage.svelte';
 	import Figure from '$lib/transformasi/Figure.svelte';
-	import {
-		translate,
-		translationVector,
-		type Shape,
-		type Vector
-	} from '$lib/transformasi/geometry';
+	import SlideToOverlay from '$lib/transformasi/SlideToOverlay.svelte';
+	import { translate, type Shape, type Vector } from '$lib/transformasi/geometry';
 	import {
 		pairs,
 		initialState,
@@ -32,10 +28,6 @@
 	};
 	const displacement: Vector = { dx: 112, dy: 0 };
 	const imej: Shape = translate(objek, displacement);
-
-	// The slide the animation plays is recovered from the two figures, so the visual
-	// motion and the logic share one source and cannot drift.
-	const v: Vector = translationVector(objek, imej);
 
 	let moved = $state(false);
 
@@ -65,12 +57,6 @@
 	const answered = $derived(isAnswered(quiz));
 	const correct = $derived(isCorrect(quiz));
 	const last = $derived(isLast(quiz));
-
-	// The slide that drives the congruent-pair "why": the same translationVector
-	// the geometry seam uses for the demo above, recovered from the two figures.
-	const slide = $derived(
-		quiz.overlayPlaying ? translationVector(pair.objek, pair.banding) : { dx: 0, dy: 0 }
-	);
 
 	function answer(choice: Answer) {
 		quiz = submitAnswer(quiz, choice);
@@ -108,17 +94,9 @@
 				class="border-base-300 bg-base-200 text-primary mx-auto aspect-[19/10] w-full max-w-xl rounded-2xl border p-4"
 			>
 				<Stage viewBox="0 0 190 100" class="h-full w-full">
-					<!-- imej: where the object lands, drawn faintly as the target -->
-					<g class="opacity-25">
-						<Figure shape={imej} />
-					</g>
-					<!-- objek: slides by v to coincide with the imej -->
-					<g
-						class="mover"
-						style:transform={moved ? `translate(${v.dx}px, ${v.dy}px)` : 'translate(0px, 0px)'}
-					>
-						<Figure shape={objek} />
-					</g>
+					<!-- objek slides onto its imej; the slide-to-overlay derives the
+					     vector from the two figures, so the motion can't drift. -->
+					<SlideToOverlay object={objek} target={imej} play={moved} targetVariant="ghost" />
 				</Stage>
 			</div>
 
@@ -188,12 +166,14 @@
 			>
 				{#key quiz.index}
 					<Stage viewBox="0 0 200 100" class="h-full w-full">
-						<!-- comparand: drawn as an outline target -->
-						<Figure shape={pair.banding} fill="none" stroke="currentColor" strokeWidth={2} />
-						<!-- objek: filled; slides onto the comparand when the "why" plays -->
-						<g class="mover" style:transform="translate({slide.dx}px, {slide.dy}px)">
-							<Figure shape={pair.objek} />
-						</g>
+						<!-- objek (filled) slides onto the comparand outline when the "why"
+						     plays; for non-congruent pairs it visibly fails to line up. -->
+						<SlideToOverlay
+							object={pair.objek}
+							target={pair.banding}
+							play={quiz.overlayPlaying}
+							targetVariant="outline"
+						/>
 					</Stage>
 				{/key}
 			</div>
@@ -238,9 +218,3 @@
 		{/if}
 	</section>
 </div>
-
-<style>
-	.mover {
-		transition: transform 1000ms cubic-bezier(0.4, 0, 0.2, 1);
-	}
-</style>

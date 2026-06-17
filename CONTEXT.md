@@ -48,6 +48,10 @@ _Avoid_: page, lesson, chapter (a chapter contains sections).
 The interactive widget within a **Section** where the student manipulates something and the result updates live — the place where the visualization _is_ the explanation.
 _Avoid_: demo, widget, simulation.
 
+**Slide-to-overlay**:
+The reveal in which an **Object** slides onto a target figure by the **Translation vector** that maps one onto the other, making "same shape and size, just moved" visible. The motion is always derived from the two figures actually on screen — never a separately-authored vector — so the visual and the geometry cannot drift. In Section 11.1 it is _scripted_ (driven by a button or a committed answer); in Section 11.2 the same mechanic becomes the student-driven **Explorable** (the student sets the **Translation vector**). A non-congruent target lands anchor-on-anchor but visibly fails to coincide — that mismatch is the lesson.
+_Avoid_: animation, transition, tween (those name the CSS, not the concept).
+
 ## Relationships
 
 - A **Transformation** maps one **Object** to one **Image**.
@@ -55,6 +59,7 @@ _Avoid_: demo, widget, simulation.
 - A **Translation** is an **Isometric transformation** described by exactly one **Translation vector**; it preserves shape, size, and **Orientation**.
 - A **Section** mirrors one textbook subsection and contains at most one primary **Explorable**.
 - Section 11.2's **Explorable** is vector-controlled: the student sets the **Translation vector**, and the **Image** slides to match while the **Object** stays fixed.
+- The **Slide-to-overlay** reveal derives its motion from the geometry seam (`translate`/`translationVector`); Section 11.2's **Explorable** is the same mechanic with a student-controlled **Translation vector** instead of a scripted one.
 
 ## Example dialogue
 
