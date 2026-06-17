@@ -23,7 +23,6 @@ export class DrillBase extends PDFDocument {
 		column: number;
 		rowHeight: number;
 		columnWidth: number;
-		cellPadding: number;
 		/** X offset of the first question from the content origin. */
 		questionOriginX: number;
 		/** Y offset of the first question from the current Y. */
@@ -33,7 +32,6 @@ export class DrillBase extends PDFDocument {
 		column: 1,
 		rowHeight: 0,
 		columnWidth: 0,
-		cellPadding: 30,
 		questionOriginX: 30,
 		questionOriginY: 30
 	};
@@ -388,10 +386,6 @@ export class DrillBase extends PDFDocument {
 	}
 
 	// ACCESSOR METHODS
-
-	public get cellPadding(): number {
-		return this.layout.cellPadding;
-	}
 
 	public get trueWidth(): number {
 		return this.page.width - this.page.margins.left - this.page.margins.right;
