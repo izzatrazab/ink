@@ -1,25 +1,17 @@
-<script>
+<script lang="ts">
 	import { resolve } from '$app/paths';
 	import DrillForm from '$lib/components/forms/DrillForm.svelte';
 
 	const formActions = [
-		{
-			title: 'Penambahan',
-			action: resolve('/exports/standard-6/addition')
-		},
-		{
-			title: 'Penolakan',
-			action: resolve('/exports/standard-6/subtraction')
-		},
-		{
-			title: 'Pendaraban',
-			action: resolve('/exports/standard-6/multiplication')
-		},
-		{
-			title: 'Pembahagian',
-			action: resolve('/exports/standard-6/division')
-		}
+		{ title: 'Penambahan', type: 'addition' },
+		{ title: 'Penolakan', type: 'subtraction' },
+		{ title: 'Pendaraban', type: 'multiplication' },
+		{ title: 'Pembahagian', type: 'division' }
 	];
+
+	function action(type: string): string {
+		return resolve('/exports/standard-6/[type]', { type });
+	}
 </script>
 
 <svelte:head>
@@ -31,7 +23,7 @@
 <div class="mt-16">
 	<ul class="list bg-base-100 rounded-box shadow-md">
 		<!-- <li class="p-4 pb-2 text-xs opacity-60 tracking-wide">Tahun 6</li> -->
-		{#each formActions as { title, action }, i}
+		{#each formActions as { title, type }, i}
 			<li class="list-row">
 				<div class="text-2xl whitespace-nowrap">
 					{i + 1})
@@ -41,7 +33,7 @@
 						<hgroup>
 							<h2 class="text-2xl">{title}</h2>
 						</hgroup>
-						<DrillForm {action} />
+						<DrillForm action={action(type)} />
 					</div>
 				</div>
 			</li>

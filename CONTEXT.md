@@ -7,9 +7,9 @@ Generates printable, bilingual (English / Malay) PDF maths worksheets for Malays
 Two layers, separated by the **Question** seam:
 
 - **`src/lib/questions/`** — the pure layer. Generators pick operands; the Evaluator computes answers. No `pdfkit`, no server code. This is where the maths lives and where it is tested. (ADR-0001, ADR-0002)
-- **`src/lib/server/`** — the drawing layer. Drill classes only render pre-generated Questions onto the page (most extend `DrillBase`, a `pdfkit` document; ColumnMethod is standalone — ADR-0004). Routes under `src/routes/exports/` turn a Drill into a PDF HTTP response.
+- **`src/lib/server/`** — the drawing layer. Drill classes only render pre-generated Questions onto the page (most extend `DrillBase`, a `pdfkit` document; ColumnMethod is standalone — ADR-0004). Routes under `src/routes/exports/` turn a Drill into a PDF HTTP response. The grade Drills (Standard 1 and Standard 6) are reached through one **Drill registry** (`src/lib/server/exports/registry.ts`) behind a single `[type]` route per grade; ColumnMethod and LongDivisionMethod keep their own routes (ADR-0007).
 
-To understand a drill, read its Generator (the rules) and its drawing class (the layout) — they are separate on purpose. Long division is the one drill outside this seam (ADR-0003).
+To understand a drill, read its Generator (the rules) and its drawing class (the layout) — they are separate on purpose. Long division sits in the seam too, but on its own shape (the **Long-division problem**, not the **Question**) with its own evaluator (ADR-0003).
 
 ## Language
 
@@ -30,6 +30,13 @@ _Avoid_: builder, factory.
 
 **Evaluator**:
 The single shared function that computes a Question's answer from its operands and operator (`+` sum, `-` fold-subtract, `×` product, `÷` fold-divide). One true source of answers.
+
+**Long-division problem**:
+The data for one long-division item — its own shape, distinct from a **Question** because the answer is two numbers, not one (ADR-0003). Shape: `{ dividend: number; divisor: number; quotient: number; remainder: number }`. The `divisor` is single-digit and `≥ 2`; difficulty sizes the `dividend` only. `remainder > 0` exactly when the drill asks for remainder problems.
+_Avoid_: dividing the dividend and divisor into a generic `operands` array — their roles are asymmetric.
+
+**Long-division evaluator**:
+The shared `longDivide(dividend, divisor) → { quotient, remainder }` — the one true source of a **Long-division problem**'s answer, the same role the **Evaluator** plays for a **Question** (ADR-0002, ADR-0003). A long-division Generator picks a valid dividend/divisor; it never hand-writes the quotient or remainder.
 
 **Operator**:
 The arithmetic symbol of a Question: `+`, `-`, `×`, `÷`.
@@ -65,4 +72,4 @@ _Avoid_: answer key, marking scheme.
 ## Flagged ambiguities
 
 - "Drill" was used loosely for both the class and the PDF — resolved: the class is a **Drill**, the PDF it produces is a **Worksheet**.
-- Long division is **not** yet covered by the `{operands, operator, answer}` **Question** shape (it has a quotient *and* a remainder); it is parked as a separate case.
+- Long division does **not** fit the `{operands, operator, answer}` **Question** shape (it has a quotient *and* a remainder). Resolved: it has its own **Long-division problem** shape and its own **Long-division evaluator**, inside the same Generator/drawing seam (ADR-0003). Earlier the answer sheet printed a truncated decimal (`17 ÷ 5` → "3.40") and showed no remainder at all — that was a bug, not a decimal-division feature.
