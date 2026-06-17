@@ -12,16 +12,5 @@ export const GET: RequestHandler = async ({ url }) => {
 
 
 	const doc = new LongDivisionMethod(difficulty, number_of_pages, (has_remainder === 'true'));
-	let buffers: any[] = [];
-
-	// Collect data as the PDF is being generated
-	doc.on('data', (chunk) => buffers.push(chunk));
-
-	// Return a promise that resolves when the PDF is fully generated
-	await new Promise((resolve) => {
-		doc.on('end', resolve);
-		doc.end();
-	});
-
-	return pdfResponse(buffers, fileName);
+	return pdfResponse(doc, fileName);
 };

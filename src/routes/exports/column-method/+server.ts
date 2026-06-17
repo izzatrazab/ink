@@ -9,16 +9,5 @@ export const GET: RequestHandler = async ({ url }) => {
 	const fileName = `Column Method - ${operation} - ${difficulty} - ${number_of_pages} question pages.pdf`
 	
 	const doc = new ColumnMethod(operation, difficulty, number_of_pages);
-	let buffers: any[] = [];
-
-	// Collect data as the PDF is being generated
-	doc.on('data', (chunk) => buffers.push(chunk));
-
-	// Return a promise that resolves when the PDF is fully generated
-	await new Promise((resolve) => {
-		doc.on('end', resolve);
-		doc.end();
-	});
-
-	return pdfResponse(buffers, fileName);
+	return pdfResponse(doc, fileName);
 };

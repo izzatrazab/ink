@@ -1,4 +1,4 @@
-import { addHeader, displayCartoonImage, drawAnimalImage, drawOrangeBorder } from '$lib/utils/draw';
+import { addHeader, displayCartoonImage, drawAnimalImage, drawColumnForm, drawOrangeBorder } from '$lib/utils/draw';
 import PDFDocument from 'pdfkit';
 import imgStar8 from '$lib/assets/stars/star-8.png';
 import imgStar9 from '$lib/assets/stars/star-9.png';
@@ -6,6 +6,7 @@ import imgStar10 from '$lib/assets/stars/star-10.png';
 import fontDynaPuffVariable from '$lib/assets/fonts/DynaPuff-VariableFont.ttf';
 import fontArial from '$lib/assets/fonts/Arial.ttf';
 import type { Question } from '$lib/questions/evaluate';
+import { pdfResponse } from '$lib/utils/pdfResponse';
 import { join } from 'path';
 
 export class DrillBase extends PDFDocument {
@@ -47,7 +48,6 @@ export class DrillBase extends PDFDocument {
 		eng: '',
 		ms: ''
 	};
-	public buffers: any[] = [];
 
 	constructor(info: {
 		Producer?: string;
@@ -71,9 +71,6 @@ export class DrillBase extends PDFDocument {
 			bufferPages: true
 		});
 		this.origin_x = this.x;
-
-		// collect data as the PDF is being generated
-		this.on('data', (chunk) => this.buffers.push(chunk));
 
 		this.registerFont('Arial', join(process.cwd(), fontArial));
 		this.registerFont('DynaPuff', join(process.cwd(), fontDynaPuffVariable));
@@ -315,74 +312,13 @@ export class DrillBase extends PDFDocument {
 		questionNumber: number,
 		padding: number = 3
 	) {
-		const content_width = width - padding - padding;
-		const content_x = x + padding;
-		const content_y = y + padding;
-		const characterSpacing = 8;
-		const fontSize = 14;
-		const operationSymbolSize = 18;
-
-		// Draw question number
-		this.fontSize(fontSize - 2).text(questionNumber.toString() + ')', content_x, content_y, {
-			width: width,
-			align: 'left'
-		});
-
-		// Draw first number
-		this.fontSize(fontSize).text(num1.toString(), content_x, content_y + 15, {
-			width: content_width - 5,
-			align: 'right',
-			characterSpacing: characterSpacing
-		});
-
-		// Draw operation sign
-		this.fontSize(operationSymbolSize).text(operation, content_x + 20, content_y + 30, {
-			width: content_width,
-			align: 'left'
-		});
-
-		// Draw second number
-		this.fontSize(fontSize).text(num2.toString(), content_x, content_y + 30, {
-			width: content_width - 5,
-			align: 'right',
-			characterSpacing: characterSpacing
-		});
-
-		// Draw lines for calculation and answer space
-		const start_line_x = content_x + 15;
-		const end_line_x = content_x + content_width;
-
-		this.strokeColor('black').lineWidth(0.5);
-		// Draw first line
-		this.moveTo(start_line_x, this.y).lineTo(end_line_x, this.y).stroke();
-
-		// // Draw middle line (for multiplication, it has additional middle line if second number has more than 1 digit)
-		// if (this.operation_method_eng === 'multiplication' && this.second_number_of_digits > 1) {
-		// 	this.moveDown(this.second_number_of_digits * 1.25);
-		// 	this.moveTo(start_line_x, this.y).lineTo(end_line_x, this.y).stroke();
-		// }
-
-		// answer gap and draw last line
-		this.moveDown(1.5);
-		this.moveTo(start_line_x, this.y).lineTo(end_line_x, this.y).stroke();
+		// Inline/column drills never render multi-digit multiplication, so no
+		// middle line — see drawColumnForm and ADR-0004.
+		drawColumnForm(this, x, y, num1, num2, operation, width, questionNumber, { padding });
 	}
 
-	public async response(fileName: string) {
-		await new Promise((resolve) => {
-			this.on('end', resolve);
-			this.end();
-		});
-
-		const pdfData = Buffer.concat(this.buffers);
-
-		// Return the PDF as a response
-		return new Response(pdfData, {
-			headers: {
-				'Content-Type': 'application/pdf',
-				'Content-Disposition': 'inline; filename="' + fileName + '"' // open in new tab
-				// 'Content-Disposition': 'attachment' // direct download
-			}
-		});
+	public response(fileName: string) {
+		return pdfResponse(this, fileName);
 	}
 
 	// ACCESSOR METHODS

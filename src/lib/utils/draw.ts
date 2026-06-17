@@ -184,6 +184,81 @@ export function drawOrangeBorder(
 	PDFKit.strokeColor('black').lineWidth(1);
 }
 
+/**
+ * Draw one Question in Column form: operands stacked for column arithmetic,
+ * the operator glyph to the left, and the rule lines for working and answer.
+ *
+ * The glyph is passed in rather than read from a Question on purpose — the
+ * displayed symbol is a rendering choice that can differ from the Question's
+ * operator (e.g. the `−` minus glyph vs the `-` operator). See ADR-0004.
+ *
+ * @param middleLineGap when set, draws an extra rule line this many `moveDown`
+ *   units below the first — used by multi-digit multiplication. Omit it (the
+ *   default) for single-line column problems.
+ */
+export function drawColumnForm(
+	PDFKit: PDFKit.PDFDocument,
+	x: number,
+	y: number,
+	num1: number,
+	num2: number,
+	glyph: string,
+	width: number,
+	questionNumber: number,
+	{ padding = 3, middleLineGap }: { padding?: number; middleLineGap?: number } = {}
+) {
+	const content_width = width - padding - padding;
+	const content_x = x + padding;
+	const content_y = y + padding;
+	const characterSpacing = 8;
+	const fontSize = 14;
+	const operationSymbolSize = 18;
+
+	// Draw question number
+	PDFKit.fontSize(fontSize - 2).text(questionNumber.toString() + ')', content_x, content_y, {
+		width: width,
+		align: 'left'
+	});
+
+	// Draw first number
+	PDFKit.fontSize(fontSize).text(num1.toString(), content_x, content_y + 15, {
+		width: content_width - 5,
+		align: 'right',
+		characterSpacing: characterSpacing
+	});
+
+	// Draw operation sign
+	PDFKit.fontSize(operationSymbolSize).text(glyph, content_x + 20, content_y + 30, {
+		width: content_width,
+		align: 'left'
+	});
+
+	// Draw second number
+	PDFKit.fontSize(fontSize).text(num2.toString(), content_x, content_y + 30, {
+		width: content_width - 5,
+		align: 'right',
+		characterSpacing: characterSpacing
+	});
+
+	// Draw lines for calculation and answer space
+	const start_line_x = content_x + 15;
+	const end_line_x = content_x + content_width;
+
+	PDFKit.strokeColor('black').lineWidth(0.5);
+	// Draw first line
+	PDFKit.moveTo(start_line_x, PDFKit.y).lineTo(end_line_x, PDFKit.y).stroke();
+
+	// Draw middle line (multiplication adds one when the second number has >1 digit)
+	if (middleLineGap != null) {
+		PDFKit.moveDown(middleLineGap);
+		PDFKit.moveTo(start_line_x, PDFKit.y).lineTo(end_line_x, PDFKit.y).stroke();
+	}
+
+	// answer gap and draw last line
+	PDFKit.moveDown(1.5);
+	PDFKit.moveTo(start_line_x, PDFKit.y).lineTo(end_line_x, PDFKit.y).stroke();
+}
+
 export function displayStarImages(PDFKit: PDFKit.PDFDocument, star_size: number, y_gap: number) {
 	// let y_gap = 40;
 	let start_3_y = PDFKit.page.height - PDFKit.page.margins.bottom - star_size;
