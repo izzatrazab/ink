@@ -279,13 +279,20 @@
 			correct={vqCorrect}
 			last={vqLast}
 			overlayPlaying={quiz.overlayPlaying}
-			object={vqObjekPx}
-			target={vqImejPx}
 			aspect="1/1"
 			cardClass="max-w-md"
 			range={6}
 			onnext={advancePair}
 		>
+			{#snippet reveal(playing)}
+				<SlideToOverlay
+					object={vqObjekPx}
+					target={vqImejPx}
+					play={playing}
+					targetVariant="outline"
+				/>
+			{/snippet}
+
 			{#snippet input(committed)}
 				{#if !committed}
 					<div class="flex flex-wrap items-center justify-center gap-8">

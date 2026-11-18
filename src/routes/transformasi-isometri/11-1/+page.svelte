@@ -154,12 +154,19 @@
 			{correct}
 			{last}
 			overlayPlaying={quiz.overlayPlaying}
-			object={pair.objek}
-			target={pair.banding}
 			aspect="2/1"
 			viewBox="0 0 200 100"
 			onnext={() => (quiz = nextPair(quiz))}
 		>
+			{#snippet reveal(playing)}
+				<SlideToOverlay
+					object={pair.objek}
+					target={pair.banding}
+					play={playing}
+					targetVariant="outline"
+				/>
+			{/snippet}
+
 			{#snippet input(committed)}
 				<div class="flex justify-center gap-3">
 					<button
