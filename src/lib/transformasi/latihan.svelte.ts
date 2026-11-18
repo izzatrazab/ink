@@ -16,14 +16,8 @@
 
 import { createLatihan, type LatihanConfig } from './latihan';
 
-/** A Section's config, plus the optional blank its draft resets to on each new pair. */
-export interface StartLatihanConfig<Pair, Answer> extends LatihanConfig<Pair, Answer> {
-	/** The answer a fresh pair starts with — present only for Sections that build an answer up (11.2's vector, 11.3's axis). */
-	blank?: Answer;
-}
-
 /** A started Latihan: the live view-state and the two actions. */
-export interface Latihan<Pair, Answer> {
+export interface StartedLatihan<Pair, Answer> {
 	/** The current pair. */
 	readonly pair: Pair;
 	/** Zero-based index of the current pair. */
@@ -47,7 +41,10 @@ export interface Latihan<Pair, Answer> {
 }
 
 /** A started Latihan whose Section builds its answer up before committing. */
-export interface DraftLatihan<Pair, Answer> extends Omit<Latihan<Pair, Answer>, 'submit'> {
+export interface StartedDraftLatihan<Pair, Answer> extends Omit<
+	StartedLatihan<Pair, Answer>,
+	'submit'
+> {
 	/** The student's in-progress answer; resets to `blank` when `next()` advances. */
 	draft: Answer;
 	/** Commits `answer`, or the current draft when called with no argument. */
@@ -56,23 +53,25 @@ export interface DraftLatihan<Pair, Answer> extends Omit<Latihan<Pair, Answer>, 
 
 /** Starts a Latihan with a draft: the config supplies the `blank` the draft starts at. */
 export function startLatihan<Pair, Answer>(
-	config: StartLatihanConfig<Pair, Answer> & { blank: Answer },
+	config: LatihanConfig<Pair, Answer> & { blank: Answer },
 	pairs: Pair[]
-): DraftLatihan<Pair, Answer>;
+): StartedDraftLatihan<Pair, Answer>;
 /** Starts a Latihan whose answers are committed directly (no draft). */
 export function startLatihan<Pair, Answer>(
-	config: StartLatihanConfig<Pair, Answer>,
+	config: LatihanConfig<Pair, Answer>,
 	pairs: Pair[]
-): Latihan<Pair, Answer>;
+): StartedLatihan<Pair, Answer>;
 export function startLatihan<Pair, Answer>(
-	config: StartLatihanConfig<Pair, Answer>,
+	config: LatihanConfig<Pair, Answer>,
 	pairs: Pair[]
-): DraftLatihan<Pair, Answer> {
+): StartedDraftLatihan<Pair, Answer> {
 	const machine = createLatihan(config);
 
 	// Snapshots are replaced, never mutated, so a raw (shallow) rune is enough.
 	let state = $state.raw(machine.initialState(pairs));
-	let draft = $state.raw(config.blank as Answer);
+	// Undefined for Sections without a draft; the overloads hide `draft` from them.
+	const blank = config.blank as Answer;
+	let draft = $state.raw(blank);
 
 	return {
 		get pair() {
@@ -114,7 +113,7 @@ export function startLatihan<Pair, Answer>(
 			// resets when the Latihan genuinely moved on to a new pair.
 			if (advanced === state) return;
 			state = advanced;
-			draft = config.blank as Answer;
+			draft = blank;
 		}
 	};
 }

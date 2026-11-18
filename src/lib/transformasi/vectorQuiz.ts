@@ -1,7 +1,7 @@
 // The find-the-vector exercise for Section 11.2: authored figure pairs
 // specialising the shared Latihan deck-walker. It mirrors classifier.ts and
 // imports only the geometry seam and latihan.ts, so it stays independently
-// testable (the page wires it to Svelte runes).
+// testable (the page starts a Latihan from its config).
 //
 // The reverse of the Explorable: shown an Object and its Image, the student must
 // name the Translation vector that maps one onto the other. The correct answer
@@ -10,12 +10,12 @@
 // translate of its Object keeps that guarantee honest: the slide-to-overlay
 // "why" lines them up exactly because the pair really is a translation. This
 // Section supplies the machine only its differences: the derived vector answer,
-// and structural Vector equality (an answer is correct by its dx/dy, not its
-// identity). The "why" always plays, since every authored pair is a true
+// structural Vector equality (an answer is correct by its dx/dy, not its
+// identity), and the zero vector the stepper's draft starts at. The "why" always plays, since every authored pair is a true
 // translation, so the latihan's default revealsWhy is left as-is.
 
 import { translate, translationVector, type Shape, type Vector } from './geometry';
-import type { StartLatihanConfig } from './latihan.svelte';
+import type { LatihanConfig } from './latihan';
 
 /** One authored exercise: an Object and its Image (a true translate of it). */
 export interface VectorQuizPair {
@@ -42,7 +42,7 @@ export const latihanConfig = {
 	correctAnswer,
 	answersEqual: vectorsEqual,
 	blank: { dx: 0, dy: 0 }
-} satisfies StartLatihanConfig<VectorQuizPair, Vector>;
+} satisfies LatihanConfig<VectorQuizPair, Vector>;
 
 /** Builds a pair from an Object and the vector that produces its Image. Authoring
  *  the Image as translate(objek, v) — not a hand-placed second shape — is what

@@ -18,9 +18,9 @@
 	// verdict buttons vs. the (a, b) stepper), the feedback sentence (an authored
 	// explanation vs. a derived vector), and the **Reveal** — the motion that plays
 	// the "why" (Slide-to-overlay for translation; Fold-to-overlay, planned for
-	// reflection in 11.3). `input` receives the `answered` flag so each Section keeps its own
-	// answered-state behaviour — 11.1 leaves its buttons visible-but-disabled, 11.2
-	// swaps its stepper away.
+	// reflection in 11.3). `input` receives the `answered` flag so each Section keeps
+	// its own answered-state behaviour — 11.1 leaves its buttons visible-but-disabled,
+	// 11.2 swaps its stepper away.
 	//
 	// The Reveal seam: the shell renders `reveal(playing)` inside its Stage and
 	// knows nothing of the figures or the motion. Its contract is that each pair

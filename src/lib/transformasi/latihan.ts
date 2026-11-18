@@ -1,6 +1,6 @@
 // The Latihan deck-walker: the shared interaction state machine behind every
 // Section's exercise (latihan). One pair is shown at a time; the student commits
-// a single answer, sees whether it is correct and the slide-to-overlay "why",
+// a single answer, sees whether it is correct and the Reveal "why",
 // then advances — commit-once-then-reveal, walking to the end of the deck.
 //
 // Extracted once a second Section needed the same machine — Section 11.1's
@@ -8,7 +8,7 @@
 // deepen-on-second-case discipline of ADR-0005/0008). The two Sections differ in
 // only three places, which are this module's configuration: how the correct
 // answer is derived from a pair, how two answers are compared, and whether
-// committing reveals the Reveal "why". Everything else — stepping, the
+// committing plays the Reveal. Everything else — stepping, the
 // commit-is-final rule, reset-on-advance, stop-at-the-last-pair — lives here once.
 //
 // Pure and framework-free like the seams it sits beside (geometry.ts, grid.ts):
@@ -31,8 +31,14 @@ export interface LatihanConfig<Pair, Answer> {
 	correctAnswer: (pair: Pair) => Answer;
 	/** Whether two answers count as the same translation/verdict. Defaults to `===`. */
 	answersEqual?: (a: Answer, b: Answer) => boolean;
-	/** Whether committing an answer reveals the slide-to-overlay "why". Defaults to always. */
+	/** Whether committing an answer reveals the Reveal "why" for a pair. Defaults to always. */
 	revealsWhy?: (pair: Pair) => boolean;
+	/**
+	 * The answer a fresh pair's draft starts with — for Sections that build an
+	 * answer up before committing (11.2's vector, 11.3's axis). The machine itself
+	 * ignores it; the rune adapter (latihan.svelte.ts) owns the draft.
+	 */
+	blank?: Answer;
 }
 
 /** The bound transitions and queries for one Section's configured latihan. */
