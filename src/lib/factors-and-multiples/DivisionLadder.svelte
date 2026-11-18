@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { fly, fade } from 'svelte/transition';
-	import { hint, isDone, product, rowsOf, tryDivisor, type LadderMode } from './ladder';
+	import { hint, isDone, narrate, product, rowsOf, tryDivisor, type LadderMode } from './ladder';
 
 	// The interactive "method of repeated division". The student builds the ladder
 	// one rung at a time by choosing a divisor; every choice is checked by the rules
@@ -34,60 +34,25 @@
 
 	const label = (row: number[]) => row.join(', ');
 
-	// For the LCM ladder: the numbers (other than 1) that the divisor did not divide,
-	// which are brought down unchanged — the step students find most surprising.
-	function broughtDown(row: number[], d: number): string {
-		const kept = row.filter((n) => n > 1 && n % d !== 0);
-		if (kept.length === 0) return '';
-		return ` ${kept.join(' and ')} ${kept.length === 1 ? 'does' : 'do'} not divide by ${d}, so ${kept.length === 1 ? 'it is' : 'they are'} brought down as they are.`;
-	}
-
 	function setMessage(text: string) {
 		message = text;
 	}
 
 	function choose(d: number) {
 		if (done) return;
-		const result = tryDivisor(current, d, mode);
+		// `current` moves on as soon as the divisor is added, so the narration works
+		// from this snapshot of the row that was actually divided.
+		const before = current;
+		const result = tryDivisor(before, d, mode);
 		hinting = false;
+		setMessage(narrate(before, d, result, mode));
 		if (!result.ok) {
 			refused = d;
-			const r = result.rejection;
-			if (r.kind === 'not-prime') {
-				setMessage(
-					d === 1
-						? '1 cannot be used — dividing by 1 changes nothing.'
-						: `${d} is not a prime number — it is ${r.smallestFactor} × ${d / r.smallestFactor}. Divide by a prime instead, like ${r.smallestFactor}.`
-				);
-			} else if (r.kind === 'remainder') {
-				setMessage(
-					`${r.number} ÷ ${d} leaves a remainder of ${r.remainder}, so ${d} does not divide ${r.number} completely.${mode === 'hcf' ? ' For the HCF, the divisor must divide every number.' : ''}`
-				);
-			} else {
-				setMessage(
-					`${d} does not divide any of the numbers, so nothing would change. For the LCM, pick a prime that divides at least one of them.`
-				);
-			}
 			return;
 		}
 		refused = null;
 		divisors = [...divisors, d];
-		if (isDone(result.next, mode)) {
-			playing = false;
-			setMessage(
-				mode === 'single'
-					? `${label(current)} ÷ ${d} = ${label(result.next)}. The bottom is 1 — we are finished! Now multiply all the numbers on the left.`
-					: mode === 'hcf'
-						? `Divided by ${d}: ${label(result.next)}. No prime number divides all of ${label(result.next)} any more, so we stop. Now multiply all the numbers on the left — that is the HCF.`
-						: `Divided by ${d}: ${label(result.next)}.${broughtDown(current, d)} Every number is now 1, so we stop. Now multiply all the numbers on the left — that is the LCM.`
-			);
-		} else {
-			setMessage(
-				mode === 'single'
-					? `${label(current)} ÷ ${d} = ${label(result.next)}. Keep going: divide ${label(result.next)} by a prime.`
-					: `Divided by ${d}: ${label(current)} becomes ${label(result.next)}.${mode === 'lcm' ? broughtDown(current, d) : ''} Keep going.`
-			);
-		}
+		if (isDone(result.next, mode)) playing = false;
 	}
 
 	function pickPreset(i: number) {
@@ -188,7 +153,7 @@
 		<div class="flex flex-wrap justify-center gap-2">
 			{#each DIVISORS as d (d)}
 				<button
-					class="btn btn-sm btn-square {hinting && suggested === d
+					class="btn btn-square size-10! min-h-0 {hinting && suggested === d
 						? 'btn-warning'
 						: refused === d
 							? 'btn-error'

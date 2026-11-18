@@ -42,14 +42,14 @@
 
 	<div class="flex items-center justify-center gap-3">
 		<button
-			class="btn btn-circle btn-outline btn-sm"
+			class="btn btn-circle btn-outline size-10! min-h-0"
 			aria-label="Fewer tiles"
 			disabled={total <= MIN}
 			onclick={() => setTotal(total - 1)}>−</button
 		>
 		<span class="min-w-24 text-center text-lg font-semibold">{total} tiles</span>
 		<button
-			class="btn btn-circle btn-outline btn-sm"
+			class="btn btn-circle btn-outline size-10! min-h-0"
 			aria-label="More tiles"
 			disabled={total >= MAX}
 			onclick={() => setTotal(total + 1)}>+</button
@@ -62,7 +62,7 @@
 			{#each { length: total }, i (i)}
 				{@const k = i + 1}
 				<button
-					class="btn btn-sm btn-square {perRow === k
+					class="btn btn-square size-10! min-h-0 {perRow === k
 						? 'btn-primary'
 						: found.includes(k)
 							? 'btn-soft btn-success'

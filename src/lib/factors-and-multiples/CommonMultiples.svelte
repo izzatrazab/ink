@@ -25,9 +25,9 @@
 
 	const styles = {
 		both: 'bg-success text-success-content font-bold',
-		a: 'bg-primary/30 font-semibold',
-		b: 'bg-secondary/30 font-semibold',
-		none: 'opacity-50'
+		a: 'bg-primary text-primary-content font-semibold',
+		b: 'bg-secondary text-secondary-content font-semibold',
+		none: 'opacity-60'
 	} as const;
 	const labels = {
 		both: 'multiple of both',
@@ -39,11 +39,11 @@
 
 <div class="space-y-4">
 	<div class="flex flex-wrap items-center justify-center gap-6">
-		{#each [{ id: 'a', value: a, swatch: 'bg-primary/30', set: (v: number) => (a = v) }, { id: 'b', value: b, swatch: 'bg-secondary/30', set: (v: number) => (b = v) }] as picker (picker.id)}
+		{#each [{ id: 'a', value: a, swatch: 'bg-primary', set: (v: number) => (a = v) }, { id: 'b', value: b, swatch: 'bg-secondary', set: (v: number) => (b = v) }] as picker (picker.id)}
 			<div class="flex items-center gap-3">
 				<span class="size-4 rounded {picker.swatch}" aria-hidden="true"></span>
 				<button
-					class="btn btn-circle btn-outline btn-sm"
+					class="btn btn-circle btn-outline size-10! min-h-0"
 					aria-label="Smaller number"
 					disabled={picker.value <= MIN}
 					onclick={() => picker.set(picker.value - 1)}>−</button
@@ -52,7 +52,7 @@
 					Multiples of {picker.value}
 				</span>
 				<button
-					class="btn btn-circle btn-outline btn-sm"
+					class="btn btn-circle btn-outline size-10! min-h-0"
 					aria-label="Bigger number"
 					disabled={picker.value >= MAX}
 					onclick={() => picker.set(picker.value + 1)}>+</button
@@ -80,10 +80,10 @@
 
 	<div class="flex flex-wrap justify-center gap-x-5 gap-y-1 text-sm">
 		<span class="flex items-center gap-2"
-			><span class="bg-primary/30 size-3 rounded"></span>multiples of {a}</span
+			><span class="bg-primary size-3 rounded"></span>multiples of {a}</span
 		>
 		<span class="flex items-center gap-2"
-			><span class="bg-secondary/30 size-3 rounded"></span>multiples of {b}</span
+			><span class="bg-secondary size-3 rounded"></span>multiples of {b}</span
 		>
 		<span class="flex items-center gap-2"
 			><span class="bg-success size-3 rounded"></span>multiples of both</span

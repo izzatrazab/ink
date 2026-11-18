@@ -20,7 +20,7 @@
 	chapter="factors-and-multiples"
 	number="2.1"
 	title="Factors, Prime Factors and Highest Common Factor (HCF)"
-	description="Section 2.1: what factors are, found by arranging tiles into equal rows."
+	description="Section 2.1: factors, prime factors and the highest common factor — explored with tiles and a step-by-step division ladder."
 	next={{ href: '/factors-and-multiples/2-2', label: '2.2 Multiples and LCM →' }}
 >
 	<!-- Beat 1 — What are factors? (concept). Defined through the picture the
@@ -133,15 +133,16 @@
 			<strong>every</strong> number — if it misses even one, it is refused.
 		</p>
 		<p class="leading-relaxed">
-			Keep going until no prime divides all the numbers any more. Multiply the numbers down the left
-			side and you get the <strong>highest common factor (HCF)</strong> — the biggest number that divides
-			all of them completely. Try finding the HCF of 36, 60 and 72.
+			Keep going until no prime divides all the numbers any more. A number that divides all of them
+			is called a <strong>common factor</strong>, and the biggest one is the
+			<strong>highest common factor (HCF)</strong>. Multiply the numbers down the left side and you
+			get it. Try finding the HCF of 36, 60 and 72.
 		</p>
 		<DivisionLadder mode="hcf" presets={[[36, 60, 72]]} />
 	</section>
 
 	<p class="text-sm opacity-60">
-		Coming next in this section: the factor tree, common factors, the highest common factor (HCF),
-		and problem solving.
+		Coming next in this section: the factor tree, common factors in more detail, other ways to find
+		the HCF, and problem solving.
 	</p>
 </LessonShell>

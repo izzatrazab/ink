@@ -71,3 +71,49 @@ export function hint(row: number[], mode: LadderMode): number | undefined {
 export function product(divisors: number[]): number {
 	return divisors.reduce((a, b) => a * b, 1);
 }
+
+/** The numbers (other than 1) that `d` does not divide — in the LCM ladder these are
+ *  "brought down" unchanged, the step students find most surprising. */
+function broughtDown(row: number[], d: number): string {
+	const kept = row.filter((n) => n > 1 && n % d !== 0);
+	if (kept.length === 0) return '';
+	const many = kept.length > 1;
+	return ` ${kept.join(' and ')} ${many ? 'do' : 'does'} not divide by ${d}, so ${many ? 'they are' : 'it is'} brought down as ${many ? 'they are' : 'it is'}.`;
+}
+
+/**
+ * The sentence shown after the student picks divisor `d` on row `before`:
+ * why it was refused, or what the step did and what to do next. `before` must be
+ * the row that was divided (not the row after), so the arithmetic reads right.
+ */
+export function narrate(before: number[], d: number, result: TryResult, mode: LadderMode): string {
+	const list = (row: number[]) => row.join(', ');
+
+	if (!result.ok) {
+		const r = result.rejection;
+		if (r.kind === 'not-prime') {
+			return d === 1
+				? '1 cannot be used — dividing by 1 changes nothing.'
+				: `${d} is not a prime number — it is ${r.smallestFactor} × ${d / r.smallestFactor}. Divide by a prime instead, like ${r.smallestFactor}.`;
+		}
+		if (r.kind === 'remainder') {
+			return `${r.number} ÷ ${d} leaves a remainder of ${r.remainder}, so ${d} does not divide ${r.number} completely.${mode === 'hcf' ? ' For the HCF, the divisor must divide every number.' : ''}`;
+		}
+		return `${d} does not divide any of the numbers, so nothing would change. For the LCM, pick a prime that divides at least one of them.`;
+	}
+
+	const next = result.next;
+	if (isDone(next, mode)) {
+		if (mode === 'single') {
+			return `${list(before)} ÷ ${d} = ${list(next)}. The bottom is 1 — we are finished! Now multiply all the numbers on the left.`;
+		}
+		if (mode === 'hcf') {
+			return `Divided by ${d}: ${list(next)}. No prime number divides all of ${list(next)} any more, so we stop. Now multiply all the numbers on the left — that is the HCF.`;
+		}
+		return `Divided by ${d}: ${list(next)}.${broughtDown(before, d)} Every number is now 1, so we stop. Now multiply all the numbers on the left — that is the LCM.`;
+	}
+	if (mode === 'single') {
+		return `${list(before)} ÷ ${d} = ${list(next)}. Keep going: divide ${list(next)} by a prime.`;
+	}
+	return `Divided by ${d}: ${list(before)} becomes ${list(next)}.${mode === 'lcm' ? broughtDown(before, d) : ''} Keep going.`;
+}

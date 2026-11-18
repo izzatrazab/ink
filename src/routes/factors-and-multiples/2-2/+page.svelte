@@ -25,7 +25,7 @@
 	chapter="factors-and-multiples"
 	number="2.2"
 	title="Multiples, Common Multiples and Lowest Common Multiple (LCM)"
-	description="Section 2.2: multiples, and the common multiples that two numbers share."
+	description="Section 2.2: multiples, common multiples and the lowest common multiple — explored with a number chart and a division ladder."
 	prev={{ href: '/factors-and-multiples/2-1', label: '← 2.1 Factors and HCF' }}
 >
 	<!-- Beat 1 — What are multiples? (concept) -->
@@ -80,11 +80,11 @@
 
 			{#snippet feedback()}
 				{#if isCommon}
-					Every hop count lands exactly on {latihan.pair.n}, so {latihan.pair.n} is a common multiple
-					of {list}.
+					Counting up in each of {list}, you land exactly on {latihan.pair.n} — so {latihan.pair.n} is
+					a common multiple.
 				{:else}
-					{latihan.pair.n} ÷ {miss} leaves a remainder, so hops of {miss} skip over {latihan.pair.n}
-					— {latihan.pair.n} is not a common multiple of {list}.
+					Counting up in {miss}s skips over {latihan.pair.n} ({latihan.pair.n} ÷ {miss} leaves a remainder)
+					— so {latihan.pair.n} is not a common multiple of {list}.
 				{/if}
 			{/snippet}
 		</LatihanShell>
