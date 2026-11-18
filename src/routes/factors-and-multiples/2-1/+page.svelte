@@ -123,6 +123,23 @@
 		<DivisionLadder presets={[[60], [72], [84], [90], [126]]} />
 	</section>
 
+	<!-- Beat 5 — The same ladder with several numbers at once: the HCF
+	     (textbook Example 8(b)). A preview of the HCF beat to come. -->
+	<section class="space-y-4">
+		<h2 class="text-2xl font-semibold">One ladder, several numbers</h2>
+		<p class="leading-relaxed">
+			The same ladder can work on <strong>several numbers at once</strong>. Write them side by side,
+			then divide all of them by the same prime. A prime only counts if it divides
+			<strong>every</strong> number — if it misses even one, it is refused.
+		</p>
+		<p class="leading-relaxed">
+			Keep going until no prime divides all the numbers any more. Multiply the numbers down the left
+			side and you get the <strong>highest common factor (HCF)</strong> — the biggest number that divides
+			all of them completely. Try finding the HCF of 36, 60 and 72.
+		</p>
+		<DivisionLadder mode="hcf" presets={[[36, 60, 72]]} />
+	</section>
+
 	<p class="text-sm opacity-60">
 		Coming next in this section: the factor tree, common factors, the highest common factor (HCF),
 		and problem solving.

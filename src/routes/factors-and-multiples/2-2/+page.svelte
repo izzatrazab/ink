@@ -1,6 +1,7 @@
 <script lang="ts">
 	import LessonShell from '$lib/transformasi/LessonShell.svelte';
 	import LatihanShell from '$lib/transformasi/LatihanShell.svelte';
+	import DivisionLadder from '$lib/factors-and-multiples/DivisionLadder.svelte';
 	import CommonMultiples from '$lib/factors-and-multiples/CommonMultiples.svelte';
 	import MultipleLanes from '$lib/factors-and-multiples/MultipleLanes.svelte';
 	import { startLatihan } from '$lib/transformasi/latihan.svelte';
@@ -89,7 +90,29 @@
 		</LatihanShell>
 	</section>
 
+	<!-- Beat 4 — The lowest common multiple, found with the same division ladder
+	     as in 2.1 but with one rule changed (textbook Example 11(b)). -->
+	<section class="space-y-4">
+		<h2 class="text-2xl font-semibold">The lowest common multiple (LCM)</h2>
+		<p class="leading-relaxed">
+			The common multiples of 6 and 8 are 24, 48, 72, … The smallest one, 24, is the
+			<strong>lowest common multiple (LCM)</strong>.
+		</p>
+		<p class="leading-relaxed">
+			You can find it with the ladder from Section 2.1, with <strong>one rule changed</strong>.
+			Write the numbers side by side and divide by a prime that goes into
+			<strong>at least one</strong>
+			of them. The numbers it does <em>not</em> divide are simply brought down unchanged. Keep going until
+			every number is 1, then multiply all the numbers on the left. Try the LCM of 3, 6 and 9.
+		</p>
+		<DivisionLadder mode="lcm" presets={[[3, 6, 9]]} />
+		<p class="text-sm leading-relaxed opacity-70">
+			Compare with the HCF ladder: for the HCF the prime must divide <em>every</em> number and we
+			stop early; for the LCM it needs to divide only <em>one</em>, and we go all the way down to 1.
+		</p>
+	</section>
+
 	<p class="text-sm opacity-60">
-		Coming next in this section: the lowest common multiple (LCM) and problem solving.
+		Coming next in this section: more ways to find the LCM, and problem solving.
 	</p>
 </LessonShell>
