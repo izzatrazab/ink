@@ -50,6 +50,7 @@
 </script>
 
 <LessonShell
+	chapter="transformasi-isometri"
 	number="11.1"
 	title="Transformasi dan Kekongruenan"
 	description="Bahagian 11.1: pengenalan kepada transformasi dan kekongruenan."

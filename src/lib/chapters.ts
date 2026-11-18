@@ -1,0 +1,169 @@
+// The chapter registry: the one place that knows which textbook chapters the
+// app teaches. The home page, each chapter landing, and <LessonShell>'s header
+// and back-link all read from here, so adding a chapter is one entry plus a
+// route folder at `/<slug>` (ADR-0011). Section pages stay hand-written.
+
+export type Language = 'en' | 'ms';
+
+export interface SectionMeta {
+	/** Section number as printed in the textbook, e.g. "11.2". */
+	number: string;
+	/** Route segment under the chapter, e.g. "11-2". */
+	slug: string;
+	title: string;
+	/** One-line summary shown on the chapter landing. */
+	description: string;
+	/** Headings the section will cover, in textbook order (the landing's outline). */
+	outline?: string[];
+	/** False while the section is only outlined and has no page yet. Defaults to true. */
+	ready?: boolean;
+}
+
+export interface Chapter {
+	/** Route segment, e.g. "transformasi-isometri" — the chapter lives at `/<slug>`. */
+	slug: string;
+	/** Form (Tingkatan), 1–5. */
+	form: number;
+	/** Chapter (Bab) number within that form. */
+	number: number;
+	/** Language the chapter's own text is written in; follows its textbook. */
+	lang: Language;
+	title: string;
+	description: string;
+	/** Sections in textbook order. Empty while a chapter is only scaffolded. */
+	sections: SectionMeta[];
+}
+
+export const chapters: Chapter[] = [
+	{
+		slug: 'factors-and-multiples',
+		form: 1,
+		number: 2,
+		lang: 'en',
+		title: 'Factors and Multiples',
+		description:
+			'Factors, prime factors and the highest common factor — then multiples, common multiples and the lowest common multiple.',
+		sections: [
+			{
+				number: '2.1',
+				slug: '2-1',
+				title: 'Factors, Prime Factors and Highest Common Factor (HCF)',
+				description: 'Which numbers divide a number completely, and what two numbers share.',
+				outline: [
+					'What are factors?',
+					'What are prime factors? (prime factorisation by repeated division or a factor tree)',
+					'What are common factors?',
+					'What is the highest common factor (HCF)? (listing, repeated division, prime factorisation)',
+					'How do you solve problems involving HCF?'
+				]
+			},
+			{
+				number: '2.2',
+				slug: '2-2',
+				title: 'Multiples, Common Multiples and Lowest Common Multiple (LCM)',
+				description: 'What you get by multiplying, and where two lists of multiples meet.',
+				outline: [
+					'What are common multiples?',
+					'What is the lowest common multiple (LCM)? (listing, repeated division, prime factorisation)',
+					'How do you solve problems involving LCM?'
+				]
+			}
+		]
+	},
+	{
+		slug: 'transformasi-isometri',
+		form: 2,
+		number: 11,
+		lang: 'ms',
+		title: 'Transformasi Isometri',
+		description:
+			'Belajar bagaimana sesuatu objek berubah kedudukan, orientasi, atau saiz — dan apa yang kekal sama apabila ia berubah.',
+		sections: [
+			{
+				number: '11.1',
+				slug: '11-1',
+				title: 'Transformasi dan Kekongruenan',
+				description: 'Apa itu transformasi, objek dan imej, serta maksud kekongruenan.'
+			},
+			{
+				number: '11.2',
+				slug: '11-2',
+				title: 'Translasi',
+				description:
+					'Bagaimana setiap titik beralih anjakan (a, b) yang sama, mengekalkan bentuk, saiz, dan orientasi.'
+			}
+		]
+	}
+];
+
+export function getChapter(slug: string): Chapter {
+	const chapter = chapters.find((c) => c.slug === slug);
+	if (!chapter) throw new Error(`Unknown chapter: ${slug}`);
+	return chapter;
+}
+
+export function chapterHref(chapter: Chapter): string {
+	return `/${chapter.slug}`;
+}
+
+export function sectionHref(chapter: Chapter, section: SectionMeta): string {
+	return `/${chapter.slug}/${section.slug}`;
+}
+
+/** Fixed UI wording for a chapter's pages, in the chapter's own language. */
+const ui = {
+	en: {
+		form: 'Form',
+		chapter: 'Chapter',
+		allSections: '← All sections',
+		sectionList: 'Section list',
+		comingSoon: 'Coming soon',
+		noSections: 'Sections for this chapter are coming soon.',
+		sectionNav: 'Section navigation',
+		interactive: 'interactive lessons',
+		questionOf: (index: number, total: number) => `Question ${index + 1} of ${total}`,
+		correct: 'Correct!',
+		incorrect: 'Not quite.',
+		allDone: 'Well done — you have finished every question.',
+		nextQuestion: 'Next question'
+	},
+	ms: {
+		form: 'Tingkatan',
+		chapter: 'Bab',
+		allSections: '← Semua bahagian',
+		sectionList: 'Senarai bahagian',
+		comingSoon: 'Akan datang',
+		noSections: 'Bahagian untuk bab ini akan datang.',
+		sectionNav: 'Navigasi bahagian',
+		interactive: 'pelajaran interaktif',
+		questionOf: (index: number, total: number) => `Pasangan ${index + 1} daripada ${total}`,
+		correct: 'Betul!',
+		incorrect: 'Belum tepat.',
+		allDone: 'Tahniah — anda telah menyelesaikan semua pasangan.',
+		nextQuestion: 'Pasangan seterusnya'
+	}
+} as const;
+
+/** The fixed UI wording for a language. */
+export function uiText(lang: Language) {
+	return ui[lang];
+}
+
+export function chapterText(chapter: Chapter) {
+	return uiText(chapter.lang);
+}
+
+/** Eyebrow text shown above titles, e.g. "Form 1 · Chapter 2". */
+export function chapterLabel(chapter: Chapter): string {
+	const t = chapterText(chapter);
+	return `${t.form} ${chapter.form} · ${t.chapter} ${chapter.number}`;
+}
+
+/** Chapters grouped by form, forms and chapters in ascending order. */
+export function chaptersByForm(): { form: number; chapters: Chapter[] }[] {
+	const forms = [...new Set(chapters.map((c) => c.form))].sort((a, b) => a - b);
+	return forms.map((form) => ({
+		form,
+		chapters: chapters.filter((c) => c.form === form).sort((a, b) => a.number - b.number)
+	}));
+}
