@@ -2,6 +2,7 @@
 	import type { Snippet } from 'svelte';
 	import FigureCard from './FigureCard.svelte';
 	import Stage from './Stage.svelte';
+	import { uiText, type Language } from '$lib/chapters';
 
 	// The shared chrome around a Section's Latihan — the graded exercise that closes
 	// every Section (CONTEXT.md). The deck-walking lives in latihan.ts; this is its
@@ -71,13 +72,26 @@
 		input: Snippet<[boolean]>;
 		/** The feedback sentence, rendered after the Betul/Belum-tepat verdict. */
 		feedback: Snippet;
+		/** Language of the shell's own wording (counter, verdict, advance). Defaults to Malay. */
+		lang?: Language;
 	}
 
-	let { latihan, aspect, cardClass, viewBox, range, reveal, input, feedback }: Props = $props();
+	let {
+		latihan,
+		aspect,
+		cardClass,
+		viewBox,
+		range,
+		reveal,
+		input,
+		feedback,
+		lang = 'ms'
+	}: Props = $props();
+	const t = $derived(uiText(lang));
 </script>
 
 <p class="text-sm font-semibold tracking-wide uppercase opacity-60">
-	Pasangan {latihan.index + 1} daripada {latihan.total}
+	{t.questionOf(latihan.index, latihan.total)}
 </p>
 
 <figure>
@@ -100,16 +114,16 @@
 		role="status"
 	>
 		<span>
-			<strong>{latihan.correct ? 'Betul!' : 'Belum tepat.'}</strong>
+			<strong>{latihan.correct ? t.correct : t.incorrect}</strong>
 			{@render feedback()}
 		</span>
 	</div>
 
 	<div class="text-center">
 		{#if latihan.last}
-			<p class="opacity-70">Tahniah — anda telah menyelesaikan semua pasangan.</p>
+			<p class="opacity-70">{t.allDone}</p>
 		{:else}
-			<button class="btn btn-primary" onclick={() => latihan.next()}>Pasangan seterusnya</button>
+			<button class="btn btn-primary" onclick={() => latihan.next()}>{t.nextQuestion}</button>
 		{/if}
 	</div>
 {/if}
