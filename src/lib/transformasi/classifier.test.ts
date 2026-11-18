@@ -5,6 +5,7 @@ import {
 	initialState,
 	submitAnswer,
 	nextPair,
+	revealing,
 	type ClassifierPair
 } from './classifier';
 
@@ -68,14 +69,14 @@ describe('correctAnswer', () => {
 
 describe('the "why" overlay (revealsWhy wiring)', () => {
 	it('plays only when the current pair is congruent', () => {
-		expect(submitAnswer(initialState(deck), 'kongruen').overlayPlaying).toBe(true);
+		expect(revealing(submitAnswer(initialState(deck), 'kongruen'))).toBe(true);
 		// jump to the different-size pair and answer it
 		const onSize = nextPair(submitAnswer(initialState(deck), 'kongruen'));
-		expect(submitAnswer(onSize, 'tak-kongruen').overlayPlaying).toBe(false);
+		expect(revealing(submitAnswer(onSize, 'tak-kongruen'))).toBe(false);
 	});
 
 	it('plays for a congruent pair even when the student answered it wrongly', () => {
 		// keys off the pair, not the answer — the visual "why" is shown regardless.
-		expect(submitAnswer(initialState(deck), 'tak-kongruen').overlayPlaying).toBe(true);
+		expect(revealing(submitAnswer(initialState(deck), 'tak-kongruen'))).toBe(true);
 	});
 });

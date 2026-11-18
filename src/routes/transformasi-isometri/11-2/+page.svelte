@@ -19,7 +19,8 @@
 		correctAnswer,
 		isAnswered,
 		isCorrect,
-		isLast
+		isLast,
+		revealing
 	} from '$lib/transformasi/vectorQuiz';
 
 	// The object, and its image produced purely by the geometry seam. Authoring the
@@ -278,7 +279,7 @@
 			answered={vqAnswered}
 			correct={vqCorrect}
 			last={vqLast}
-			overlayPlaying={quiz.overlayPlaying}
+			overlayPlaying={revealing(quiz)}
 			aspect="1/1"
 			cardClass="max-w-md"
 			range={6}

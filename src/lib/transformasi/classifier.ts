@@ -35,7 +35,7 @@ export function correctAnswer(pair: ClassifierPair): Answer {
 	return pair.relationship === 'congruent' ? 'kongruen' : 'tak-kongruen';
 }
 
-/** A snapshot of the exercise: which pair, the committed answer, the "why" overlay. */
+/** A snapshot of the exercise: which pair and the committed answer. */
 export type ClassifierState = LatihanState<ClassifierPair, Answer>;
 
 const machine = createLatihan<ClassifierPair, Answer>({
@@ -45,8 +45,16 @@ const machine = createLatihan<ClassifierPair, Answer>({
 	revealsWhy: (pair) => pair.relationship === 'congruent'
 });
 
-export const { initialState, currentPair, isAnswered, isCorrect, isLast, submitAnswer, nextPair } =
-	machine;
+export const {
+	initialState,
+	currentPair,
+	isAnswered,
+	isCorrect,
+	isLast,
+	revealing,
+	submitAnswer,
+	nextPair
+} = machine;
 
 // Authored deck — four clean cases: two congruent (same orientation, only
 // translated apart), one different-size (similar, not congruent), one

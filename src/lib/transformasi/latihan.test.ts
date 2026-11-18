@@ -23,11 +23,11 @@ const deck: Pair[] = [
 const plain = createLatihan<Pair, number>({ correctAnswer: (p) => p.answer });
 
 describe('initialState', () => {
-	it('starts on the first pair, unanswered, with no overlay playing', () => {
+	it('starts on the first pair, unanswered, with no Reveal playing', () => {
 		const s = plain.initialState(deck);
 		expect(s.index).toBe(0);
 		expect(s.committed).toBeNull();
-		expect(s.overlayPlaying).toBe(false);
+		expect(plain.revealing(s)).toBe(false);
 		expect(plain.isAnswered(s)).toBe(false);
 		expect(plain.currentPair(s)).toBe(deck[0]);
 	});
@@ -46,8 +46,8 @@ describe('submitAnswer', () => {
 	});
 
 	it('reveals the "why" by default, regardless of correctness', () => {
-		expect(plain.submitAnswer(plain.initialState(deck), 1).overlayPlaying).toBe(true);
-		expect(plain.submitAnswer(plain.initialState(deck), 99).overlayPlaying).toBe(true);
+		expect(plain.revealing(plain.submitAnswer(plain.initialState(deck), 1))).toBe(true);
+		expect(plain.revealing(plain.submitAnswer(plain.initialState(deck), 99))).toBe(true);
 	});
 });
 
@@ -59,10 +59,16 @@ describe('revealsWhy config', () => {
 		revealsWhy: (p) => p.answer % 2 === 0
 	});
 
-	it('plays the overlay only when the predicate holds for the current pair', () => {
-		expect(picky.submitAnswer(picky.initialState(deck), 1).overlayPlaying).toBe(false); // answer 1
+	it('reveals only when the predicate holds for the current pair', () => {
+		expect(picky.revealing(picky.submitAnswer(picky.initialState(deck), 1))).toBe(false); // answer 1
 		const onSecond = picky.nextPair(picky.submitAnswer(picky.initialState(deck), 1));
-		expect(picky.submitAnswer(onSecond, 2).overlayPlaying).toBe(true); // answer 2
+		expect(picky.revealing(picky.submitAnswer(onSecond, 2))).toBe(true); // answer 2
+	});
+});
+
+describe('revealing', () => {
+	it('is false before any answer, even though the pair would reveal', () => {
+		expect(plain.revealing(plain.initialState(deck))).toBe(false);
 	});
 });
 
@@ -92,11 +98,11 @@ describe('isCorrect', () => {
 });
 
 describe('nextPair', () => {
-	it('advances and resets the committed answer + overlay', () => {
+	it('advances and resets the committed answer and the Reveal', () => {
 		const s = plain.nextPair(plain.submitAnswer(plain.initialState(deck), 1));
 		expect(s.index).toBe(1);
 		expect(s.committed).toBeNull();
-		expect(s.overlayPlaying).toBe(false);
+		expect(plain.revealing(s)).toBe(false);
 		expect(plain.currentPair(s)).toBe(deck[1]);
 	});
 

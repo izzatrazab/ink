@@ -8,7 +8,7 @@
 // deepen-on-second-case discipline of ADR-0005/0008). The two Sections differ in
 // only three places, which are this module's configuration: how the correct
 // answer is derived from a pair, how two answers are compared, and whether
-// committing reveals the slide-to-overlay "why". Everything else — stepping, the
+// committing reveals the Reveal "why". Everything else — stepping, the
 // commit-is-final rule, reset-on-advance, stop-at-the-last-pair — lives here once.
 //
 // Pure and framework-free like the seams it sits beside (geometry.ts, grid.ts):
@@ -16,14 +16,13 @@
 // in the factory closure, never in the state, so the state stays plain,
 // structurally-comparable data (the tests lean on `toBe` identity for no-ops).
 
-/** A snapshot of one latihan: which pair, the committed answer, the "why" overlay. */
+/** A snapshot of one latihan: which pair and the committed answer. Whether the
+ *  Reveal is playing is derived from these (see `revealing`), never stored. */
 export interface LatihanState<Pair, Answer> {
 	pairs: Pair[];
 	index: number;
 	/** The student's committed answer for the current pair, or null if unanswered. */
 	committed: Answer | null;
-	/** Whether the slide-to-overlay "why" is currently playing. */
-	overlayPlaying: boolean;
 }
 
 /** What a Section must supply to specialise the deck-walker — only what varies. */
@@ -43,6 +42,8 @@ export interface Latihan<Pair, Answer> {
 	isAnswered(state: LatihanState<Pair, Answer>): boolean;
 	isCorrect(state: LatihanState<Pair, Answer>): boolean;
 	isLast(state: LatihanState<Pair, Answer>): boolean;
+	/** Whether the Reveal is playing: the current pair is answered and the Section reveals it. */
+	revealing(state: LatihanState<Pair, Answer>): boolean;
 	submitAnswer(state: LatihanState<Pair, Answer>, answer: Answer): LatihanState<Pair, Answer>;
 	nextPair(state: LatihanState<Pair, Answer>): LatihanState<Pair, Answer>;
 }
@@ -58,7 +59,7 @@ export function createLatihan<Pair, Answer>(
 	type State = LatihanState<Pair, Answer>;
 
 	function initialState(pairs: Pair[]): State {
-		return { pairs, index: 0, committed: null, overlayPlaying: false };
+		return { pairs, index: 0, committed: null };
 	}
 
 	function currentPair(state: State): Pair {
@@ -79,24 +80,36 @@ export function createLatihan<Pair, Answer>(
 		return state.index === state.pairs.length - 1;
 	}
 
-	/**
-	 * Commits the student's answer for the current pair, revealing the "why" when
-	 * the Section's `revealsWhy` says so. A second submission is ignored — the
-	 * commitment is final.
-	 */
-	function submitAnswer(state: State, answer: Answer): State {
-		if (isAnswered(state)) return state;
-		return { ...state, committed: answer, overlayPlaying: revealsWhy(currentPair(state)) };
+	function revealing(state: State): boolean {
+		return isAnswered(state) && revealsWhy(currentPair(state));
 	}
 
 	/**
-	 * Advances to the next pair, resetting the committed answer and the overlay. A
+	 * Commits the student's answer for the current pair. A second submission is
+	 * ignored — the commitment is final. Whether the "why" then plays is `revealing`.
+	 */
+	function submitAnswer(state: State, answer: Answer): State {
+		if (isAnswered(state)) return state;
+		return { ...state, committed: answer };
+	}
+
+	/**
+	 * Advances to the next pair, resetting the committed answer. A
 	 * no-op until the current pair is answered, and a no-op on the last pair.
 	 */
 	function nextPair(state: State): State {
 		if (!isAnswered(state) || isLast(state)) return state;
-		return { ...state, index: state.index + 1, committed: null, overlayPlaying: false };
+		return { ...state, index: state.index + 1, committed: null };
 	}
 
-	return { initialState, currentPair, isAnswered, isCorrect, isLast, submitAnswer, nextPair };
+	return {
+		initialState,
+		currentPair,
+		isAnswered,
+		isCorrect,
+		isLast,
+		revealing,
+		submitAnswer,
+		nextPair
+	};
 }

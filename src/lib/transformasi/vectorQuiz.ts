@@ -35,7 +35,7 @@ function vectorsEqual(a: Vector, b: Vector): boolean {
 	return a.dx === b.dx && a.dy === b.dy;
 }
 
-/** A snapshot of the exercise: which pair, the committed vector, the "why" overlay. */
+/** A snapshot of the exercise: which pair and the committed vector. */
 export type VectorQuizState = LatihanState<VectorQuizPair, Vector>;
 
 const machine = createLatihan<VectorQuizPair, Vector>({
@@ -43,8 +43,16 @@ const machine = createLatihan<VectorQuizPair, Vector>({
 	answersEqual: vectorsEqual
 });
 
-export const { initialState, currentPair, isAnswered, isCorrect, isLast, submitAnswer, nextPair } =
-	machine;
+export const {
+	initialState,
+	currentPair,
+	isAnswered,
+	isCorrect,
+	isLast,
+	revealing,
+	submitAnswer,
+	nextPair
+} = machine;
 
 /** Builds a pair from an Object and the vector that produces its Image. Authoring
  *  the Image as translate(objek, v) — not a hand-placed second shape — is what

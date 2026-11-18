@@ -15,6 +15,7 @@
 		isAnswered,
 		isCorrect,
 		isLast,
+		revealing,
 		type Answer
 	} from '$lib/transformasi/classifier';
 
@@ -153,7 +154,7 @@
 			{answered}
 			{correct}
 			{last}
-			overlayPlaying={quiz.overlayPlaying}
+			overlayPlaying={revealing(quiz)}
 			aspect="2/1"
 			viewBox="0 0 200 100"
 			onnext={() => (quiz = nextPair(quiz))}
