@@ -59,3 +59,14 @@ export function commonMultiples(ns: number[], limit: number): number[] {
 	for (let m = 1; m <= limit; m++) if (isCommonMultiple(m, ns)) result.push(m);
 	return result;
 }
+
+/** Highest common factor of two or more whole numbers (Euclid's algorithm). */
+export function hcf(ns: number[]): number {
+	const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b));
+	return ns.reduce(gcd);
+}
+
+/** Lowest common multiple of two or more whole numbers. */
+export function lcm(ns: number[]): number {
+	return ns.reduce((a, b) => (a / hcf([a, b])) * b);
+}

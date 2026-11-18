@@ -1,6 +1,7 @@
 <script lang="ts">
 	import LessonShell from '$lib/transformasi/LessonShell.svelte';
 	import LatihanShell from '$lib/transformasi/LatihanShell.svelte';
+	import DivisionLadder from '$lib/factors-and-multiples/DivisionLadder.svelte';
 	import FactorTiles from '$lib/factors-and-multiples/FactorTiles.svelte';
 	import TileArray from '$lib/factors-and-multiples/TileArray.svelte';
 	import { startLatihan } from '$lib/transformasi/latihan.svelte';
@@ -93,8 +94,37 @@
 		</LatihanShell>
 	</section>
 
+	<!-- Beat 4 — What are prime factors? (concept), then the Method of repeated
+	     division as a guided, self-explaining ladder. -->
+	<section class="space-y-4">
+		<h2 class="text-2xl font-semibold">What are prime factors?</h2>
+		<p class="leading-relaxed">
+			The factors of 18 are 1, 2, 3, 6, 9 and 18. Some of them are prime numbers — 2 and 3. Those
+			are the <strong>prime factors</strong> of 18.
+		</p>
+		<p class="leading-relaxed">
+			Every number can be built by multiplying prime numbers together: 18 = 2 × 3 × 3. Writing a
+			number like this is called <strong>prime factorisation</strong>.
+		</p>
+	</section>
+
+	<section class="space-y-4">
+		<h2 class="text-2xl font-semibold">Method of repeated division</h2>
+		<p class="leading-relaxed">
+			Here is a way to find the prime factorisation of any number. Write the number, then keep
+			dividing by a prime number that goes in completely, writing each answer underneath. When you
+			reach <strong>1</strong>, stop — the primes you divided by, down the left side, are the prime
+			factors. Multiply them and you are back to the number you started with.
+		</p>
+		<p class="leading-relaxed">
+			Try it. Pick a number, then choose what to divide by. Pick a wrong one on purpose and see what
+			happens — or press <strong>Watch it</strong> to see it done once.
+		</p>
+		<DivisionLadder presets={[[60], [72], [84], [90], [126]]} />
+	</section>
+
 	<p class="text-sm opacity-60">
-		Coming next in this section: prime factors, common factors, the highest common factor (HCF), and
-		problem solving.
+		Coming next in this section: the factor tree, common factors, the highest common factor (HCF),
+		and problem solving.
 	</p>
 </LessonShell>

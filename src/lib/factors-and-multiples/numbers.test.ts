@@ -5,7 +5,9 @@ import {
 	factors,
 	isCommonMultiple,
 	isFactor,
+	hcf,
 	isPrime,
+	lcm,
 	leftover,
 	multiples
 } from './numbers';
@@ -101,5 +103,16 @@ describe('commonMultiples', () => {
 		const [first, ...rest] = commonMultiples([4, 10], 100);
 		expect(first).toBe(20);
 		expect(rest.every((m) => m % first === 0)).toBe(true);
+	});
+});
+
+describe('hcf and lcm', () => {
+	it('match the textbook answers', () => {
+		expect(hcf([18, 24])).toBe(6);
+		expect(hcf([36, 60, 72])).toBe(12);
+		expect(hcf([48, 64, 80])).toBe(16);
+		expect(lcm([6, 8])).toBe(24);
+		expect(lcm([3, 6, 9])).toBe(18);
+		expect(lcm([3, 8, 12])).toBe(24);
 	});
 });
