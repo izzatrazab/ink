@@ -30,6 +30,8 @@ export interface Latihan<Pair, Answer> {
 	readonly index: number;
 	/** Total pairs in the deck. */
 	readonly total: number;
+	/** The committed answer for the current pair, or null while unanswered. */
+	readonly committed: Answer | null;
 	/** Whether the current pair has been answered (the commitment is final). */
 	readonly answered: boolean;
 	/** Whether the committed answer is correct. */
@@ -81,6 +83,9 @@ export function startLatihan<Pair, Answer>(
 		},
 		get total() {
 			return state.pairs.length;
+		},
+		get committed() {
+			return state.committed;
 		},
 		get answered() {
 			return machine.isAnswered(state);

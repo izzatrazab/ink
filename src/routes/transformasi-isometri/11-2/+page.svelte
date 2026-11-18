@@ -10,18 +10,8 @@
 	import ColumnVector from '$lib/transformasi/ColumnVector.svelte';
 	import { anchor, translate, type Shape, type Vector } from '$lib/transformasi/geometry';
 	import { toPx, toPxShape, toCartesian, snap, clamp } from '$lib/transformasi/grid';
-	import {
-		pairs as vqPairs,
-		initialState,
-		submitAnswer,
-		nextPair,
-		currentPair,
-		correctAnswer,
-		isAnswered,
-		isCorrect,
-		isLast,
-		revealing
-	} from '$lib/transformasi/vectorQuiz';
+	import { startLatihan } from '$lib/transformasi/latihan.svelte';
+	import { pairs as vqPairs, latihanConfig, correctAnswer } from '$lib/transformasi/vectorQuiz';
 
 	// The object, and its image produced purely by the geometry seam. Authoring the
 	// image as translate(objek, …) keeps the picture on screen equal to the function
@@ -122,32 +112,18 @@
 
 	// Beat 3 — Latihan (find the vector). The reverse drill: shown an objek and its
 	// imej on the grid, the student enters the vektor translasi with the same
-	// stepper, commits, and watches the slide-to-overlay confirm it. Interaction
-	// lives in the pure vectorQuiz state machine; the page holds the snapshot and
-	// the in-progress guess, and reads everything else as derived view-state.
-	let quiz = $state(initialState(vqPairs));
-	let guess = $state<Vector>({ dx: 0, dy: 0 });
+	// stepper, commits, and watches the slide-to-overlay confirm it. The page
+	// starts a Latihan from the Section's config and deck; the in-progress guess is
+	// the Latihan's draft, which resets itself when the pair advances.
+	const latihan = startLatihan(latihanConfig, vqPairs);
 
-	const vqPair = $derived(currentPair(quiz));
-	const vqAnswered = $derived(isAnswered(quiz));
-	const vqCorrect = $derived(isCorrect(quiz));
-	const vqLast = $derived(isLast(quiz));
-	const vqAnswer = $derived(correctAnswer(vqPair));
+	const vqAnswer = $derived(correctAnswer(latihan.pair));
 
 	// The pair drawn on the grid: both figures mapped Cartesian → px (ADR-0009).
 	// The slide-to-overlay derives its motion from these two px figures, so the
 	// "why" always slides along the genuine translation.
-	const vqObjekPx = $derived(toPxShape(vqPair.objek));
-	const vqImejPx = $derived(toPxShape(vqPair.imej));
-
-	function submitGuess() {
-		quiz = submitAnswer(quiz, guess);
-	}
-
-	function advancePair() {
-		quiz = nextPair(quiz);
-		guess = { dx: 0, dy: 0 };
-	}
+	const vqObjekPx = $derived(toPxShape(latihan.pair.objek));
+	const vqImejPx = $derived(toPxShape(latihan.pair.imej));
 </script>
 
 <LessonShell
@@ -273,18 +249,7 @@
 		<!-- objek (filled) slides onto the imej outline when the "why" plays; the
 		     slide derives its vector from the two px figures. The stepper is the
 		     same control as the Explorable, so entry and exploration look alike. -->
-		<LatihanShell
-			index={quiz.index}
-			total={vqPairs.length}
-			answered={vqAnswered}
-			correct={vqCorrect}
-			last={vqLast}
-			overlayPlaying={revealing(quiz)}
-			aspect="1/1"
-			cardClass="max-w-md"
-			range={6}
-			onnext={advancePair}
-		>
+		<LatihanShell {latihan} aspect="1/1" cardClass="max-w-md" range={6}>
 			{#snippet reveal(playing)}
 				<SlideToOverlay
 					object={vqObjekPx}
@@ -297,26 +262,27 @@
 			{#snippet input(committed)}
 				{#if !committed}
 					<div class="flex flex-wrap items-center justify-center gap-8">
-						<VectorStepper value={guess} onchange={(next) => (guess = next)} />
+						<VectorStepper value={latihan.draft} onchange={(next) => (latihan.draft = next)} />
 						<div class="flex flex-col items-center gap-2">
 							<span class="text-sm font-semibold tracking-wide uppercase opacity-60">
 								Jawapan anda
 							</span>
-							<ColumnVector value={guess} />
+							<ColumnVector value={latihan.draft} />
 						</div>
 					</div>
 					<div class="text-center">
-						<button class="btn btn-primary" onclick={submitGuess}>Sahkan jawapan</button>
+						<button class="btn btn-primary" onclick={() => latihan.submit()}>Sahkan jawapan</button>
 					</div>
 				{/if}
 			{/snippet}
 
 			{#snippet feedback()}
-				{#if vqCorrect}
+				{#if latihan.correct}
 					Vektor translasinya ialah ({vqAnswer.dx}, {vqAnswer.dy}) — perhatikan objek bertindih
 					tepat dengan imej.
 				{:else}
-					Anda menjawab ({guess.dx}, {guess.dy}); vektor translasi yang betul ialah ({vqAnswer.dx},
+					Anda menjawab ({latihan.draft.dx}, {latihan.draft.dy}); vektor translasi yang betul ialah
+					({vqAnswer.dx},
 					{vqAnswer.dy}).
 				{/if}
 			{/snippet}

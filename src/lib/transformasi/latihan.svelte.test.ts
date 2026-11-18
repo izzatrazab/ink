@@ -38,6 +38,15 @@ describe('startLatihan view-state', () => {
 		expect(l.revealing).toBe(false);
 	});
 
+	it('exposes the committed answer: none before commit, the answer after, none again on advance', () => {
+		const l = startLatihan(config, deck);
+		expect(l.committed).toBeNull();
+		l.submit(2);
+		expect(l.committed).toBe(2);
+		l.next();
+		expect(l.committed).toBeNull();
+	});
+
 	it('reports correctness after an explicit submit', () => {
 		const right = startLatihan(config, deck);
 		right.submit(1);

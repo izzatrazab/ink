@@ -1,6 +1,6 @@
 // The congruency classifier for Section 11.1: authored content specialising the
 // shared Latihan deck-walker. It imports only the geometry types and latihan.ts,
-// so it stays independently testable (the page wires it to Svelte runes).
+// so it stays independently testable (the page starts a Latihan from its config).
 //
 // Per the PRD the authored pairs are trusted — there is no `classifyRelationship`
 // validator. `correctAnswer` derives the verdict from the authored relationship
@@ -11,7 +11,7 @@
 // CONTEXT.md's flagged ambiguity on whether the visible mismatch should also play).
 
 import type { Shape } from './geometry';
-import { createLatihan, type LatihanState } from './latihan';
+import type { LatihanConfig } from './latihan';
 
 /** How a comparand figure relates to its object. */
 export type Relationship = 'congruent' | 'different-size' | 'different-shape';
@@ -35,26 +35,13 @@ export function correctAnswer(pair: ClassifierPair): Answer {
 	return pair.relationship === 'congruent' ? 'kongruen' : 'tak-kongruen';
 }
 
-/** A snapshot of the exercise: which pair and the committed answer. */
-export type ClassifierState = LatihanState<ClassifierPair, Answer>;
-
-const machine = createLatihan<ClassifierPair, Answer>({
+/** What Section 11.1 supplies to the Latihan deck-walker. Verdicts are string
+ *  enums, so the default `===` comparison is exactly right; the only
+ *  Section-specific rule is that the Reveal plays for congruent pairs. */
+export const latihanConfig: LatihanConfig<ClassifierPair, Answer> = {
 	correctAnswer,
-	// Verdicts are string enums, so the default `===` comparison is exactly right;
-	// the only Section-specific rule is that the "why" plays for congruent pairs.
 	revealsWhy: (pair) => pair.relationship === 'congruent'
-});
-
-export const {
-	initialState,
-	currentPair,
-	isAnswered,
-	isCorrect,
-	isLast,
-	revealing,
-	submitAnswer,
-	nextPair
-} = machine;
+};
 
 // Authored deck — four clean cases: two congruent (same orientation, only
 // translated apart), one different-size (similar, not congruent), one

@@ -1,13 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import { translate, translationVector, type Shape, type Vector } from './geometry';
-import {
-	correctAnswer,
-	initialState,
-	submitAnswer,
-	isCorrect,
-	pairs,
-	type VectorQuizPair
-} from './vectorQuiz';
+import { createLatihan } from './latihan';
+import { correctAnswer, latihanConfig, pairs, type VectorQuizPair } from './vectorQuiz';
+
+// The deck-walker as Section 11.2 configures it — the same interface the
+// adapter wraps, so these tests cross the seam the page does.
+const { initialState, submitAnswer, isCorrect } = createLatihan(latihanConfig);
 
 // The generic deck-walking (stepping, commit-is-final, reset-on-advance,
 // stop-at-last) is covered once in latihan.test.ts. This suite tests only what

@@ -6,18 +6,8 @@
 	import Figure from '$lib/transformasi/Figure.svelte';
 	import SlideToOverlay from '$lib/transformasi/SlideToOverlay.svelte';
 	import { translate, type Shape, type Vector } from '$lib/transformasi/geometry';
-	import {
-		pairs,
-		initialState,
-		submitAnswer,
-		nextPair,
-		currentPair,
-		isAnswered,
-		isCorrect,
-		isLast,
-		revealing,
-		type Answer
-	} from '$lib/transformasi/classifier';
+	import { startLatihan } from '$lib/transformasi/latihan.svelte';
+	import { pairs, latihanConfig } from '$lib/transformasi/classifier';
 
 	// The object, and its image produced purely by the geometry seam. Authoring the
 	// image as translate(objek, …) — rather than a second hand-placed shape — means
@@ -54,17 +44,9 @@
 		]
 	};
 
-	// Congruency classifier — interaction lives in the pure state machine; the page
-	// only holds the current snapshot and reads derived view-state off it.
-	let quiz = $state(initialState(pairs));
-	const pair = $derived(currentPair(quiz));
-	const answered = $derived(isAnswered(quiz));
-	const correct = $derived(isCorrect(quiz));
-	const last = $derived(isLast(quiz));
-
-	function answer(choice: Answer) {
-		quiz = submitAnswer(quiz, choice);
-	}
+	// Congruency classifier — the page starts a Latihan from the Section's config
+	// and deck, and reads everything (the pair, the verdict, the Reveal) off it.
+	const latihan = startLatihan(latihanConfig, pairs);
 </script>
 
 <LessonShell
@@ -148,21 +130,11 @@
 
 		<!-- objek (filled) slides onto the comparand outline when the "why" plays;
 		     for non-congruent pairs it visibly fails to line up. -->
-		<LatihanShell
-			index={quiz.index}
-			total={pairs.length}
-			{answered}
-			{correct}
-			{last}
-			overlayPlaying={revealing(quiz)}
-			aspect="2/1"
-			viewBox="0 0 200 100"
-			onnext={() => (quiz = nextPair(quiz))}
-		>
+		<LatihanShell {latihan} aspect="2/1" viewBox="0 0 200 100">
 			{#snippet reveal(playing)}
 				<SlideToOverlay
-					object={pair.objek}
-					target={pair.banding}
+					object={latihan.pair.objek}
+					target={latihan.pair.banding}
 					play={playing}
 					targetVariant="outline"
 				/>
@@ -172,17 +144,17 @@
 				<div class="flex justify-center gap-3">
 					<button
 						class="btn btn-outline btn-primary"
-						class:btn-active={committed && quiz.committed === 'kongruen'}
+						class:btn-active={committed && latihan.committed === 'kongruen'}
 						disabled={committed}
-						onclick={() => answer('kongruen')}
+						onclick={() => latihan.submit('kongruen')}
 					>
 						Kongruen
 					</button>
 					<button
 						class="btn btn-outline btn-primary"
-						class:btn-active={committed && quiz.committed === 'tak-kongruen'}
+						class:btn-active={committed && latihan.committed === 'tak-kongruen'}
 						disabled={committed}
-						onclick={() => answer('tak-kongruen')}
+						onclick={() => latihan.submit('tak-kongruen')}
 					>
 						Tak kongruen
 					</button>
@@ -190,7 +162,7 @@
 			{/snippet}
 
 			{#snippet feedback()}
-				{pair.explanation}
+				{latihan.pair.explanation}
 			{/snippet}
 		</LatihanShell>
 	</section>

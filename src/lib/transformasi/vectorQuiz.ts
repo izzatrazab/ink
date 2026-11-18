@@ -15,7 +15,7 @@
 // translation, so the latihan's default revealsWhy is left as-is.
 
 import { translate, translationVector, type Shape, type Vector } from './geometry';
-import { createLatihan, type LatihanState } from './latihan';
+import type { StartLatihanConfig } from './latihan.svelte';
 
 /** One authored exercise: an Object and its Image (a true translate of it). */
 export interface VectorQuizPair {
@@ -35,24 +35,14 @@ function vectorsEqual(a: Vector, b: Vector): boolean {
 	return a.dx === b.dx && a.dy === b.dy;
 }
 
-/** A snapshot of the exercise: which pair and the committed vector. */
-export type VectorQuizState = LatihanState<VectorQuizPair, Vector>;
-
-const machine = createLatihan<VectorQuizPair, Vector>({
+/** What Section 11.2 supplies to the Latihan deck-walker: the derived vector
+ *  answer, structural equality, and the zero vector the stepper starts at on
+ *  every pair. The Reveal always plays, so `revealsWhy` keeps its default. */
+export const latihanConfig = {
 	correctAnswer,
-	answersEqual: vectorsEqual
-});
-
-export const {
-	initialState,
-	currentPair,
-	isAnswered,
-	isCorrect,
-	isLast,
-	revealing,
-	submitAnswer,
-	nextPair
-} = machine;
+	answersEqual: vectorsEqual,
+	blank: { dx: 0, dy: 0 }
+} satisfies StartLatihanConfig<VectorQuizPair, Vector>;
 
 /** Builds a pair from an Object and the vector that produces its Image. Authoring
  *  the Image as translate(objek, v) — not a hand-placed second shape — is what
