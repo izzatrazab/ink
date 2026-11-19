@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { chapterHref, chapterLabel, chapterText, getChapter } from '$lib/chapters';
+	import { chapterHref, chapterLabel, chapterText, getChapter, sectionTitle } from '$lib/chapters';
 	import { reader } from '$lib/language.svelte';
 	import LanguageToggle from './LanguageToggle.svelte';
 
@@ -39,12 +39,7 @@
 	const t = $derived(chapterText(chapterMeta));
 	// The Section's title comes from the registry, in the reader's language, so the
 	// page, the chapter landing and the tab title can never disagree.
-	const title = $derived(
-		chapterMeta.sections.find((s) => s.number === number)?.title ??
-			(() => {
-				throw new Error(`Unknown section ${number} in chapter ${chapter}`);
-			})()
-	);
+	const title = $derived(sectionTitle(chapterMeta, number));
 	const headTitle = $derived(docTitle ?? `${number} ${title}`);
 
 	$effect(() => {

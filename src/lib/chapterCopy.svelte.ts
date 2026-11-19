@@ -16,7 +16,8 @@ export function chapterCopy<C>(slug: string, table: Record<Language, C>): Chapte
 	const chapter = getChapter(slug);
 	return {
 		get t() {
-			// A table lacking the resolved language falls back to the chapter's own.
+			// `reader.for` only returns a language the chapter offers; the fallback covers a
+			// table that is missing an entry for it.
 			return table[reader.for(chapter)] ?? table[chapter.lang];
 		}
 	};

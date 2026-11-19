@@ -14,8 +14,8 @@
 	import Rich from '$lib/factors-and-multiples/Rich.svelte';
 	import { useCopy } from '$lib/factors-and-multiples/useCopy';
 
-	const c = useCopy();
-	const t = $derived(c.t);
+	const copy = useCopy();
+	const t = $derived(copy.t);
 
 	// The Latihan: is it a common multiple? The verdict is derived from the pair
 	// (commonMultipleQuiz.correctAnswer); the Reveal hops along a lane per number

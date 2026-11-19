@@ -10,8 +10,8 @@
 	import Rich from '$lib/factors-and-multiples/Rich.svelte';
 	import { useCopy } from '$lib/factors-and-multiples/useCopy';
 
-	const c = useCopy();
-	const t = $derived(c.t);
+	const copy = useCopy();
+	const t = $derived(copy.t);
 
 	// The Latihan: is this row size a factor? The verdict is derived from the pair
 	// (factorQuiz.correctAnswer); the Reveal arranges the tiles into rows of that

@@ -14,8 +14,8 @@
 	let a = $state(6);
 	let b = $state(8);
 
-	const c = useCopy();
-	const t = $derived(c.t.chart);
+	const copy = useCopy();
+	const t = $derived(copy.t.chart);
 	const common = $derived(commonMultiples([a, b], LIMIT));
 	const first = $derived(common[0]);
 	const rest = $derived(common.slice(1));

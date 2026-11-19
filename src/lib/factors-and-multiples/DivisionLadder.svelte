@@ -2,7 +2,16 @@
 	import { fly, fade } from 'svelte/transition';
 	import { useCopy } from './useCopy';
 	import Rich from './Rich.svelte';
-	import { hint, isDone, narrate, product, rowsOf, tryDivisor, type LadderMode } from './ladder';
+	import {
+		hint,
+		isDone,
+		narrate,
+		product,
+		rowsOf,
+		tryDivisor,
+		type LadderMode,
+		type TryResult
+	} from './ladder';
 
 	// The interactive "method of repeated division". The student builds the ladder
 	// one rung at a time by choosing a divisor; every choice is checked by the rules
@@ -18,14 +27,16 @@
 
 	let { presets, mode = 'single' }: Props = $props();
 
-	const c = useCopy();
-	const t = $derived(c.t.ladder);
+	const copy = useCopy();
+	const t = $derived(copy.t.ladder);
 
 	const DIVISORS = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13];
 
 	let presetIndex = $state(0);
 	let divisors = $state<number[]>([]);
-	let message = $state('');
+	// What the message line is about, not its text: the sentence is derived below in
+	// the reader's current language, so toggling EN/BM rewrites it in place.
+	let note = $state<{ before: number[]; d: number; result: TryResult } | 'watch' | null>(null);
 	let refused = $state<number | null>(null);
 	let hinting = $state(false);
 	let playing = $state(false);
@@ -36,12 +47,11 @@
 	const done = $derived(isDone(current, mode));
 	const suggested = $derived(hint(current, mode));
 	const answer = $derived(product(divisors));
+	const message = $derived(
+		note === 'watch' ? t.watchNote : note ? narrate(note.before, note.d, note.result, mode, t) : ''
+	);
 
 	const label = (row: number[]) => row.join(', ');
-
-	function setMessage(text: string) {
-		message = text;
-	}
 
 	function choose(d: number) {
 		if (done) return;
@@ -50,7 +60,7 @@
 		const before = current;
 		const result = tryDivisor(before, d, mode);
 		hinting = false;
-		setMessage(narrate(before, d, result, mode, t));
+		note = { before, d, result };
 		if (!result.ok) {
 			refused = d;
 			return;
@@ -67,7 +77,7 @@
 
 	function reset() {
 		divisors = [];
-		message = '';
+		note = null;
 		refused = null;
 		hinting = false;
 		playing = false;
@@ -78,7 +88,7 @@
 		hinting = false;
 		refused = null;
 		divisors = divisors.slice(0, -1);
-		message = '';
+		note = null;
 	}
 
 	// "Watch": take the hint step every 1.2 s until the ladder is done.
@@ -97,7 +107,7 @@
 
 	function watch() {
 		reset();
-		message = t.watchNote;
+		note = 'watch';
 		playing = true;
 	}
 

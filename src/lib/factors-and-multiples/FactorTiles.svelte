@@ -18,8 +18,8 @@
 	let perRow = $state<number | null>(null);
 	let found = $state<number[]>([]);
 
-	const c = useCopy();
-	const t = $derived(c.t.tiles);
+	const copy = useCopy();
+	const t = $derived(copy.t.tiles);
 	const all = $derived(factors(total));
 	const size = $derived(perRow ?? total);
 	const rest = $derived(perRow === null ? 0 : leftover(total, perRow));

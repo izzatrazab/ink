@@ -16,8 +16,8 @@
 
 	let { n, of: lanes, playing }: Props = $props();
 
-	const c = useCopy();
-	const t = $derived(c.t.lanes);
+	const copy = useCopy();
+	const t = $derived(copy.t.lanes);
 	const LEFT = 26;
 	const RIGHT = 190;
 	const TOP = 16;

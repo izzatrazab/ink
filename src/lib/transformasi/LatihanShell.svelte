@@ -85,9 +85,8 @@
 		reveal,
 		input,
 		feedback,
-		wording = malayWording
+		wording: t = malayWording
 	}: Props = $props();
-	const t = $derived(wording);
 </script>
 
 <p class="text-sm font-semibold tracking-wide uppercase opacity-60">

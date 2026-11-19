@@ -155,6 +155,13 @@ export function getChapter(slug: string): Chapter {
 	return chapter;
 }
 
+/** The title of the Section numbered `number` (e.g. "2.1") in this chapter's language. */
+export function sectionTitle(chapter: Chapter, number: string): string {
+	const section = chapter.sections.find((s) => s.number === number);
+	if (!section) throw new Error(`Unknown section ${number} in chapter ${chapter.slug}`);
+	return section.title;
+}
+
 export function chapterHref(chapter: Chapter): string {
 	return `/${chapter.slug}`;
 }
