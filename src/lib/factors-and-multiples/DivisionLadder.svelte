@@ -92,7 +92,7 @@
 
 	function watch() {
 		reset();
-		message = 'Watch: each time, we divide by the smallest prime that goes in.';
+		message = 'Watch: always the smallest prime that fits.';
 		playing = true;
 	}
 
@@ -169,19 +169,15 @@
 		</div>
 	</div>
 
-	<p class="min-h-16 text-center leading-relaxed" aria-live="polite">
+	<p class="min-h-12 text-center leading-relaxed" aria-live="polite">
 		{#if message}
 			{message}
+		{:else if current.length > 1 && mode === 'hcf'}
+			Pick a prime that goes into <strong>every</strong> number.
+		{:else if current.length > 1 && mode === 'lcm'}
+			Pick a prime that goes into <strong>at least one</strong>.
 		{:else}
-			{#if current.length > 1 && mode === 'hcf'}
-				Choose a prime number that divides <strong>every</strong> number in
-				<strong>{label(current)}</strong>.
-			{:else if current.length > 1 && mode === 'lcm'}
-				Choose a prime number that divides <strong>at least one</strong> of
-				<strong>{label(current)}</strong>.
-			{:else}
-				Choose a prime number that divides <strong>{label(current)}</strong> completely.
-			{/if}
+			Pick a prime that goes into <strong>{label(current)}</strong>.
 		{/if}
 	</p>
 

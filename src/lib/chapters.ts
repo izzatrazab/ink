@@ -41,32 +41,27 @@ export const chapters: Chapter[] = [
 		number: 2,
 		lang: 'en',
 		title: 'Factors and Multiples',
-		description:
-			'Factors, prime factors and the highest common factor — then multiples, common multiples and the lowest common multiple.',
+		description: 'Factors, multiples, and what numbers have in common.',
 		sections: [
 			{
 				number: '2.1',
 				slug: '2-1',
 				title: 'Factors, Prime Factors and Highest Common Factor (HCF)',
-				description: 'Which numbers divide a number completely, and what two numbers share.',
+				description: 'What divides a number — and what numbers share.',
 				outline: [
-					'What are factors?',
-					'What are prime factors? (prime factorisation by repeated division or a factor tree)',
-					'What are common factors?',
-					'What is the highest common factor (HCF)? (listing, repeated division, prime factorisation)',
-					'How do you solve problems involving HCF?'
+					'Factors',
+					'Prime factors',
+					'Common factors',
+					'Highest common factor (HCF)',
+					'Solving problems with HCF'
 				]
 			},
 			{
 				number: '2.2',
 				slug: '2-2',
 				title: 'Multiples, Common Multiples and Lowest Common Multiple (LCM)',
-				description: 'What you get by multiplying, and where two lists of multiples meet.',
-				outline: [
-					'What are common multiples?',
-					'What is the lowest common multiple (LCM)? (listing, repeated division, prime factorisation)',
-					'How do you solve problems involving LCM?'
-				]
+				description: 'Counting in steps — and where two counts meet.',
+				outline: ['Common multiples', 'Lowest common multiple (LCM)', 'Solving problems with LCM']
 			}
 		]
 	},

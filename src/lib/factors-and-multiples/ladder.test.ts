@@ -123,23 +123,21 @@ describe('narrate', () => {
 		narrate(row, d, tryDivisor(row, d, mode), mode);
 
 	it('reads the row that was divided, not the row after', () => {
-		expect(say([60], 2, 'single')).toBe('60 ÷ 2 = 30. Keep going: divide 30 by a prime.');
-		expect(say([5], 5, 'single')).toContain('5 ÷ 5 = 1. The bottom is 1');
+		expect(say([60], 2, 'single')).toBe('60 ÷ 2 = 30. Keep going.');
+		expect(say([5], 5, 'single')).toContain('5 ÷ 5 = 1. We reached 1!');
 	});
 	it('explains a non-prime and a remainder', () => {
-		expect(say([60], 4, 'single')).toBe(
-			'4 is not a prime number — it is 2 × 2. Divide by a prime instead, like 2.'
-		);
-		expect(say([60], 7, 'single')).toContain('60 ÷ 7 leaves a remainder of 4');
-		expect(say([36, 60, 72], 5, 'hcf')).toContain('must divide every number');
+		expect(say([60], 4, 'single')).toBe('4 is not prime (2 × 2). Try a prime, like 2.');
+		expect(say([60], 7, 'single')).toBe('60 ÷ 7 leaves 4, so 7 does not go in.');
+		expect(say([36, 60, 72], 5, 'hcf')).toContain('must go into every number');
 	});
 	it('says why the HCF ladder stops', () => {
-		expect(say([9, 15, 18], 3, 'hcf')).toContain('No prime number divides all of 3, 5, 6');
+		expect(say([9, 15, 18], 3, 'hcf')).toContain('No prime fits all of them');
 	});
 	it('names what the LCM ladder brings down', () => {
 		expect(say([3, 6, 9], 2, 'lcm')).toBe(
-			'Divided by 2: 3, 6, 9 becomes 3, 3, 9. 3 and 9 do not divide by 2, so they are brought down as they are. Keep going.'
+			'Divide by 2: 3, 6, 9 → 3, 3, 9. 3 and 9 come down unchanged.'
 		);
-		expect(say([1, 1, 3], 3, 'lcm')).toContain('Every number is now 1');
+		expect(say([1, 1, 3], 3, 'lcm')).toContain('All 1s');
 	});
 });

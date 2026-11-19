@@ -90,16 +90,13 @@
 		>
 	</div>
 
-	<p class="min-h-12 text-center leading-relaxed" aria-live="polite">
+	<p class="min-h-8 text-center leading-relaxed" aria-live="polite">
 		{#if a === b}
-			Both numbers are {a}, so every multiple of {a} is a common multiple.
+			Same number — every multiple is common.
 		{:else if rest.length > 0}
-			The common multiples of {a} and {b} up to {LIMIT} are
-			<strong>{common.join(', ')}</strong>. The first one is {first} — and each of the others is a multiple
-			of {first}.
+			Common multiples: <strong>{common.join(', ')}</strong>. All are multiples of {first}.
 		{:else}
-			The only common multiple of {a} and {b} up to {LIMIT} is <strong>{first}</strong>. The next
-			one would be {first * 2}, and then {first * 3} — all multiples of {first}.
+			Common multiple: <strong>{first}</strong>. Next: {first * 2}, {first * 3}, …
 		{/if}
 	</p>
 </div>

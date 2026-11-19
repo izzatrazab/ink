@@ -74,17 +74,15 @@
 		</div>
 	</div>
 
-	<p class="min-h-12 text-center leading-relaxed" aria-live="polite">
+	<p class="min-h-8 text-center leading-relaxed" aria-live="polite">
 		{#if perRow === null}
-			Tap a number to choose how many tiles go in each row.
+			Tap a number: how many tiles in each row?
 		{:else if rest === 0}
-			<strong>{total} tiles</strong> make <strong>{total / perRow}</strong>
-			{total / perRow === 1 ? 'row' : 'rows'} of <strong>{perRow}</strong>, with none left over. So
-			{perRow} divides {total} completely — {perRow} and {total / perRow} are factors of {total}.
+			<strong>{total / perRow}</strong>
+			{total / perRow === 1 ? 'row' : 'rows'} of <strong>{perRow}</strong>, none left over. So
+			<strong>{perRow}</strong> and <strong>{total / perRow}</strong> are factors!
 		{:else}
-			<strong>{total} tiles</strong> in rows of <strong>{perRow}</strong> leave
-			<strong class="text-warning">{rest}</strong> over. {perRow} does not divide {total} completely,
-			so it is not a factor.
+			<strong class="text-warning">{rest}</strong> left over. {perRow} is not a factor.
 		{/if}
 	</p>
 
@@ -104,10 +102,9 @@
 	{#if done}
 		<div class="alert alert-success" role="status">
 			<span>
-				That's all of them! The factors of {total} are {all.join(', ')}.
+				All found! Factors of {total}: {all.join(', ')}.
 				{#if isPrime(total)}
-					{total} only ever makes one rectangle, 1 × {total} — a number like that is called a
-					<strong>prime number</strong>.
+					Only one rectangle (1 × {total}) — that makes it a <strong>prime number</strong>.
 				{/if}
 			</span>
 		</div>
