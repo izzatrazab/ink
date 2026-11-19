@@ -1,8 +1,6 @@
 <script lang="ts">
 	import { fly, fade } from 'svelte/transition';
-	import { reader } from '$lib/language.svelte';
-	import { getChapter } from '$lib/chapters';
-	import { copy } from './copy';
+	import { useCopy } from './useCopy';
 	import Rich from './Rich.svelte';
 	import { hint, isDone, narrate, product, rowsOf, tryDivisor, type LadderMode } from './ladder';
 
@@ -20,8 +18,8 @@
 
 	let { presets, mode = 'single' }: Props = $props();
 
-	const lang = $derived(reader.for(getChapter('factors-and-multiples')));
-	const t = $derived(copy[lang].ladder);
+	const c = useCopy();
+	const t = $derived(c.t.ladder);
 
 	const DIVISORS = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13];
 
@@ -52,7 +50,7 @@
 		const before = current;
 		const result = tryDivisor(before, d, mode);
 		hinting = false;
-		setMessage(narrate(before, d, result, mode, lang));
+		setMessage(narrate(before, d, result, mode, t));
 		if (!result.ok) {
 			refused = d;
 			return;

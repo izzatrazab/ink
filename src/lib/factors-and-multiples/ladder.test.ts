@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { hint, isDone, narrate, product, rowsOf, tryDivisor, type LadderMode } from './ladder';
 import { hcf, lcm } from './numbers';
+import { copy } from './copy';
 
 describe('tryDivisor — single / hcf', () => {
 	it('divides every number by an accepted prime', () => {
@@ -120,7 +121,7 @@ describe('hint', () => {
 
 describe('narrate', () => {
 	const say = (row: number[], d: number, mode: LadderMode) =>
-		narrate(row, d, tryDivisor(row, d, mode), mode);
+		narrate(row, d, tryDivisor(row, d, mode), mode, copy.en.ladder);
 
 	it('reads the row that was divided, not the row after', () => {
 		expect(say([60], 2, 'single')).toBe('60 ÷ 2 = 30. Keep going.');
@@ -143,7 +144,7 @@ describe('narrate', () => {
 
 	describe('in Malay', () => {
 		const sayMs = (row: number[], d: number, mode: LadderMode) =>
-			narrate(row, d, tryDivisor(row, d, mode), mode, 'ms');
+			narrate(row, d, tryDivisor(row, d, mode), mode, copy.ms.ladder);
 
 		it('reads the row that was divided', () => {
 			expect(sayMs([60], 2, 'single')).toBe('60 ÷ 2 = 30. Teruskan.');

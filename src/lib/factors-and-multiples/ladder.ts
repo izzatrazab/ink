@@ -14,8 +14,7 @@
 // from it and cannot drift. Divisors are always prime, so the finished ladder
 // reads as a prime factorisation. Framework-free.
 
-import type { Language } from '$lib/chapters';
-import { copy } from './copy';
+import type { Copy } from './copy';
 import { factors, hcf, isPrime } from './numbers';
 
 export type LadderMode = 'single' | 'hcf' | 'lcm';
@@ -82,7 +81,7 @@ function keptNumbers(row: number[], d: number): number[] {
 
 /**
  * The short sentence shown after the student picks divisor `d` on row `before`:
- * why it was refused, or what the step did, in `lang`. `before` must be the row
+ * why it was refused, or what the step did, in the wording `t` it is given. `before` must be the row
  * that was divided (not the row after), so the arithmetic reads right.
  */
 export function narrate(
@@ -90,9 +89,8 @@ export function narrate(
 	d: number,
 	result: TryResult,
 	mode: LadderMode,
-	lang: Language = 'en'
+	t: Copy['ladder']
 ): string {
-	const t = copy[lang].ladder;
 	const list = (row: number[]) => row.join(', ');
 	const kept = keptNumbers(before, d);
 	const down = kept.length === 0 ? '' : t.broughtDown(kept);
