@@ -11,7 +11,8 @@ import type { LatihanWording } from '$lib/transformasi/latihanWording';
 
 export interface Copy {
 	nav: { next21: string; prev22: string; next22: string };
-	meta: { title21: string; desc21: string; title22: string; desc22: string };
+	/** Page <meta name="description"> per Section (titles live in the chapter registry). */
+	meta: { desc21: string; desc22: string };
 	practice: string;
 	yes: string;
 	no: string;
@@ -19,7 +20,6 @@ export interface Copy {
 	quiz: LatihanWording;
 
 	s21: {
-		title: string;
 		factorsHeading: string;
 		factorsIntro: string;
 		oneIsFactor: string;
@@ -33,7 +33,6 @@ export interface Copy {
 		leftOver: (rest: number) => string;
 	};
 	s22: {
-		title: string;
 		multiplesHeading: string;
 		multiplesIntro: string;
 		multiplesPrompt: string;
@@ -108,10 +107,8 @@ const en: Copy = {
 		next22: '2.2 Multiples and LCM →'
 	},
 	meta: {
-		title21: 'Factors, Prime Factors and Highest Common Factor (HCF)',
 		desc21:
 			'Section 2.1: factors, prime factors and the highest common factor — explored with tiles and a step-by-step division ladder.',
-		title22: 'Multiples, Common Multiples and Lowest Common Multiple (LCM)',
 		desc22:
 			'Section 2.2: multiples, common multiples and the lowest common multiple — explored with a number chart and a division ladder.'
 	},
@@ -127,7 +124,6 @@ const en: Copy = {
 	},
 
 	s21: {
-		title: 'Factors, Prime Factors and Highest Common Factor (HCF)',
 		factorsHeading: 'What are factors?',
 		factorsIntro:
 			'A **factor** of a number divides it completely, with nothing left over. Can you split the tiles into equal rows?',
@@ -145,7 +141,6 @@ const en: Copy = {
 		leftOver: (rest) => `${rest} ${rest === 1 ? 'tile is' : 'tiles are'} left over.`
 	},
 	s22: {
-		title: 'Multiples, Common Multiples and Lowest Common Multiple (LCM)',
 		multiplesHeading: 'Common multiples',
 		multiplesIntro:
 			'Count in 9s: 9, 18, 27, … These are the **multiples** of 9. A number that is a multiple of two numbers is a **common multiple** of them.',
@@ -233,10 +228,8 @@ const ms: Copy = {
 		next22: '2.2 Gandaan dan GSTK →'
 	},
 	meta: {
-		title21: 'Faktor, Faktor Perdana dan Faktor Sepunya Terbesar (FSTB)',
 		desc21:
 			'Bahagian 2.1: faktor, faktor perdana dan faktor sepunya terbesar — diterokai dengan jubin dan tangga pembahagian langkah demi langkah.',
-		title22: 'Gandaan, Gandaan Sepunya dan Gandaan Sepunya Terkecil (GSTK)',
 		desc22:
 			'Bahagian 2.2: gandaan, gandaan sepunya dan gandaan sepunya terkecil — diterokai dengan carta nombor dan tangga pembahagian.'
 	},
@@ -252,7 +245,6 @@ const ms: Copy = {
 	},
 
 	s21: {
-		title: 'Faktor, Faktor Perdana dan Faktor Sepunya Terbesar (FSTB)',
 		factorsHeading: 'Apakah faktor?',
 		factorsIntro:
 			'**Faktor** bagi sesuatu nombor membahagikannya dengan tepat, tanpa baki. Bolehkah anda membahagikan jubin kepada baris yang sama banyak?',
@@ -270,7 +262,6 @@ const ms: Copy = {
 		leftOver: (rest) => `${rest} jubin berbaki.`
 	},
 	s22: {
-		title: 'Gandaan, Gandaan Sepunya dan Gandaan Sepunya Terkecil (GSTK)',
 		multiplesHeading: 'Gandaan sepunya',
 		multiplesIntro:
 			'Kira dalam 9: 9, 18, 27, … Ini ialah **gandaan** bagi 9. Nombor yang menjadi gandaan bagi dua nombor ialah **gandaan sepunya** bagi kedua-duanya.',

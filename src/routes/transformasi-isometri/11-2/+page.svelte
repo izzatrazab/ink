@@ -129,7 +129,6 @@
 <LessonShell
 	chapter="transformasi-isometri"
 	number="11.2"
-	title="Translasi"
 	description="Bahagian 11.2: translasi — menggelongsorkan setiap titik objek jarak yang sama dalam arah yang sama."
 	prev={{ href: '/transformasi-isometri/11-1', label: '← 11.1 Transformasi dan Kekongruenan' }}
 >

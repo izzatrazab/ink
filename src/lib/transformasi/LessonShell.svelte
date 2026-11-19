@@ -18,8 +18,6 @@
 	interface Props {
 		/** Section number, e.g. "11.2". */
 		number: string;
-		/** Section title, e.g. "Translasi". */
-		title: string;
 		/** <meta name="description"> for the page. */
 		description: string;
 		/** Slug of the chapter this Section belongs to (see `$lib/chapters`). */
@@ -33,12 +31,20 @@
 		children: Snippet;
 	}
 
-	let { number, title, description, chapter, docTitle, prev, next, children }: Props = $props();
+	let { number, description, chapter, docTitle, prev, next, children }: Props = $props();
 
 	const base = $derived(getChapter(chapter));
 	// The chapter in the reader's language (its own unless they switched).
 	const chapterMeta = $derived(reader.view(base));
 	const t = $derived(chapterText(chapterMeta));
+	// The Section's title comes from the registry, in the reader's language, so the
+	// page, the chapter landing and the tab title can never disagree.
+	const title = $derived(
+		chapterMeta.sections.find((s) => s.number === number)?.title ??
+			(() => {
+				throw new Error(`Unknown section ${number} in chapter ${chapter}`);
+			})()
+	);
 	const headTitle = $derived(docTitle ?? `${number} ${title}`);
 
 	$effect(() => {

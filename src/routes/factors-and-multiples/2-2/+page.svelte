@@ -29,7 +29,6 @@
 <LessonShell
 	chapter="factors-and-multiples"
 	number="2.2"
-	title={t.s22.title}
 	description={t.meta.desc22}
 	prev={{ href: '/factors-and-multiples/2-1', label: t.nav.prev22 }}
 >

@@ -87,7 +87,7 @@ The language the reader chose to read in, remembered across pages and visits. It
 _Avoid_: locale, i18n, user language.
 
 **Chapter copy**:
-All of a chapter's on-screen body wording — headings, prose, hints, feedback sentences — in each language the chapter offers. A chapter's own language follows its textbook (English for Factors and Multiples, Malay for Transformasi Isometri); its translations follow that, so on any disagreement the chapter's own language's term wins (e.g. HCF over FSTB). It excludes the chapter's structure and Section titles/descriptions, which belong to the chapter registry and are not duplicated in the copy.
+All of a chapter's on-screen body wording — headings, prose, hints, feedback sentences — in each language the chapter offers. A chapter's own language follows its textbook (English for Factors and Multiples, Malay for Transformasi Isometri); its translations follow that, so on any disagreement the chapter's own language's term wins (e.g. HCF over FSTB). It excludes the chapter's structure and the Section titles, which belong to the chapter registry and are not duplicated in the copy.
 _Avoid_: strings, translations (as the name of the wording), translation file.
 
 ## Relationships

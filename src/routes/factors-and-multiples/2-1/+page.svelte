@@ -24,7 +24,6 @@
 <LessonShell
 	chapter="factors-and-multiples"
 	number="2.1"
-	title={t.s21.title}
 	description={t.meta.desc21}
 	next={{ href: '/factors-and-multiples/2-2', label: t.nav.next22 }}
 >
