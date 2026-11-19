@@ -2,9 +2,7 @@
 	import FigureCard from '$lib/transformasi/FigureCard.svelte';
 	import Stage from '$lib/transformasi/Stage.svelte';
 	import TileArray from './TileArray.svelte';
-	import { reader } from '$lib/language.svelte';
-	import { getChapter } from '$lib/chapters';
-	import { copy } from './copy';
+	import { useCopy } from './useCopy';
 	import Rich from './Rich.svelte';
 	import { discover, factors, isPrime, leftover } from './numbers';
 
@@ -20,7 +18,8 @@
 	let perRow = $state<number | null>(null);
 	let found = $state<number[]>([]);
 
-	const t = $derived(copy[reader.for(getChapter('factors-and-multiples'))].tiles);
+	const c = useCopy();
+	const t = $derived(c.t.tiles);
 	const all = $derived(factors(total));
 	const size = $derived(perRow ?? total);
 	const rest = $derived(perRow === null ? 0 : leftover(total, perRow));
