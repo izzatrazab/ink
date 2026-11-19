@@ -12,3 +12,8 @@ The app began as a single chapter (Bab 11, Transformasi Isometri) and its front 
 - `src/lib/transformasi/` still holds the isometry-specific code; the shared `SectionCard`/`LessonShell`/`ChapterLanding` live there for now and move only if a second chapter wants more shared parts.
 
 **Adding a chapter:** add an entry to `chapters`, add `src/routes/<slug>/+page.svelte` rendering `<ChapterLanding>`, then add section entries and pages as they are written.
+
+**Amendment — words and languages**
+
+- A chapter's words have two homes with distinct jobs: the registry (`chapters.ts`) owns the chapter and Section titles, descriptions and outlines in every language the chapter offers; the chapter copy owns the body wording. Titles and descriptions are not duplicated into the copy, so a Section page reads them from the registry.
+- Body wording is resolved through one module (`chapterCopy`) from the **Reader language**; a chapter whose copy lacks the reader's choice falls back to its own language.

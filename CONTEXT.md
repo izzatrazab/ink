@@ -2,7 +2,7 @@
 
 An interactive web app that _teaches_ (not merely drills) Form 2 KSSM Mathematics **Chapter 11, Transformasi Isometri**, through manipulable SVG. The chapter is built one **Section** at a time: **Transformation + Congruency** (Section 11.1, the conceptual on-ramp), **Translation** (Section 11.2), and **Reflection** (Section 11.3). Rotation (11.4), combined transformations (11.5), and rotational symmetry (11.6) remain deferred — each is a new interaction model, a separate build (ADR-0008 as amended by ADR-0010).
 
-> The site now hosts more than one chapter (ADR-0011): the chapter registry in `src/lib/chapters.ts` lists them, and `/` is a chapter index. Form 1 Chapter 2, **Factors and Multiples** (`/factors-and-multiples`, written in English to follow its textbook), is outlined with Sections 2.1 and 2.2 not yet built. The rest of this document describes the Transformasi Isometri chapter.
+> The site now hosts more than one chapter (ADR-0011): the chapter registry in `src/lib/chapters.ts` lists them, and `/` is a chapter index. Form 1 Chapter 2, **Factors and Multiples** (`/factors-and-multiples`, written in English to follow its textbook), has Sections 2.1 and 2.2 built, and offers Malay as a translation (see **Reader language**). The rest of this document describes the Transformasi Isometri chapter.
 
 > The earlier PDF drill generator is superseded but its code is still in the repo, parked at `/generator`. ADR-0001–0007 describe that prior system, not this one.
 
@@ -81,6 +81,14 @@ _Avoid_: animation, transition, tween (those name the CSS, not the concept).
 **Latihan**:
 The graded exercise that closes a **Section**: a deck of authored pairs walked one at a time, where the student commits a single answer, sees whether it is correct and a **Reveal** "why", then advances to the next pair. The commitment is final — a second answer for the same pair is ignored. Every **Section** has one. What varies between Sections is only the answer (a congruency verdict in 11.1, a **Translation vector** in 11.2, an **Axis of reflection** in 11.3), how the correct answer is derived from the pair (never authored separately), which pairs reveal the "why" on commit, and which reveal plays it (**Slide-to-overlay** in 11.1/11.2, **Fold-to-overlay** in 11.3). Everything else is shared, in three pieces: the stepping rules (`latihan.ts`, a pure state machine); the live object a Section starts from its config and deck (`startLatihan` in `latihan.svelte.ts`), which holds the snapshot, exposes the derived view-state, and owns the student's in-progress answer (the _draft_, reset to the Section's blank on each new pair); and the rendered chrome — progress counter, the **Reveal** replay, the verdict, the advance — (`LatihanShell.svelte`), which takes that live object plus each Section's answer input, feedback sentence, and **Reveal** as snippets.
 _Avoid_: quiz, drill, test, exercise engine.
+
+**Reader language** (_Bahasa pembaca_):
+The language the reader chose to read in, remembered across pages and visits. It applies only to a chapter that offers it; a chapter that does not offer the choice shows its own language. Until the reader chooses, every chapter shows its own language.
+_Avoid_: locale, i18n, user language.
+
+**Chapter copy**:
+All of a chapter's on-screen body wording — headings, prose, hints, feedback sentences — in each language the chapter offers. A chapter's own language follows its textbook (English for Factors and Multiples, Malay for Transformasi Isometri); its translations follow that, so on any disagreement the chapter's own language's term wins (e.g. HCF over FSTB). It excludes the chapter's structure and Section titles/descriptions, which belong to the chapter registry and are not duplicated in the copy.
+_Avoid_: strings, translations (as the name of the wording), translation file.
 
 ## Relationships
 
