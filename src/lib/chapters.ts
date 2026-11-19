@@ -173,12 +173,7 @@ const ui = {
 		comingSoon: 'Coming soon',
 		noSections: 'Sections for this chapter are coming soon.',
 		sectionNav: 'Section navigation',
-		interactive: 'interactive lessons',
-		questionOf: (index: number, total: number) => `Question ${index + 1} of ${total}`,
-		correct: 'Correct!',
-		incorrect: 'Not quite.',
-		allDone: 'Well done — you have finished every question.',
-		nextQuestion: 'Next question'
+		interactive: 'interactive lessons'
 	},
 	ms: {
 		form: 'Tingkatan',
@@ -188,12 +183,7 @@ const ui = {
 		comingSoon: 'Akan datang',
 		noSections: 'Bahagian untuk bab ini akan datang.',
 		sectionNav: 'Navigasi bahagian',
-		interactive: 'pelajaran interaktif',
-		questionOf: (index: number, total: number) => `Pasangan ${index + 1} daripada ${total}`,
-		correct: 'Betul!',
-		incorrect: 'Belum tepat.',
-		allDone: 'Tahniah — anda telah menyelesaikan semua pasangan.',
-		nextQuestion: 'Pasangan seterusnya'
+		interactive: 'pelajaran interaktif'
 	}
 } as const;
 

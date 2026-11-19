@@ -8,12 +8,10 @@
 	import { pairs, latihanConfig, correctAnswer } from '$lib/factors-and-multiples/factorQuiz';
 	import { leftover } from '$lib/factors-and-multiples/numbers';
 	import Rich from '$lib/factors-and-multiples/Rich.svelte';
-	import { copy } from '$lib/factors-and-multiples/copy';
-	import { getChapter } from '$lib/chapters';
-	import { reader } from '$lib/language.svelte';
+	import { useCopy } from '$lib/factors-and-multiples/useCopy';
 
-	const lang = $derived(reader.for(getChapter('factors-and-multiples')));
-	const t = $derived(copy[lang]);
+	const c = useCopy();
+	const t = $derived(c.t);
 
 	// The Latihan: is this row size a factor? The verdict is derived from the pair
 	// (factorQuiz.correctAnswer); the Reveal arranges the tiles into rows of that
@@ -44,7 +42,6 @@
 
 		<LatihanShell
 			{latihan}
-			{lang}
 			wording={t.quiz}
 			aspect="5/3"
 			cardClass="max-w-md"

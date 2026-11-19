@@ -7,6 +7,7 @@
 // gandaan sepunya, gandaan sepunya terkecil (GSTK).
 
 import type { Language } from '$lib/chapters';
+import type { LatihanWording } from '$lib/transformasi/latihanWording';
 
 export interface Copy {
 	nav: { next21: string; prev22: string; next22: string };
@@ -15,7 +16,7 @@ export interface Copy {
 	yes: string;
 	no: string;
 	/** Wording the Latihan shell uses for this chapter (see LatihanShell `wording`). */
-	quiz: { questionOf: (index: number, total: number) => string; allDone: string };
+	quiz: LatihanWording;
 
 	s21: {
 		title: string;
@@ -119,6 +120,9 @@ const en: Copy = {
 	no: 'No',
 	quiz: {
 		questionOf: (i, n) => `Question ${i + 1} of ${n}`,
+		correct: 'Correct!',
+		incorrect: 'Not quite.',
+		nextQuestion: 'Next question',
 		allDone: 'Well done — you have finished every question.'
 	},
 
@@ -241,6 +245,9 @@ const ms: Copy = {
 	no: 'Tidak',
 	quiz: {
 		questionOf: (i, n) => `Soalan ${i + 1} daripada ${n}`,
+		correct: 'Betul!',
+		incorrect: 'Belum tepat.',
+		nextQuestion: 'Pasangan seterusnya',
 		allDone: 'Tahniah — anda telah menyelesaikan semua soalan.'
 	},
 

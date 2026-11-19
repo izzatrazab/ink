@@ -2,7 +2,7 @@
 	import type { Snippet } from 'svelte';
 	import FigureCard from './FigureCard.svelte';
 	import Stage from './Stage.svelte';
-	import { uiText, type Language } from '$lib/chapters';
+	import { malayWording, type LatihanWording } from './latihanWording';
 
 	// The shared chrome around a Section's Latihan — the graded exercise that closes
 	// every Section (CONTEXT.md). The deck-walking lives in latihan.ts; this is its
@@ -72,10 +72,8 @@
 		input: Snippet<[boolean]>;
 		/** The feedback sentence, rendered after the Betul/Belum-tepat verdict. */
 		feedback: Snippet;
-		/** Language of the shell's own wording (counter, verdict, advance). Defaults to Malay. */
-		lang?: Language;
-		/** Per-chapter wording that replaces the shared counter / finished line. */
-		wording?: { questionOf: (index: number, total: number) => string; allDone: string };
+		/** The shell's own wording (counter, verdict, advance, finished line). Defaults to Malay. */
+		wording?: LatihanWording;
 	}
 
 	let {
@@ -87,10 +85,9 @@
 		reveal,
 		input,
 		feedback,
-		lang = 'ms',
-		wording
+		wording = malayWording
 	}: Props = $props();
-	const t = $derived({ ...uiText(lang), ...wording });
+	const t = $derived(wording);
 </script>
 
 <p class="text-sm font-semibold tracking-wide uppercase opacity-60">
