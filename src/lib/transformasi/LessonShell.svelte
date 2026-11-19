@@ -1,6 +1,8 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { chapterHref, chapterLabel, chapterText, getChapter } from '$lib/chapters';
+	import { reader } from '$lib/language.svelte';
+	import LanguageToggle from './LanguageToggle.svelte';
 
 	// The shared chrome around one Section: the page container, the header
 	// (chapter eyebrow, section number + title), the <svelte:head> tags, and a
@@ -33,9 +35,15 @@
 
 	let { number, title, description, chapter, docTitle, prev, next, children }: Props = $props();
 
-	const chapterMeta = $derived(getChapter(chapter));
+	const base = $derived(getChapter(chapter));
+	// The chapter in the reader's language (its own unless they switched).
+	const chapterMeta = $derived(reader.view(base));
 	const t = $derived(chapterText(chapterMeta));
 	const headTitle = $derived(docTitle ?? `${number} ${title}`);
+
+	$effect(() => {
+		document.documentElement.lang = chapterMeta.lang;
+	});
 </script>
 
 <svelte:head>
@@ -44,12 +52,15 @@
 </svelte:head>
 
 <div class="container mx-auto max-w-2xl space-y-12 px-8 py-16">
-	<hgroup class="space-y-2">
-		<p class="text-sm font-semibold tracking-wide uppercase opacity-60">
-			{chapterLabel(chapterMeta)} · {chapterMeta.title}
-		</p>
-		<h1 class="text-4xl font-bold">{number} {title}</h1>
-	</hgroup>
+	<div class="flex items-start justify-between gap-4">
+		<hgroup class="space-y-2">
+			<p class="text-sm font-semibold tracking-wide uppercase opacity-60">
+				{chapterLabel(chapterMeta)} · {chapterMeta.title}
+			</p>
+			<h1 class="text-4xl font-bold">{number} {title}</h1>
+		</hgroup>
+		<LanguageToggle chapter={base} />
+	</div>
 
 	{@render children()}
 

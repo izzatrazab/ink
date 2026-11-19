@@ -2,6 +2,10 @@
 	import FigureCard from '$lib/transformasi/FigureCard.svelte';
 	import Stage from '$lib/transformasi/Stage.svelte';
 	import TileArray from './TileArray.svelte';
+	import { reader } from '$lib/language.svelte';
+	import { getChapter } from '$lib/chapters';
+	import { copy } from './copy';
+	import Rich from './Rich.svelte';
 	import { discover, factors, isPrime, leftover } from './numbers';
 
 	// The Explorable for "What are factors?": put N tiles into rows of k. When the
@@ -16,6 +20,7 @@
 	let perRow = $state<number | null>(null);
 	let found = $state<number[]>([]);
 
+	const t = $derived(copy[reader.for(getChapter('factors-and-multiples'))].tiles);
 	const all = $derived(factors(total));
 	const size = $derived(perRow ?? total);
 	const rest = $derived(perRow === null ? 0 : leftover(total, perRow));
@@ -43,21 +48,21 @@
 	<div class="flex items-center justify-center gap-3">
 		<button
 			class="btn btn-circle btn-outline size-10! min-h-0"
-			aria-label="Fewer tiles"
+			aria-label={t.fewer}
 			disabled={total <= MIN}
 			onclick={() => setTotal(total - 1)}>−</button
 		>
-		<span class="min-w-24 text-center text-lg font-semibold">{total} tiles</span>
+		<span class="min-w-24 text-center text-lg font-semibold">{t.count(total)}</span>
 		<button
 			class="btn btn-circle btn-outline size-10! min-h-0"
-			aria-label="More tiles"
+			aria-label={t.more}
 			disabled={total >= MAX}
 			onclick={() => setTotal(total + 1)}>+</button
 		>
 	</div>
 
 	<div class="space-y-2 text-center">
-		<p class="text-sm font-semibold tracking-wide uppercase opacity-60">Tiles in each row</p>
+		<p class="text-sm font-semibold tracking-wide uppercase opacity-60">{t.inEachRow}</p>
 		<div class="flex flex-wrap justify-center gap-2">
 			{#each { length: total }, i (i)}
 				{@const k = i + 1}
@@ -76,19 +81,17 @@
 
 	<p class="min-h-8 text-center leading-relaxed" aria-live="polite">
 		{#if perRow === null}
-			Tap a number: how many tiles in each row?
+			{t.tap}
 		{:else if rest === 0}
-			<strong>{total / perRow}</strong>
-			{total / perRow === 1 ? 'row' : 'rows'} of <strong>{perRow}</strong>, none left over. So
-			<strong>{perRow}</strong> and <strong>{total / perRow}</strong> are factors!
+			<Rich text={t.complete(total, perRow, total / perRow)} />
 		{:else}
-			<strong class="text-warning">{rest}</strong> left over. {perRow} is not a factor.
+			<Rich text={t.leftOver(rest, perRow)} />
 		{/if}
 	</p>
 
 	<div class="space-y-2 text-center">
 		<p class="text-sm font-semibold tracking-wide uppercase opacity-60">
-			Factors of {total} found: {found.length} of {all.length}
+			{t.found(total, found.length, all.length)}
 		</p>
 		<ul class="flex flex-wrap justify-center gap-2">
 			{#each all as factor (factor)}
@@ -102,9 +105,9 @@
 	{#if done}
 		<div class="alert alert-success" role="status">
 			<span>
-				All found! Factors of {total}: {all.join(', ')}.
+				{t.allFound(total, all)}
 				{#if isPrime(total)}
-					Only one rectangle (1 × {total}) — that makes it a <strong>prime number</strong>.
+					<Rich text={t.primeNote(total)} />
 				{/if}
 			</span>
 		</div>

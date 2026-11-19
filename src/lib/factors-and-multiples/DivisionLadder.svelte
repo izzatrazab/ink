@@ -1,5 +1,9 @@
 <script lang="ts">
 	import { fly, fade } from 'svelte/transition';
+	import { reader } from '$lib/language.svelte';
+	import { getChapter } from '$lib/chapters';
+	import { copy } from './copy';
+	import Rich from './Rich.svelte';
 	import { hint, isDone, narrate, product, rowsOf, tryDivisor, type LadderMode } from './ladder';
 
 	// The interactive "method of repeated division". The student builds the ladder
@@ -15,6 +19,9 @@
 	}
 
 	let { presets, mode = 'single' }: Props = $props();
+
+	const lang = $derived(reader.for(getChapter('factors-and-multiples')));
+	const t = $derived(copy[lang].ladder);
 
 	const DIVISORS = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13];
 
@@ -45,7 +52,7 @@
 		const before = current;
 		const result = tryDivisor(before, d, mode);
 		hinting = false;
-		setMessage(narrate(before, d, result, mode));
+		setMessage(narrate(before, d, result, mode, lang));
 		if (!result.ok) {
 			refused = d;
 			return;
@@ -92,21 +99,21 @@
 
 	function watch() {
 		reset();
-		message = 'Watch: always the smallest prime that fits.';
+		message = t.watchNote;
 		playing = true;
 	}
 
 	const finalLine = $derived(
 		mode === 'single'
 			? `${start[0]} = ${divisors.join(' × ')}`
-			: `${mode === 'hcf' ? 'HCF' : 'LCM'} = ${divisors.join(' × ')} = ${answer}`
+			: `${mode === 'hcf' ? t.hcf : t.lcm} = ${divisors.join(' × ')} = ${answer}`
 	);
 </script>
 
 <div class="space-y-4">
 	{#if presets.length > 1}
 		<div class="flex flex-wrap items-center justify-center gap-2">
-			<span class="text-sm font-semibold tracking-wide uppercase opacity-60">Number</span>
+			<span class="text-sm font-semibold tracking-wide uppercase opacity-60">{t.number}</span>
 			{#each presets as preset, i (i)}
 				<button
 					class="btn btn-sm {i === presetIndex ? 'btn-primary' : 'btn-outline'}"
@@ -119,13 +126,13 @@
 
 	<div
 		class="border-base-300 bg-base-200 mx-auto max-w-sm rounded-2xl border p-5 font-mono text-xl"
-		aria-label="Division ladder for {label(start)}"
+		aria-label={t.aria(label(start))}
 	>
 		{#each rows as row, i (i)}
 			<div class="flex min-h-12 items-center" in:fly={{ y: -14, duration: 300 }}>
 				<span
 					class="w-14 pr-3 text-right font-bold {done ? 'text-success' : 'text-primary'}"
-					aria-label={divisors[i] ? `divisor ${divisors[i]}` : undefined}
+					aria-label={divisors[i] ? t.divisor(divisors[i]) : undefined}
 				>
 					{divisors[i] ?? ''}
 				</span>
@@ -148,7 +155,7 @@
 
 	<div class="space-y-2 text-center">
 		<p class="text-sm font-semibold tracking-wide uppercase opacity-60">
-			{done ? 'Finished' : 'Divide by…'}
+			{done ? t.finished : t.divideBy}
 		</p>
 		<div class="flex flex-wrap justify-center gap-2">
 			{#each DIVISORS as d (d)}
@@ -173,11 +180,11 @@
 		{#if message}
 			{message}
 		{:else if current.length > 1 && mode === 'hcf'}
-			Pick a prime that goes into <strong>every</strong> number.
+			<Rich text={t.pickEvery} />
 		{:else if current.length > 1 && mode === 'lcm'}
-			Pick a prime that goes into <strong>at least one</strong>.
+			<Rich text={t.pickOne} />
 		{:else}
-			Pick a prime that goes into <strong>{label(current)}</strong>.
+			<Rich text={t.pickPrime(label(current))} />
 		{/if}
 	</p>
 
@@ -191,14 +198,14 @@
 		<button
 			class="btn btn-sm btn-outline"
 			disabled={done || playing}
-			onclick={() => (hinting = !hinting)}>{hinting ? 'Hide hint' : 'Hint'}</button
+			onclick={() => (hinting = !hinting)}>{hinting ? t.hideHint : t.hint}</button
 		>
-		<button class="btn btn-sm btn-outline" disabled={playing} onclick={watch}>Watch it</button>
+		<button class="btn btn-sm btn-outline" disabled={playing} onclick={watch}>{t.watch}</button>
 		<button class="btn btn-sm btn-ghost" disabled={divisors.length === 0} onclick={undo}
-			>Undo</button
+			>{t.undo}</button
 		>
 		<button class="btn btn-sm btn-ghost" disabled={divisors.length === 0} onclick={reset}
-			>Start over</button
+			>{t.reset}</button
 		>
 	</div>
 </div>

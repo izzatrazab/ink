@@ -1,4 +1,8 @@
 <script lang="ts">
+	import { reader } from '$lib/language.svelte';
+	import { getChapter } from '$lib/chapters';
+	import { copy } from './copy';
+	import Rich from './Rich.svelte';
 	import { commonMultiples, isFactor } from './numbers';
 
 	// The Explorable for "What are common multiples?": a number chart from 1 to 72.
@@ -12,6 +16,7 @@
 	let a = $state(6);
 	let b = $state(8);
 
+	const t = $derived(copy[reader.for(getChapter('factors-and-multiples'))].chart);
 	const common = $derived(commonMultiples([a, b], LIMIT));
 	const first = $derived(common[0]);
 	const rest = $derived(common.slice(1));
@@ -29,12 +34,6 @@
 		b: 'bg-secondary text-secondary-content font-semibold',
 		none: 'opacity-60'
 	} as const;
-	const labels = {
-		both: 'multiple of both',
-		a: 'multiple of the first number',
-		b: 'multiple of the second number',
-		none: 'not a multiple'
-	} as const;
 </script>
 
 <div class="space-y-4">
@@ -44,16 +43,16 @@
 				<span class="size-4 rounded {picker.swatch}" aria-hidden="true"></span>
 				<button
 					class="btn btn-circle btn-outline size-10! min-h-0"
-					aria-label="Smaller number"
+					aria-label={t.smaller}
 					disabled={picker.value <= MIN}
 					onclick={() => picker.set(picker.value - 1)}>−</button
 				>
 				<span class="min-w-20 text-center text-lg font-semibold">
-					Multiples of {picker.value}
+					{t.multiplesOf(picker.value)}
 				</span>
 				<button
 					class="btn btn-circle btn-outline size-10! min-h-0"
-					aria-label="Bigger number"
+					aria-label={t.bigger}
 					disabled={picker.value >= MAX}
 					onclick={() => picker.set(picker.value + 1)}>+</button
 				>
@@ -63,7 +62,7 @@
 
 	<ol
 		class="border-base-300 bg-base-200 mx-auto grid max-w-md grid-cols-12 gap-1 rounded-2xl border p-3"
-		aria-label="Numbers from 1 to {LIMIT}"
+		aria-label={t.numbersFrom(LIMIT)}
 	>
 		{#each cells as n (n)}
 			{@const k = kind(n)}
@@ -71,7 +70,7 @@
 				class="flex aspect-square items-center justify-center rounded text-xs transition-colors sm:text-sm {styles[
 					k
 				]}"
-				aria-label="{n}, {labels[k]}"
+				aria-label="{n}, {t.cell[k]}"
 			>
 				{n}
 			</li>
@@ -80,23 +79,23 @@
 
 	<div class="flex flex-wrap justify-center gap-x-5 gap-y-1 text-sm">
 		<span class="flex items-center gap-2"
-			><span class="bg-primary size-3 rounded"></span>multiples of {a}</span
+			><span class="bg-primary size-3 rounded"></span>{t.multiplesOf(a)}</span
 		>
 		<span class="flex items-center gap-2"
-			><span class="bg-secondary size-3 rounded"></span>multiples of {b}</span
+			><span class="bg-secondary size-3 rounded"></span>{t.multiplesOf(b)}</span
 		>
 		<span class="flex items-center gap-2"
-			><span class="bg-success size-3 rounded"></span>multiples of both</span
+			><span class="bg-success size-3 rounded"></span>{t.both}</span
 		>
 	</div>
 
 	<p class="min-h-8 text-center leading-relaxed" aria-live="polite">
 		{#if a === b}
-			Same number — every multiple is common.
+			{t.same}
 		{:else if rest.length > 0}
-			Common multiples: <strong>{common.join(', ')}</strong>. All are multiples of {first}.
+			<Rich text={t.many(common, first)} />
 		{:else}
-			Common multiple: <strong>{first}</strong>. Next: {first * 2}, {first * 3}, …
+			<Rich text={t.one(first)} />
 		{/if}
 	</p>
 </div>

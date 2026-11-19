@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { chapters, chapterLabel, chaptersByForm, getChapter, sectionHref } from './chapters';
+import {
+	chapters,
+	chapterLabel,
+	chaptersByForm,
+	getChapter,
+	languagesOf,
+	localize,
+	sectionHref
+} from './chapters';
 
 describe('chapter registry', () => {
 	it('has unique slugs', () => {
@@ -23,5 +31,25 @@ describe('chapter registry', () => {
 
 	it('throws on an unknown chapter', () => {
 		expect(() => getChapter('nope')).toThrow();
+	});
+});
+
+describe('localize', () => {
+	it('offers Malay for Chapter 2 and nothing extra for Transformasi', () => {
+		expect(languagesOf(getChapter('factors-and-multiples'))).toEqual(['en', 'ms']);
+		expect(languagesOf(getChapter('transformasi-isometri'))).toEqual(['ms']);
+	});
+	it('translates title, sections and the label', () => {
+		const ms = localize(getChapter('factors-and-multiples'), 'ms');
+		expect(ms.title).toBe('Faktor dan Gandaan');
+		expect(ms.sections[0].title).toContain('FSTB');
+		expect(ms.sections[1].slug).toBe('2-2');
+		expect(chapterLabel(ms)).toBe('Tingkatan 1 · Bab 2');
+	});
+	it('falls back to the chapter’s own language when there is no translation', () => {
+		const t = getChapter('transformasi-isometri');
+		expect(localize(t, 'en')).toBe(t);
+		const fm = getChapter('factors-and-multiples');
+		expect(localize(fm, 'en')).toBe(fm);
 	});
 });

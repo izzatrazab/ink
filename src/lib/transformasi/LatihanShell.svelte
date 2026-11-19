@@ -74,6 +74,8 @@
 		feedback: Snippet;
 		/** Language of the shell's own wording (counter, verdict, advance). Defaults to Malay. */
 		lang?: Language;
+		/** Per-chapter wording that replaces the shared counter / finished line. */
+		wording?: { questionOf: (index: number, total: number) => string; allDone: string };
 	}
 
 	let {
@@ -85,9 +87,10 @@
 		reveal,
 		input,
 		feedback,
-		lang = 'ms'
+		lang = 'ms',
+		wording
 	}: Props = $props();
-	const t = $derived(uiText(lang));
+	const t = $derived({ ...uiText(lang), ...wording });
 </script>
 
 <p class="text-sm font-semibold tracking-wide uppercase opacity-60">

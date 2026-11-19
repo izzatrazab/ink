@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { chapterHref, chapterLabel, chaptersByForm } from '$lib/chapters';
+	import { reader } from '$lib/language.svelte';
 </script>
 
 <svelte:head>
@@ -19,7 +20,8 @@
 				Form {group.form} · Tingkatan {group.form}
 			</h2>
 			<ul class="space-y-3">
-				{#each group.chapters as chapter (chapter.slug)}
+				{#each group.chapters as base (base.slug)}
+					{@const chapter = reader.view(base)}
 					<li>
 						<a
 							href={chapterHref(chapter)}

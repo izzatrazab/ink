@@ -6,11 +6,13 @@
 	import Moon from '$lib/components/icons/phosphor/Moon.svelte';
 	import Sun from '$lib/components/icons/phosphor/Sun.svelte';
 	import Github from '$lib/components/icons/Github.svelte';
+	import { reader } from '$lib/language.svelte';
 
 	let { children } = $props();
 	let darkMode = $state(true);
 
 	onMount(() => {
+		reader.load();
 		// Set theme on mount
 		let prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
 		let theme = localStorage.getItem('theme') || (prefersDarkScheme ? 'dark' : 'light');

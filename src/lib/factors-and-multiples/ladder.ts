@@ -14,6 +14,8 @@
 // from it and cannot drift. Divisors are always prime, so the finished ladder
 // reads as a prime factorisation. Framework-free.
 
+import type { Language } from '$lib/chapters';
+import { copy } from './copy';
 import { factors, hcf, isPrime } from './numbers';
 
 export type LadderMode = 'single' | 'hcf' | 'lcm';
@@ -74,45 +76,42 @@ export function product(divisors: number[]): number {
 
 /** The numbers (other than 1) that `d` does not divide — in the LCM ladder these are
  *  "brought down" unchanged, the step students find most surprising. */
-function broughtDown(row: number[], d: number): string {
-	const kept = row.filter((n) => n > 1 && n % d !== 0);
-	if (kept.length === 0) return '';
-	return ` ${kept.join(' and ')} come${kept.length === 1 ? 's' : ''} down unchanged.`;
+function keptNumbers(row: number[], d: number): number[] {
+	return row.filter((n) => n > 1 && n % d !== 0);
 }
 
 /**
  * The short sentence shown after the student picks divisor `d` on row `before`:
- * why it was refused, or what the step did. `before` must be the row that was
- * divided (not the row after), so the arithmetic reads right.
+ * why it was refused, or what the step did, in `lang`. `before` must be the row
+ * that was divided (not the row after), so the arithmetic reads right.
  */
-export function narrate(before: number[], d: number, result: TryResult, mode: LadderMode): string {
+export function narrate(
+	before: number[],
+	d: number,
+	result: TryResult,
+	mode: LadderMode,
+	lang: Language = 'en'
+): string {
+	const t = copy[lang].ladder;
 	const list = (row: number[]) => row.join(', ');
+	const kept = keptNumbers(before, d);
+	const down = kept.length === 0 ? '' : t.broughtDown(kept);
 
 	if (!result.ok) {
 		const r = result.rejection;
 		if (r.kind === 'not-prime') {
-			return d === 1
-				? '1 changes nothing. Pick a prime.'
-				: `${d} is not prime (${r.smallestFactor} × ${d / r.smallestFactor}). Try a prime, like ${r.smallestFactor}.`;
+			return d === 1 ? t.notPrime1 : t.notPrime(d, r.smallestFactor, d / r.smallestFactor);
 		}
-		if (r.kind === 'remainder') {
-			return `${r.number} ÷ ${d} leaves ${r.remainder}, so ${d} does not go in.${mode === 'hcf' ? ' It must go into every number.' : ''}`;
-		}
-		return `${d} goes into none of them. Pick a prime that fits at least one.`;
+		if (r.kind === 'remainder') return t.remainder(r.number, d, r.remainder, mode === 'hcf');
+		return t.none(d);
 	}
 
 	const next = result.next;
 	if (isDone(next, mode)) {
-		if (mode === 'single') {
-			return `${list(before)} ÷ ${d} = ${list(next)}. We reached 1! Multiply the left column.`;
-		}
-		if (mode === 'hcf') {
-			return `${list(before)} ÷ ${d} = ${list(next)}. No prime fits all of them, so stop. Multiply the left column: that is the HCF.`;
-		}
-		return `${list(before)} ÷ ${d} = ${list(next)}.${broughtDown(before, d)} All 1s, so stop. Multiply the left column: that is the LCM.`;
+		if (mode === 'single') return t.doneSingle(list(before), d, list(next));
+		if (mode === 'hcf') return t.doneHcf(list(before), d, list(next));
+		return t.doneLcm(list(before), d, list(next), down);
 	}
-	if (mode === 'single') {
-		return `${list(before)} ÷ ${d} = ${list(next)}. Keep going.`;
-	}
-	return `Divide by ${d}: ${list(before)} → ${list(next)}.${mode === 'lcm' ? broughtDown(before, d) : ''}`;
+	if (mode === 'single') return t.keepGoing(list(before), d, list(next));
+	return t.step(list(before), d, list(next), mode === 'lcm' ? down : '');
 }

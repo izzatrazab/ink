@@ -1,11 +1,19 @@
 <script lang="ts">
 	import SectionCard from '$lib/transformasi/SectionCard.svelte';
 	import { chapterLabel, chapterText, sectionHref, type Chapter } from '$lib/chapters';
+	import { reader } from '$lib/language.svelte';
+	import LanguageToggle from './LanguageToggle.svelte';
 
 	// The shared chapter landing: eyebrow, title, blurb, and one card per Section.
 	// A chapter with no sections yet shows a "coming soon" note instead of a list.
-	let { chapter }: { chapter: Chapter } = $props();
+	let { chapter: base }: { chapter: Chapter } = $props();
+	// The chapter in the reader's language (its own unless they switched).
+	const chapter = $derived(reader.view(base));
 	const t = $derived(chapterText(chapter));
+
+	$effect(() => {
+		document.documentElement.lang = chapter.lang;
+	});
 </script>
 
 <svelte:head>
@@ -14,13 +22,16 @@
 </svelte:head>
 
 <div class="container mx-auto max-w-2xl space-y-10 px-8 py-16">
-	<hgroup class="space-y-2">
-		<p class="text-sm font-semibold tracking-wide uppercase opacity-60">
-			{chapterLabel(chapter)}
-		</p>
-		<h1 class="ink-linear-gradient text-5xl font-bold">{chapter.title}</h1>
-		<p class="opacity-80">{chapter.description}</p>
-	</hgroup>
+	<div class="flex items-start justify-between gap-4">
+		<hgroup class="space-y-2">
+			<p class="text-sm font-semibold tracking-wide uppercase opacity-60">
+				{chapterLabel(chapter)}
+			</p>
+			<h1 class="ink-linear-gradient text-5xl font-bold">{chapter.title}</h1>
+			<p class="opacity-80">{chapter.description}</p>
+		</hgroup>
+		<LanguageToggle chapter={base} />
+	</div>
 
 	{#if chapter.sections.length > 0}
 		<nav aria-label={t.sectionList}>

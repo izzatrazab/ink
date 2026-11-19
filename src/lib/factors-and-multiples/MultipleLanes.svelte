@@ -1,4 +1,7 @@
 <script lang="ts">
+	import { reader } from '$lib/language.svelte';
+	import { getChapter } from '$lib/chapters';
+	import { copy } from './copy';
 	import { isFactor, multiples } from './numbers';
 
 	// The Reveal for the common-multiple Latihan, drawn in a 200 × 120 stage: one
@@ -15,6 +18,7 @@
 
 	let { n, of: lanes, playing }: Props = $props();
 
+	const t = $derived(copy[reader.for(getChapter('factors-and-multiples'))].lanes);
 	const LEFT = 26;
 	const RIGHT = 190;
 	const TOP = 16;
@@ -45,7 +49,7 @@
 
 {#each lanes as d, lane (d)}
 	{@const hits = isFactor(n, d)}
-	<text x="2" y={y(lane) + 3} font-size="8" fill="currentColor">{d}s</text>
+	<text x="2" y={y(lane) + 3} font-size="8" fill="currentColor">{t.label(d)}</text>
 	<line x1={LEFT} x2={RIGHT} y1={y(lane)} y2={y(lane)} stroke="currentColor" opacity="0.25" />
 	{#each multiples(d, n) as m, i (m)}
 		{@const landing = m === n}

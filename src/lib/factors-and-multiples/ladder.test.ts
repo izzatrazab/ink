@@ -140,4 +140,30 @@ describe('narrate', () => {
 		);
 		expect(say([1, 1, 3], 3, 'lcm')).toContain('All 1s');
 	});
+
+	describe('in Malay', () => {
+		const sayMs = (row: number[], d: number, mode: LadderMode) =>
+			narrate(row, d, tryDivisor(row, d, mode), mode, 'ms');
+
+		it('reads the row that was divided', () => {
+			expect(sayMs([60], 2, 'single')).toBe('60 ÷ 2 = 30. Teruskan.');
+			expect(sayMs([5], 5, 'single')).toContain('5 ÷ 5 = 1. Kita sampai 1!');
+		});
+		it('explains a non-prime and a remainder', () => {
+			expect(sayMs([60], 4, 'single')).toBe(
+				'4 bukan nombor perdana (2 × 2). Cuba nombor perdana, seperti 2.'
+			);
+			expect(sayMs([60], 7, 'single')).toBe('60 ÷ 7 berbaki 4, jadi 7 tidak boleh membahagi.');
+			expect(sayMs([36, 60, 72], 5, 'hcf')).toContain('setiap nombor');
+		});
+		it('uses the KSSM terms FSTB and GSTK when the ladder stops', () => {
+			expect(sayMs([9, 15, 18], 3, 'hcf')).toContain('FSTB');
+			expect(sayMs([1, 1, 3], 3, 'lcm')).toContain('GSTK');
+		});
+		it('names what the LCM ladder brings down', () => {
+			expect(sayMs([3, 6, 9], 2, 'lcm')).toBe(
+				'Bahagi dengan 2: 3, 6, 9 → 3, 3, 9. 3 dan 9 diturunkan tanpa berubah.'
+			);
+		});
+	});
 });

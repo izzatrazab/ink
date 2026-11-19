@@ -19,6 +19,13 @@ export interface SectionMeta {
 	ready?: boolean;
 }
 
+/** A chapter's text in another language: same shape, sections matched by `slug`. */
+export interface ChapterTranslation {
+	title: string;
+	description: string;
+	sections: Record<string, Pick<SectionMeta, 'title' | 'description' | 'outline'>>;
+}
+
 export interface Chapter {
 	/** Route segment, e.g. "transformasi-isometri" — the chapter lives at `/<slug>`. */
 	slug: string;
@@ -32,6 +39,9 @@ export interface Chapter {
 	description: string;
 	/** Sections in textbook order. Empty while a chapter is only scaffolded. */
 	sections: SectionMeta[];
+	/** Other languages the reader can switch to, keyed by language. A chapter with
+	 *  translations shows a language toggle; the others stay in their own language. */
+	translations?: Partial<Record<Language, ChapterTranslation>>;
 }
 
 export const chapters: Chapter[] = [
@@ -63,7 +73,35 @@ export const chapters: Chapter[] = [
 				description: 'Counting in steps — and where two counts meet.',
 				outline: ['Common multiples', 'Lowest common multiple (LCM)', 'Solving problems with LCM']
 			}
-		]
+		],
+		translations: {
+			ms: {
+				title: 'Faktor dan Gandaan',
+				description: 'Faktor, gandaan, dan apa yang dikongsi oleh nombor.',
+				sections: {
+					'2-1': {
+						title: 'Faktor, Faktor Perdana dan Faktor Sepunya Terbesar (FSTB)',
+						description: 'Apa yang membahagi sesuatu nombor — dan apa yang dikongsi oleh nombor.',
+						outline: [
+							'Faktor',
+							'Faktor perdana',
+							'Faktor sepunya',
+							'Faktor sepunya terbesar (FSTB)',
+							'Penyelesaian masalah dengan FSTB'
+						]
+					},
+					'2-2': {
+						title: 'Gandaan, Gandaan Sepunya dan Gandaan Sepunya Terkecil (GSTK)',
+						description: 'Mengira dengan langkah tetap — dan di mana dua pengiraan bertemu.',
+						outline: [
+							'Gandaan sepunya',
+							'Gandaan sepunya terkecil (GSTK)',
+							'Penyelesaian masalah dengan GSTK'
+						]
+					}
+				}
+			}
+		}
 	},
 	{
 		slug: 'transformasi-isometri',
@@ -90,6 +128,26 @@ export const chapters: Chapter[] = [
 		]
 	}
 ];
+
+/** Languages a reader can read this chapter in: its own, plus any translations. */
+export function languagesOf(chapter: Chapter): Language[] {
+	return [chapter.lang, ...(Object.keys(chapter.translations ?? {}) as Language[])];
+}
+
+/** The chapter's text in `lang`, falling back to its own language when it has no
+ *  such translation. The result's `lang` is the language actually used, so
+ *  `chapterText` and `chapterLabel` follow along. */
+export function localize(chapter: Chapter, lang: Language): Chapter {
+	const tr = lang === chapter.lang ? undefined : chapter.translations?.[lang];
+	if (!tr) return chapter;
+	return {
+		...chapter,
+		lang,
+		title: tr.title,
+		description: tr.description,
+		sections: chapter.sections.map((s) => ({ ...s, ...tr.sections[s.slug] }))
+	};
+}
 
 export function getChapter(slug: string): Chapter {
 	const chapter = chapters.find((c) => c.slug === slug);
