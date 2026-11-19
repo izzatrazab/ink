@@ -1,7 +1,5 @@
 <script lang="ts">
-	import { reader } from '$lib/language.svelte';
-	import { getChapter } from '$lib/chapters';
-	import { copy } from './copy';
+	import { useCopy } from './useCopy';
 	import { isFactor, multiples } from './numbers';
 
 	// The Reveal for the common-multiple Latihan, drawn in a 200 × 120 stage: one
@@ -18,7 +16,8 @@
 
 	let { n, of: lanes, playing }: Props = $props();
 
-	const t = $derived(copy[reader.for(getChapter('factors-and-multiples'))].lanes);
+	const c = useCopy();
+	const t = $derived(c.t.lanes);
 	const LEFT = 26;
 	const RIGHT = 190;
 	const TOP = 16;

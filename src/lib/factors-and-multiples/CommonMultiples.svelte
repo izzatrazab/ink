@@ -1,7 +1,5 @@
 <script lang="ts">
-	import { reader } from '$lib/language.svelte';
-	import { getChapter } from '$lib/chapters';
-	import { copy } from './copy';
+	import { useCopy } from './useCopy';
 	import Rich from './Rich.svelte';
 	import { commonMultiples, isFactor } from './numbers';
 
@@ -16,7 +14,8 @@
 	let a = $state(6);
 	let b = $state(8);
 
-	const t = $derived(copy[reader.for(getChapter('factors-and-multiples'))].chart);
+	const c = useCopy();
+	const t = $derived(c.t.chart);
 	const common = $derived(commonMultiples([a, b], LIMIT));
 	const first = $derived(common[0]);
 	const rest = $derived(common.slice(1));
