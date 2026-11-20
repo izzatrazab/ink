@@ -1,11 +1,22 @@
 <script lang="ts">
 	import LessonShell from '$lib/transformasi/LessonShell.svelte';
+	import LatihanShell from '$lib/transformasi/LatihanShell.svelte';
 	import CompareLadders from '$lib/factors-and-multiples/CompareLadders.svelte';
+	import { startLatihan } from '$lib/transformasi/latihan.svelte';
+	import { pairs, latihanConfig, result } from '$lib/factors-and-multiples/hcfLcmQuiz';
 	import Rich from '$lib/factors-and-multiples/Rich.svelte';
 	import { useCopy } from '$lib/factors-and-multiples/useCopy';
 
 	const copy = useCopy();
 	const t = $derived(copy.t);
+
+	// The Latihan: HCF or LCM? The verdict is the pair's authored kind and the number
+	// is derived (hcfLcmQuiz.result). Once answered, the ladders open on the problem's
+	// own numbers so the student can see the answer come out of the method.
+	const latihan = startLatihan(latihanConfig, pairs);
+	const answerKind = $derived(latihan.pair.kind);
+	const answer = $derived(result(latihan.pair));
+	const list = $derived(t.s22.and(latihan.pair.numbers));
 </script>
 
 <LessonShell
@@ -75,5 +86,59 @@
 				<p class="font-semibold"><Rich text={t.s23.lcmClue.answer} /></p>
 			</div>
 		</div>
+	</section>
+
+	<!-- Beat 5 — Latihan: HCF or LCM? -->
+	<section class="space-y-4">
+		<h2 class="text-2xl font-semibold">{t.practice}</h2>
+
+		<LatihanShell
+			{latihan}
+			wording={t.quiz}
+			aspect="5/3"
+			cardClass="max-w-md"
+			viewBox="0 0 200 120"
+		>
+			{#snippet reveal(playing)}
+				<text x="100" y="45" text-anchor="middle" class="fill-current text-2xl font-bold">
+					{latihan.pair.numbers.join(' · ')}
+				</text>
+				<text
+					x="100"
+					y="85"
+					text-anchor="middle"
+					class="fill-current text-xl font-bold transition-opacity duration-500"
+					opacity={playing ? 1 : 0}
+				>
+					{answerKind === 'hcf' ? t.ladder.hcf : t.ladder.lcm} = {answer}
+				</text>
+			{/snippet}
+
+			{#snippet input(answered)}
+				<p class="text-center leading-relaxed">{t.s23.quiz.problems[latihan.pair.key]}</p>
+				<p class="text-center font-semibold">{t.s23.quiz.question}</p>
+				<div class="flex flex-wrap justify-center gap-3">
+					<button class="btn btn-primary" disabled={answered} onclick={() => latihan.submit('hcf')}
+						>{t.ladder.hcf}</button
+					>
+					<button
+						class="btn btn-secondary"
+						disabled={answered}
+						onclick={() => latihan.submit('lcm')}>{t.ladder.lcm}</button
+					>
+				</div>
+			{/snippet}
+
+			{#snippet feedback()}
+				{t.s23.quiz.feedback(answerKind, list, answer)}
+			{/snippet}
+		</LatihanShell>
+
+		{#if latihan.answered}
+			{#key latihan.index}
+				<p class="text-center text-sm opacity-70">{t.s23.quiz.tryLadder}</p>
+				<CompareLadders presets={[latihan.pair.numbers]} />
+			{/key}
+		{/if}
 	</section>
 </LessonShell>

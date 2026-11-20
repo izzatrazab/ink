@@ -8,6 +8,7 @@
 
 import type { Language } from '$lib/chapters';
 import type { LatihanWording } from '$lib/transformasi/latihanWording';
+import type { Kind, ProblemKey } from './hcfLcmQuiz';
 
 export interface Copy {
 	nav: { next21: string; prev22: string; next22: string; prev23: string; next23: string };
@@ -58,6 +59,12 @@ export interface Copy {
 		cluesIntro: string;
 		hcfClue: { title: string; problem: string; answer: string };
 		lcmClue: { title: string; problem: string; answer: string };
+		quiz: {
+			question: string;
+			problems: Record<ProblemKey, string>;
+			feedback: (kind: Kind, list: string, result: number) => string;
+			tryLadder: string;
+		};
 	};
 	compare: {
 		hcfRule: string;
@@ -243,6 +250,28 @@ const en: Copy = {
 			problem:
 				'One bus leaves every 12 minutes and another every 18 minutes. They leave together now. When do they next leave together?',
 			answer: 'LCM of 12 and 18 = **36** minutes.'
+		},
+		quiz: {
+			question: 'Is this an HCF problem or an LCM problem?',
+			problems: {
+				tiles:
+					'A floor 48 cm by 72 cm is covered with identical square tiles, with no cutting. What is the largest possible side of a tile?',
+				lights:
+					'Two lights flash together now. One flashes every 15 seconds and the other every 20 seconds. After how many seconds will they next flash together?',
+				groups:
+					'A teacher splits 36 boys and 45 girls into identical groups, using every student. What is the greatest number of groups?',
+				packs:
+					'Pens come in packs of 6 and pencils in packs of 8. What is the smallest number of pens that matches an equal number of pencils?',
+				ribbons:
+					'Ribbons of 40 cm, 56 cm and 72 cm are cut into equal pieces with nothing left over. What is the longest possible piece?',
+				buses:
+					'Three buses leave a terminal together. They then leave every 10, 12 and 15 minutes. After how many minutes do all three leave together again?'
+			},
+			feedback: (kind, list, result) =>
+				kind === 'hcf'
+					? `Splitting into equal parts needs a number that goes into all of them: HCF of ${list} = ${result}.`
+					: `Waiting for things to line up needs a number they all go into: LCM of ${list} = ${result}.`,
+			tryLadder: 'Check it on the ladders: press Step and see which one gives the answer.'
 		}
 	},
 	compare: {
@@ -444,6 +473,28 @@ const ms: Copy = {
 			problem:
 				'Sebuah bas bertolak setiap 12 minit dan sebuah lagi setiap 18 minit. Kedua-duanya bertolak bersama sekarang. Bilakah kedua-duanya bertolak bersama lagi?',
 			answer: 'GSTK bagi 12 dan 18 = **36** minit.'
+		},
+		quiz: {
+			question: 'Adakah ini masalah FSTB atau masalah GSTK?',
+			problems: {
+				tiles:
+					'Sebuah lantai 48 cm kali 72 cm ditutup dengan jubin segi empat sama yang serupa, tanpa dipotong. Apakah sisi jubin yang terbesar?',
+				lights:
+					'Dua lampu berkelip bersama sekarang. Satu berkelip setiap 15 saat dan satu lagi setiap 20 saat. Selepas berapa saat kedua-duanya berkelip bersama lagi?',
+				groups:
+					'Seorang guru membahagikan 36 murid lelaki dan 45 murid perempuan kepada kumpulan yang serupa, dengan semua murid digunakan. Apakah bilangan kumpulan yang paling banyak?',
+				packs:
+					'Pen dijual dalam bungkusan 6 dan pensel dalam bungkusan 8. Apakah bilangan pen yang paling sedikit untuk sepadan dengan bilangan pensel yang sama?',
+				ribbons:
+					'Reben 40 cm, 56 cm dan 72 cm dipotong kepada bahagian yang sama panjang tanpa baki. Apakah panjang bahagian yang paling panjang?',
+				buses:
+					'Tiga buah bas bertolak dari terminal bersama-sama. Kemudian, bas-bas itu bertolak setiap 10, 12 dan 15 minit. Selepas berapa minit ketiga-tiganya bertolak bersama lagi?'
+			},
+			feedback: (kind, list, result) =>
+				kind === 'hcf'
+					? `Membahagi sama banyak memerlukan nombor yang membahagi kesemuanya: FSTB bagi ${list} = ${result}.`
+					: `Menunggu sehingga serentak memerlukan nombor yang boleh dibahagi oleh kesemuanya: GSTK bagi ${list} = ${result}.`,
+			tryLadder: 'Semak dengan tangga: tekan Langkah dan lihat yang mana satu memberi jawapan.'
 		}
 	},
 	compare: {
