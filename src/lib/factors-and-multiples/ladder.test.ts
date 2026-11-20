@@ -5,8 +5,10 @@ import {
 	isDone,
 	narrate,
 	product,
+	reachedOnes,
 	rowsOf,
 	tryDivisor,
+	wasBroughtDown,
 	type LadderMode
 } from './ladder';
 import { hcf, lcm } from './numbers';
@@ -188,5 +190,43 @@ describe('autoDivisors', () => {
 	});
 	it('works a single number down to its prime factors', () => {
 		expect(autoDivisors([60], 'single')).toEqual([2, 2, 3, 5]);
+	});
+});
+
+describe('reachedOnes', () => {
+	it('is true only when the last row is all 1s', () => {
+		expect(reachedOnes([[12], [6], [3], [1]])).toBe(true);
+		expect(
+			reachedOnes([
+				[12, 18],
+				[6, 9]
+			])
+		).toBe(false);
+	});
+
+	it('differs from isDone for HCF: a finished HCF ladder need not reach 1s', () => {
+		const rows = rowsOf([12, 18], [2, 3], 'hcf');
+		expect(isDone(rows[rows.length - 1], 'hcf')).toBe(true);
+		expect(reachedOnes(rows)).toBe(false);
+	});
+});
+
+describe('wasBroughtDown', () => {
+	const rows = rowsOf([4, 9], [2, 2, 3, 3], 'lcm'); // [4,9] [2,9] [1,9] [1,3] [1,1]
+
+	it('marks a number the rung above left unchanged', () => {
+		expect(wasBroughtDown('lcm', rows, 1, 1)).toBe(true); // 9 came down past the 2
+		expect(wasBroughtDown('lcm', rows, 2, 1)).toBe(true);
+	});
+
+	it('does not mark a number that was divided, a 1, or the first row', () => {
+		expect(wasBroughtDown('lcm', rows, 1, 0)).toBe(false); // 4 → 2
+		expect(wasBroughtDown('lcm', rows, 2, 0)).toBe(false); // 2 → 1
+		expect(wasBroughtDown('lcm', rows, 3, 0)).toBe(false); // 1 stays 1
+		expect(wasBroughtDown('lcm', rows, 0, 0)).toBe(false);
+	});
+
+	it('only applies to the LCM ladder', () => {
+		expect(wasBroughtDown('hcf', rows, 1, 1)).toBe(false);
 	});
 });

@@ -59,6 +59,18 @@ export function rowsOf(start: number[], divisors: number[], mode: LadderMode): n
 	return rows;
 }
 
+/** Whether the ladder's last row is all 1s. For HCF a ladder can be finished (`isDone`)
+ *  without this — it stops as soon as no prime divides every number. */
+export function reachedOnes(rows: number[][]): boolean {
+	return rows[rows.length - 1].every((n) => n === 1);
+}
+
+/** In the LCM ladder, whether the number at `rows[i][j]` survived the rung above it
+ *  untouched — "brought down" unchanged, the step students find most surprising. */
+export function wasBroughtDown(mode: LadderMode, rows: number[][], i: number, j: number): boolean {
+	return mode === 'lcm' && i > 0 && rows[i][j] > 1 && rows[i][j] === rows[i - 1][j];
+}
+
 /** The smallest prime the ladder accepts next, or undefined when it is done. */
 export function hint(row: number[], mode: LadderMode): number | undefined {
 	if (isDone(row, mode)) return undefined;
@@ -114,15 +126,18 @@ export function narrate(
 	return t.step(list(before), d, list(next), mode === 'lcm' ? down : '');
 }
 
+/** How many numbers a ladder starts with: one to factorise, or several to compare. */
+export type StartCount = 'one' | 'several';
+
 /** Reads the student's own numbers ("48, 90" or "48 90"): whole numbers 2–999,
- *  one for a single factorisation, 2–4 otherwise. Null when the text does not fit. */
-export function parseNumbers(text: string, mode: LadderMode): number[] | null {
+ *  exactly one for `'one'`, 2–4 for `'several'`. Null when the text does not fit. */
+export function parseNumbers(text: string, count: StartCount): number[] | null {
 	const parts = text
 		.trim()
 		.split(/[\s,;]+/)
 		.filter(Boolean);
 	const nums = parts.map((p) => (/^\d+$/.test(p) ? Number(p) : NaN));
-	const [min, max] = mode === 'single' ? [1, 1] : [2, 4];
+	const [min, max] = count === 'one' ? [1, 1] : [2, 4];
 	if (nums.length < min || nums.length > max) return null;
 	return nums.every((n) => Number.isInteger(n) && n >= 2 && n <= 999) ? nums : null;
 }

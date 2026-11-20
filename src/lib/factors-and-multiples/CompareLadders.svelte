@@ -1,14 +1,12 @@
-<script lang="ts" module>
-	function isDoneAllOnes(rows: number[][]): boolean {
-		return rows[rows.length - 1].every((n) => n === 1);
-	}
-</script>
-
 <script lang="ts">
+	import { onDestroy } from 'svelte';
 	import { fly, fade } from 'svelte/transition';
 	import { useCopy } from './useCopy';
 	import Rich from './Rich.svelte';
-	import { autoDivisors, parseNumbers, product, rowsOf, type LadderMode } from './ladder';
+	import StartingNumbers from './StartingNumbers.svelte';
+	import { startPicker } from './picker.svelte';
+	import { startStepper } from './stepper.svelte';
+	import { autoDivisors, product, reachedOnes, rowsOf, wasBroughtDown } from './ladder';
 	import { hcf as hcfOf, lcm as lcmOf } from './numbers';
 
 	// The HCF ladder and the LCM ladder for the SAME numbers, side by side. One
@@ -26,16 +24,13 @@
 	const copy = useCopy();
 	const t = $derived(copy.t);
 
-	let presetIndex = $state(0);
 	let steps = $state(0);
-	let playing = $state(false);
-	let customText = $state('');
-	let customStart = $state<number[] | null>(null);
-	let customError = $state(false);
-
-	const isCustom = $derived(custom && presetIndex === presets.length);
-	const ready = $derived(!isCustom || customStart !== null);
-	const start = $derived((isCustom ? customStart : presets[presetIndex]) ?? [1]);
+	const picker = startPicker(
+		() => ({ presets, custom, count: 'several' }),
+		() => reset()
+	);
+	const ready = $derived(picker.ready);
+	const start = $derived(picker.start);
 
 	const plan = $derived({
 		hcf: autoDivisors(start, 'hcf'),
@@ -58,92 +53,29 @@
 
 	const label = (row: number[]) => row.join(', ');
 
-	function pickPreset(i: number) {
-		presetIndex = i;
-		reset();
-	}
-
 	function reset() {
+		stepper.stop();
 		steps = 0;
-		playing = false;
-	}
-
-	function applyCustom() {
-		const nums = parseNumbers(customText, 'hcf');
-		customError = nums === null;
-		if (nums) {
-			customStart = nums;
-			reset();
-		}
 	}
 
 	function step() {
 		if (!finished) steps += 1;
-		if (steps >= total) playing = false;
 	}
 
-	$effect(() => {
-		if (!playing) return;
-		const id = setInterval(step, 1200);
-		return () => clearInterval(id);
+	const stepper = startStepper(() => {
+		step();
+		return !finished;
 	});
+	onDestroy(stepper.stop);
 
 	function play() {
 		reset();
-		playing = true;
+		stepper.play();
 	}
-
-	/** In the LCM ladder, a number that survives a rung untouched was "brought down". */
-	const broughtDown = (mode: LadderMode, rows: number[][], i: number, j: number) =>
-		mode === 'lcm' && i > 0 && rows[i][j] > 1 && rows[i][j] === rows[i - 1][j];
 </script>
 
 <div class="space-y-4">
-	{#if presets.length > 1 || custom}
-		<div class="flex flex-wrap items-center justify-center gap-2">
-			<span class="text-sm font-semibold tracking-wide uppercase opacity-60">{t.ladder.number}</span
-			>
-			{#each presets as preset, i (i)}
-				<button
-					class="btn btn-sm {i === presetIndex ? 'btn-primary' : 'btn-outline'}"
-					aria-pressed={i === presetIndex}
-					onclick={() => pickPreset(i)}>{label(preset)}</button
-				>
-			{/each}
-			{#if custom}
-				<button
-					class="btn btn-sm {isCustom ? 'btn-primary' : 'btn-outline'}"
-					aria-pressed={isCustom}
-					onclick={() => pickPreset(presets.length)}>{t.ladder.own}</button
-				>
-			{/if}
-		</div>
-	{/if}
-
-	{#if isCustom}
-		<form
-			class="flex flex-wrap items-center justify-center gap-2"
-			onsubmit={(e) => {
-				e.preventDefault();
-				applyCustom();
-			}}
-		>
-			<input
-				class="input input-bordered input-sm w-48 font-mono"
-				type="text"
-				inputmode="numeric"
-				placeholder={t.ladder.ownPlaceholder}
-				aria-label={t.ladder.own}
-				bind:value={customText}
-			/>
-			<button class="btn btn-sm btn-primary" type="submit">{t.ladder.ownGo}</button>
-		</form>
-		{#if customError}
-			<p class="text-error text-center text-sm" role="alert">{t.ladder.ownInvalid(false)}</p>
-		{:else if !ready}
-			<p class="text-center opacity-70">{t.ladder.ownEmpty}</p>
-		{/if}
-	{/if}
+	<StartingNumbers {picker} {presets} {custom} t={t.ladder} single={false} />
 
 	{#if ready}
 		<div class="grid gap-4 md:grid-cols-2" aria-label={t.compare.aria(label(start))}>
@@ -173,7 +105,7 @@
 									class="border-base-content/60 flex flex-1 flex-wrap gap-x-2 border-l-2 py-1 pl-3"
 								>
 									{#each row as n, j (j)}
-										{#if broughtDown(side.mode, side.rows, i, j)}
+										{#if wasBroughtDown(side.mode, side.rows, i, j)}
 											<span class="bg-warning/30 rounded px-1" title={t.compare.broughtDown}
 												>{n}</span
 											>
@@ -194,7 +126,7 @@
 
 					{#if side.done}
 						<div class="mt-3 space-y-1" in:fade>
-							{#if isHcf && !isDoneAllOnes(side.rows)}
+							{#if isHcf && !reachedOnes(side.rows)}
 								<p class="text-sm">{t.compare.stopHcf}</p>
 							{/if}
 							<p class="font-mono font-bold">
@@ -221,10 +153,10 @@
 		{/if}
 
 		<div class="flex flex-wrap items-center justify-center gap-2">
-			<button class="btn btn-sm btn-primary" disabled={finished || playing} onclick={step}>
+			<button class="btn btn-sm btn-primary" disabled={finished || stepper.playing} onclick={step}>
 				{t.compare.step}
 			</button>
-			<button class="btn btn-sm btn-outline" disabled={playing} onclick={play}>
+			<button class="btn btn-sm btn-outline" disabled={stepper.playing} onclick={play}>
 				{t.ladder.watch}
 			</button>
 			<button class="btn btn-sm btn-ghost" disabled={steps === 0} onclick={reset}>

@@ -2,7 +2,7 @@
 
 An interactive web app that _teaches_ (not merely drills) Form 2 KSSM Mathematics **Chapter 11, Transformasi Isometri**, through manipulable SVG. The chapter is built one **Section** at a time: **Transformation + Congruency** (Section 11.1, the conceptual on-ramp), **Translation** (Section 11.2), and **Reflection** (Section 11.3). Rotation (11.4), combined transformations (11.5), and rotational symmetry (11.6) remain deferred — each is a new interaction model, a separate build (ADR-0008 as amended by ADR-0010).
 
-> The site now hosts more than one chapter (ADR-0011): the chapter registry in `src/lib/chapters.ts` lists them, and `/` is a chapter index. Form 1 Chapter 2, **Factors and Multiples** (`/factors-and-multiples`, written in English to follow its textbook), has Sections 2.1 and 2.2 built, and offers Malay as a translation (see **Reader language**). The rest of this document describes the Transformasi Isometri chapter.
+> The site now hosts more than one chapter (ADR-0011): the chapter registry in `src/lib/chapters.ts` lists them, and `/` is a chapter index. Form 1 Chapter 2, **Factors and Multiples** (`/factors-and-multiples`, written in English to follow its textbook), has Sections 2.1, 2.2 and 2.3 built, and offers Malay as a translation (see **Reader language**). The rest of this document describes the Transformasi Isometri chapter.
 
 > The earlier PDF drill generator is superseded but its code is still in the repo, parked at `/generator`. ADR-0001–0007 describe that prior system, not this one.
 
@@ -89,6 +89,18 @@ _Avoid_: locale, i18n, user language.
 **Chapter copy**:
 All of a chapter's on-screen body wording — headings, prose, hints, feedback sentences — in each language the chapter offers. A chapter's own language follows its textbook (English for Factors and Multiples, Malay for Transformasi Isometri); its translations follow that, so on any disagreement the chapter's own language's term wins (e.g. HCF over FSTB). It excludes the chapter's structure and the Section titles, which belong to the chapter registry and are not duplicated in the copy.
 _Avoid_: strings, translations (as the name of the wording), translation file.
+
+**Division ladder**:
+The textbook's method of repeated division, drawn as rows: each rung divides the current row by a prime and writes the result below. It serves three uses that differ only in what a divisor must do — prime factorisation of one number, **HCF** (the divisor must divide every number), and **LCM** (the divisor need divide only one number; the rest are brought down unchanged). The student's progress is the list of divisors chosen; the rows and the answer follow from it.
+_Avoid_: ladder method, staircase, division table.
+
+**Starting numbers**:
+The row a **Division ladder** begins with: either one of the chapter's preset sets, or numbers the student types under "Your own". Changing the starting numbers restarts the ladder.
+_Avoid_: input, seed, initial values.
+
+**Watch**:
+The scripted run of a **Division ladder** (or the side-by-side HCF and LCM ladders), which takes one rung at a time on its own, narrating each. It takes the same step the "Hint" would suggest — the smallest prime the ladder accepts.
+_Avoid_: autoplay, animation, demo.
 
 ## Relationships
 

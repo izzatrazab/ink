@@ -1,25 +1,18 @@
 <script lang="ts">
+	import { onDestroy } from 'svelte';
 	import { fly, fade } from 'svelte/transition';
 	import { useCopy } from './useCopy';
 	import Rich from './Rich.svelte';
-	import {
-		hint,
-		parseNumbers,
-		isDone,
-		narrate,
-		product,
-		rowsOf,
-		tryDivisor,
-		type LadderMode,
-		type TryResult
-	} from './ladder';
+	import StartingNumbers from './StartingNumbers.svelte';
+	import { startPicker } from './picker.svelte';
+	import { startLadder } from './ladderSession.svelte';
+	import { narrate, type LadderMode } from './ladder';
 
 	// The interactive "method of repeated division". The student builds the ladder
 	// one rung at a time by choosing a divisor; every choice is checked by the rules
 	// in ladder.ts and either accepted (a new row drops in) or refused with the
-	// reason. The only state is the list of divisors chosen — rows, "done" and the
-	// final product are all derived. "Hint" points at the smallest prime that works;
-	// "Watch" plays the whole ladder by itself, narrating each step.
+	// reason. The ladder's state and Watch live in ladderSession.svelte.ts and the
+	// starting numbers in picker.svelte.ts; this component is wording and markup.
 	interface Props {
 		/** The numbers to divide, as one starting row, e.g. [60] or [36, 60, 72]. */
 		presets: number[][];
@@ -35,154 +28,41 @@
 
 	const DIVISORS = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 17, 19];
 
-	let presetIndex = $state(0);
-	let divisors = $state<number[]>([]);
-	// What the message line is about, not its text: the sentence is derived below in
-	// the reader's current language, so toggling EN/BM rewrites it in place.
-	let note = $state<{ before: number[]; d: number; result: TryResult } | 'watch' | null>(null);
-	let refused = $state<number | null>(null);
-	let hinting = $state(false);
-	let playing = $state(false);
+	const picker = startPicker(
+		() => ({ presets, custom, count: mode === 'single' ? 'one' : 'several' }),
+		() => ladder.reset()
+	);
+	// Before the student has entered valid numbers the ladder is hidden; the picker
+	// keeps `start` at [1] so what derives from it stays well-defined.
+	const ready = $derived(picker.ready);
+	const start = $derived(picker.start);
+	const ladder = startLadder(() => ({ start, mode }));
+	onDestroy(ladder.stop);
 
-	let customText = $state('');
-	let customStart = $state<number[] | null>(null);
-	let customError = $state(false);
-
-	const isCustom = $derived(custom && presetIndex === presets.length);
-	// Before the student has entered valid numbers the ladder is hidden; [1] only
-	// keeps the derived values below well-defined.
-	const ready = $derived(!isCustom || customStart !== null);
-	const start = $derived((isCustom ? customStart : presets[presetIndex]) ?? [1]);
-	const rows = $derived(rowsOf(start, divisors, mode));
-	const current = $derived(rows[rows.length - 1]);
-	const done = $derived(isDone(current, mode));
-	const suggested = $derived(hint(current, mode));
-	const answer = $derived(product(divisors));
+	const { choose, undo, reset, watch, toggleHint } = ladder;
+	const divisors = $derived(ladder.divisors);
+	const rows = $derived(ladder.rows);
+	const current = $derived(ladder.current);
+	const done = $derived(ladder.done);
+	const suggested = $derived(ladder.suggested);
+	const refused = $derived(ladder.refused);
+	const hinting = $derived(ladder.hinting);
+	const note = $derived(ladder.note);
 	const message = $derived(
 		note === 'watch' ? t.watchNote : note ? narrate(note.before, note.d, note.result, mode, t) : ''
 	);
 
 	const label = (row: number[]) => row.join(', ');
 
-	function choose(d: number) {
-		if (done) return;
-		// `current` moves on as soon as the divisor is added, so the narration works
-		// from this snapshot of the row that was actually divided.
-		const before = current;
-		const result = tryDivisor(before, d, mode);
-		hinting = false;
-		note = { before, d, result };
-		if (!result.ok) {
-			refused = d;
-			return;
-		}
-		refused = null;
-		divisors = [...divisors, d];
-		if (isDone(result.next, mode)) playing = false;
-	}
-
-	function pickPreset(i: number) {
-		presetIndex = i;
-		reset();
-	}
-
-	function applyCustom() {
-		const nums = parseNumbers(customText, mode);
-		customError = nums === null;
-		if (nums) {
-			customStart = nums;
-			reset();
-		}
-	}
-
-	function reset() {
-		divisors = [];
-		note = null;
-		refused = null;
-		hinting = false;
-		playing = false;
-	}
-
-	function undo() {
-		playing = false;
-		hinting = false;
-		refused = null;
-		divisors = divisors.slice(0, -1);
-		note = null;
-	}
-
-	// "Watch": take the hint step every 1.2 s until the ladder is done.
-	$effect(() => {
-		if (!playing) return;
-		const id = setInterval(() => {
-			const d = hint(rowsOf(start, divisors, mode).at(-1)!, mode);
-			if (d === undefined) {
-				playing = false;
-				return;
-			}
-			choose(d);
-		}, 1200);
-		return () => clearInterval(id);
-	});
-
-	function watch() {
-		reset();
-		note = 'watch';
-		playing = true;
-	}
-
 	const finalLine = $derived(
 		mode === 'single'
 			? `${start[0]} = ${divisors.join(' × ')}`
-			: `${mode === 'hcf' ? t.hcf : t.lcm} = ${divisors.join(' × ')} = ${answer}`
+			: `${mode === 'hcf' ? t.hcf : t.lcm} = ${divisors.join(' × ')} = ${ladder.answer}`
 	);
 </script>
 
 <div class="space-y-4">
-	{#if presets.length > 1 || custom}
-		<div class="flex flex-wrap items-center justify-center gap-2">
-			<span class="text-sm font-semibold tracking-wide uppercase opacity-60">{t.number}</span>
-			{#each presets as preset, i (i)}
-				<button
-					class="btn btn-sm {i === presetIndex ? 'btn-primary' : 'btn-outline'}"
-					aria-pressed={i === presetIndex}
-					onclick={() => pickPreset(i)}>{label(preset)}</button
-				>
-			{/each}
-			{#if custom}
-				<button
-					class="btn btn-sm {isCustom ? 'btn-primary' : 'btn-outline'}"
-					aria-pressed={isCustom}
-					onclick={() => pickPreset(presets.length)}>{t.own}</button
-				>
-			{/if}
-		</div>
-	{/if}
-
-	{#if isCustom}
-		<form
-			class="flex flex-wrap items-center justify-center gap-2"
-			onsubmit={(e) => {
-				e.preventDefault();
-				applyCustom();
-			}}
-		>
-			<input
-				class="input input-bordered input-sm w-48 font-mono"
-				type="text"
-				inputmode="numeric"
-				placeholder={t.ownPlaceholder}
-				aria-label={t.own}
-				bind:value={customText}
-			/>
-			<button class="btn btn-sm btn-primary" type="submit">{t.ownGo}</button>
-		</form>
-		{#if customError}
-			<p class="text-error text-center text-sm" role="alert">{t.ownInvalid(mode === 'single')}</p>
-		{:else if !ready}
-			<p class="text-center opacity-70">{t.ownEmpty}</p>
-		{/if}
-	{/if}
+	<StartingNumbers {picker} {presets} {custom} {t} single={mode === 'single'} />
 
 	{#if ready}
 		<div class="ink-card mx-auto max-w-sm p-5 font-mono text-xl" aria-label={t.aria(label(start))}>
@@ -226,10 +106,7 @@
 								: 'btn-outline'}"
 						class:shake={refused === d}
 						disabled={done}
-						onclick={() => {
-							playing = false;
-							choose(d);
-						}}>{d}</button
+						onclick={() => choose(d)}>{d}</button
 					>
 				{/each}
 			</div>
@@ -254,12 +131,12 @@
 		{/if}
 
 		<div class="flex flex-wrap justify-center gap-2">
-			<button
-				class="btn btn-sm btn-outline"
-				disabled={done || playing}
-				onclick={() => (hinting = !hinting)}>{hinting ? t.hideHint : t.hint}</button
+			<button class="btn btn-sm btn-outline" disabled={done || ladder.watching} onclick={toggleHint}
+				>{hinting ? t.hideHint : t.hint}</button
 			>
-			<button class="btn btn-sm btn-outline" disabled={playing} onclick={watch}>{t.watch}</button>
+			<button class="btn btn-sm btn-outline" disabled={ladder.watching} onclick={watch}
+				>{t.watch}</button
+			>
 			<button class="btn btn-sm btn-ghost" disabled={divisors.length === 0} onclick={undo}
 				>{t.undo}</button
 			>
