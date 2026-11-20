@@ -34,9 +34,11 @@
 	<link rel="icon" type="image/svg" href={plusMinusSvg} />
 </svelte:head>
 
-<div class="navbar bg-base-100 shadow-sm px-8 sticky top-0 z-10">
+<div class="navbar bg-base-100/90 border-base-300 sticky top-0 z-10 border-b px-8 backdrop-blur">
 	<div class="flex-1">
-		<a class="text-4xl font-bold" href={resolve('/')}>InK</a>
+		<a class="font-display text-primary text-4xl font-bold tracking-tight" href={resolve('/')}
+			>InK</a
+		>
 	</div>
 	<div class="flex flex-row gap-x-4">
 		<button class="swap swap-rotate" onclick={toggleTheme}>

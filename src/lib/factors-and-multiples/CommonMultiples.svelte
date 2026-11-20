@@ -60,7 +60,7 @@
 	</div>
 
 	<ol
-		class="border-base-300 bg-base-200 mx-auto grid max-w-md grid-cols-12 gap-1 rounded-2xl border p-3"
+		class="ink-card mx-auto grid max-w-md grid-cols-12 gap-1 p-3"
 		aria-label={t.numbersFrom(LIMIT)}
 	>
 		{#each cells as n (n)}

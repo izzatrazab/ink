@@ -185,10 +185,7 @@
 	{/if}
 
 	{#if ready}
-		<div
-			class="border-base-300 bg-base-200 mx-auto max-w-sm rounded-2xl border p-5 font-mono text-xl"
-			aria-label={t.aria(label(start))}
-		>
+		<div class="ink-card mx-auto max-w-sm p-5 font-mono text-xl" aria-label={t.aria(label(start))}>
 			{#each rows as row, i (i)}
 				<div class="flex min-h-12 items-center" in:fly={{ y: -14, duration: 300 }}>
 					<span

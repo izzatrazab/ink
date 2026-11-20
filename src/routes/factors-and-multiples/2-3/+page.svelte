@@ -94,12 +94,12 @@
 		<h2 class="text-2xl font-semibold">{t.s23.cluesHeading}</h2>
 		<p class="leading-relaxed">{t.s23.cluesIntro}</p>
 		<div class="grid gap-4 md:grid-cols-2">
-			<div class="border-primary/50 space-y-2 rounded-2xl border-2 p-4">
+			<div class="bg-primary/5 border-primary/20 space-y-2 rounded-3xl border p-5">
 				<h3 class="text-primary font-bold">{t.s23.hcfClue.title}</h3>
 				<p>{t.s23.hcfClue.problem}</p>
 				<p class="font-semibold"><Rich text={t.s23.hcfClue.answer} /></p>
 			</div>
-			<div class="border-secondary/50 space-y-2 rounded-2xl border-2 p-4">
+			<div class="bg-secondary/5 border-secondary/20 space-y-2 rounded-3xl border p-5">
 				<h3 class="text-secondary font-bold">{t.s23.lcmClue.title}</h3>
 				<p>{t.s23.lcmClue.problem}</p>
 				<p class="font-semibold"><Rich text={t.s23.lcmClue.answer} /></p>

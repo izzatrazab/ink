@@ -15,9 +15,6 @@
 	let { aspect, class: className = 'max-w-xl', children }: Props = $props();
 </script>
 
-<div
-	class="border-base-300 bg-base-200 text-primary mx-auto w-full rounded-2xl border p-4 {className}"
-	style:aspect-ratio={aspect}
->
+<div class="ink-card text-primary mx-auto w-full p-4 {className}" style:aspect-ratio={aspect}>
 	{@render children()}
 </div>

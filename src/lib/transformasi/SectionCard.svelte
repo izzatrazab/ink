@@ -25,15 +25,17 @@
 <svelte:element
 	this={href ? 'a' : 'div'}
 	{href}
-	class="card bg-base-200 block p-5 transition-colors {href ? 'hover:bg-base-300' : ''}"
+	class="ink-card block space-y-1 p-6 {href ? '' : 'opacity-80'}"
 >
 	<span class="flex items-center justify-between gap-3">
-		<span class="text-primary text-sm font-semibold">{number}</span>
+		<span class="bg-primary/10 text-primary rounded-full px-3 py-0.5 text-sm font-semibold"
+			>{number}</span
+		>
 		{#if !href && badge}
 			<span class="badge badge-ghost badge-sm">{badge}</span>
 		{/if}
 	</span>
-	<span class="block text-lg font-bold">{title}</span>
+	<span class="font-display block text-xl font-bold">{title}</span>
 	<span class="block opacity-70">{description}</span>
 	{#if outline.length > 0}
 		<ul class="mt-3 list-disc space-y-1 pl-5 text-sm opacity-80">

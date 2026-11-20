@@ -24,9 +24,7 @@
 <div class="container mx-auto max-w-2xl space-y-10 px-8 py-16">
 	<div class="flex items-start justify-between gap-4">
 		<hgroup class="space-y-2">
-			<p class="text-sm font-semibold tracking-wide uppercase opacity-60">
-				{chapterLabel(chapter)}
-			</p>
+			<p class="ink-eyebrow">{chapterLabel(chapter)}</p>
 			<h1 class="ink-linear-gradient text-5xl font-bold">{chapter.title}</h1>
 			<p class="opacity-80">{chapter.description}</p>
 		</hgroup>
@@ -51,6 +49,6 @@
 			</ul>
 		</nav>
 	{:else}
-		<p class="card bg-base-200 p-5 opacity-80">{t.noSections}</p>
+		<p class="ink-card p-6 opacity-80">{t.noSections}</p>
 	{/if}
 </div>

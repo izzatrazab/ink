@@ -55,9 +55,7 @@
 <div class="container mx-auto max-w-4xl space-y-12 px-8 py-16">
 	<div class="flex items-start justify-between gap-4">
 		<hgroup class="space-y-2">
-			<p class="text-sm font-semibold tracking-wide uppercase opacity-60">
-				{chapterLabel(chapterMeta)} · {chapterMeta.title}
-			</p>
+			<p class="ink-eyebrow">{chapterLabel(chapterMeta)} · {chapterMeta.title}</p>
 			<h1 class="text-4xl font-bold">{number} {title}</h1>
 		</hgroup>
 		<LanguageToggle chapter={base} />
@@ -72,7 +70,7 @@
 				<a href={prev.href} class="btn btn-outline btn-primary">{prev.label}</a>
 			{/if}
 			{#if next}
-				<a href={next.href} class="btn btn-outline btn-primary">{next.label}</a>
+				<a href={next.href} class="btn btn-primary">{next.label}</a>
 			{/if}
 		</div>
 	</nav>

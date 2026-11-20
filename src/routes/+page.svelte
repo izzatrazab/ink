@@ -23,12 +23,9 @@
 				{#each group.chapters as base (base.slug)}
 					{@const chapter = reader.view(base)}
 					<li>
-						<a
-							href={chapterHref(chapter)}
-							class="card bg-base-200 hover:bg-base-300 block p-5 transition-colors"
-						>
-							<span class="text-primary text-sm font-semibold">{chapterLabel(chapter)}</span>
-							<span class="block text-lg font-bold">{chapter.title}</span>
+						<a href={chapterHref(chapter)} class="ink-card block space-y-1 p-6">
+							<span class="ink-eyebrow">{chapterLabel(chapter)}</span>
+							<span class="font-display block text-xl font-bold">{chapter.title}</span>
 							<span class="block opacity-70">{chapter.description}</span>
 						</a>
 					</li>

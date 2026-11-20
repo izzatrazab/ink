@@ -149,7 +149,11 @@
 		<div class="grid gap-4 md:grid-cols-2" aria-label={t.compare.aria(label(start))}>
 			{#each sides as side (side.mode)}
 				{@const isHcf = side.mode === 'hcf'}
-				<div class="rounded-2xl border-2 p-4 {isHcf ? 'border-primary/50' : 'border-secondary/50'}">
+				<div
+					class="rounded-3xl border p-5 {isHcf
+						? 'bg-primary/5 border-primary/20'
+						: 'bg-secondary/5 border-secondary/20'}"
+				>
 					<h3 class="text-lg font-bold {isHcf ? 'text-primary' : 'text-secondary'}">
 						{isHcf ? t.ladder.hcf : t.ladder.lcm}
 					</h3>
