@@ -31,7 +31,7 @@
 		both: 'bg-success text-success-content font-bold',
 		a: 'bg-primary text-primary-content font-semibold',
 		b: 'bg-secondary text-secondary-content font-semibold',
-		none: 'opacity-60'
+		none: 'opacity-70'
 	} as const;
 </script>
 
@@ -66,7 +66,7 @@
 		{#each cells as n (n)}
 			{@const k = kind(n)}
 			<li
-				class="flex aspect-square items-center justify-center rounded text-xs transition-colors sm:text-sm {styles[
+				class="flex aspect-square items-center justify-center rounded text-sm transition-colors {styles[
 					k
 				]}"
 				aria-label="{n}, {t.cell[k]}"

@@ -25,29 +25,33 @@
 
 <div class="flex flex-col gap-3">
 	<div class="flex items-center gap-3">
-		<span class="w-4 font-mono text-lg italic">a</span>
+		<span class="w-4 font-mono text-xl italic">a</span>
 		<button
-			class="btn btn-circle btn-outline btn-sm"
+			class="btn btn-circle btn-outline size-11 min-h-0"
 			aria-label="Kurangkan a"
 			onclick={() => bump('dx', -step)}>−</button
 		>
-		<span class="w-8 text-center font-mono text-lg tabular-nums" aria-live="polite">{value.dx}</span>
+		<span class="w-10 text-center font-mono text-xl tabular-nums" aria-live="polite"
+			>{value.dx}</span
+		>
 		<button
-			class="btn btn-circle btn-outline btn-sm"
+			class="btn btn-circle btn-outline size-11 min-h-0"
 			aria-label="Tambah a"
 			onclick={() => bump('dx', step)}>+</button
 		>
 	</div>
 	<div class="flex items-center gap-3">
-		<span class="w-4 font-mono text-lg italic">b</span>
+		<span class="w-4 font-mono text-xl italic">b</span>
 		<button
-			class="btn btn-circle btn-outline btn-sm"
+			class="btn btn-circle btn-outline size-11 min-h-0"
 			aria-label="Kurangkan b"
 			onclick={() => bump('dy', -step)}>−</button
 		>
-		<span class="w-8 text-center font-mono text-lg tabular-nums" aria-live="polite">{value.dy}</span>
+		<span class="w-10 text-center font-mono text-xl tabular-nums" aria-live="polite"
+			>{value.dy}</span
+		>
 		<button
-			class="btn btn-circle btn-outline btn-sm"
+			class="btn btn-circle btn-outline size-11 min-h-0"
 			aria-label="Tambah b"
 			onclick={() => bump('dy', step)}>+</button
 		>

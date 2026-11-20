@@ -33,7 +33,7 @@
 		<h2 class="text-2xl font-semibold">{t.s21.factorsHeading}</h2>
 		<p class="leading-relaxed"><Rich text={t.s21.factorsIntro} /></p>
 		<FactorTiles />
-		<p class="text-sm opacity-70">{t.s21.oneIsFactor}</p>
+		<p class="ink-muted">{t.s21.oneIsFactor}</p>
 	</section>
 
 	<!-- Beat 2 — Latihan: is it a factor? -->

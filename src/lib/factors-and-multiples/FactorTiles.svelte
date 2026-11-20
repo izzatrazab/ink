@@ -61,7 +61,7 @@
 	</div>
 
 	<div class="space-y-2 text-center">
-		<p class="text-sm font-semibold tracking-wide uppercase opacity-60">{t.inEachRow}</p>
+		<p class="text-sm font-semibold tracking-wide uppercase ink-muted">{t.inEachRow}</p>
 		<div class="flex flex-wrap justify-center gap-2">
 			{#each { length: total }, i (i)}
 				{@const k = i + 1}
@@ -89,7 +89,7 @@
 	</p>
 
 	<div class="space-y-2 text-center">
-		<p class="text-sm font-semibold tracking-wide uppercase opacity-60">
+		<p class="text-sm font-semibold tracking-wide uppercase ink-muted">
 			{t.found(total, found.length, all.length)}
 		</p>
 		<ul class="flex flex-wrap justify-center gap-2">

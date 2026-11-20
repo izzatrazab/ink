@@ -34,14 +34,22 @@
 	<link rel="icon" type="image/svg" href={plusMinusSvg} />
 </svelte:head>
 
-<div class="navbar bg-base-100/90 border-base-300 sticky top-0 z-10 border-b px-8 backdrop-blur">
+<div
+	class="navbar bg-base-100/90 border-base-300 sticky top-0 z-10 border-b px-4 backdrop-blur sm:px-8"
+>
 	<div class="flex-1">
 		<a class="font-display text-primary text-4xl font-bold tracking-tight" href={resolve('/')}
 			>InK</a
 		>
 	</div>
 	<div class="flex flex-row gap-x-4">
-		<button class="swap swap-rotate" onclick={toggleTheme}>
+		<button
+			class="swap swap-rotate size-11"
+			onclick={toggleTheme}
+			aria-label={darkMode
+				? 'Switch to light theme / Tukar ke tema cerah'
+				: 'Switch to dark theme / Tukar ke tema gelap'}
+		>
 			<!-- this hidden checkbox controls the state -->
 			<input type="checkbox" bind:checked={darkMode} />
 
@@ -56,7 +64,13 @@
 			</div>
 		</button>
 
-		<a href="https://github.com/izzatrazab/math-drill-generator" target="_blank" class="contrast">
+		<a
+			href="https://github.com/izzatrazab/math-drill-generator"
+			target="_blank"
+			rel="noopener noreferrer"
+			class="contrast flex size-11 items-center justify-center"
+			aria-label="GitHub (opens in a new tab)"
+		>
 			<Github class="h-8 w-8" />
 		</a>
 	</div>

@@ -156,7 +156,7 @@
 
 		{#if latihan.answered}
 			{#key latihan.index}
-				<p class="text-center text-sm opacity-70">{t.s23.quiz.tryLadder}</p>
+				<p class="text-center ink-muted">{t.s23.quiz.tryLadder}</p>
 				<CompareLadders presets={[latihan.pair.numbers]} />
 			{/key}
 		{/if}

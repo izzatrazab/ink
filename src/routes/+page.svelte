@@ -16,7 +16,7 @@
 
 	{#each chaptersByForm() as group (group.form)}
 		<section class="space-y-3" aria-label="Form {group.form}">
-			<h2 class="text-sm font-semibold tracking-wide uppercase opacity-60">
+			<h2 class="text-sm font-semibold tracking-wide uppercase ink-muted">
 				Form {group.form} · Tingkatan {group.form}
 			</h2>
 			<ul class="space-y-3">

@@ -197,15 +197,11 @@
 					<!-- The draggable arrowhead knob. Pointer handling lives here in the
 					     Explorable; it snaps to whole grid points via grid.ts and writes
 					     the same vektor rune as the steppers. -->
-					<circle
+					<!-- The visible knob is small, but the grabbable area is a transparent
+					     circle about a thumb wide (≥44 px on a phone), so a fingertip lands. -->
+					<g
 						class="cursor-grab"
 						class:cursor-grabbing={dragging}
-						cx={arrowTo.x}
-						cy={arrowTo.y}
-						r="4"
-						fill="currentColor"
-						stroke="var(--color-base-100, white)"
-						stroke-width="1.5"
 						style="touch-action: none;"
 						role="button"
 						tabindex="0"
@@ -213,8 +209,20 @@
 						onpointerdown={onHandleDown}
 						onpointermove={onHandleMove}
 						onpointerup={onHandleUp}
+						onpointercancel={onHandleUp}
 						onkeydown={onHandleKey}
-					/>
+					>
+						<circle cx={arrowTo.x} cy={arrowTo.y} r="20" fill="transparent" />
+						<circle
+							cx={arrowTo.x}
+							cy={arrowTo.y}
+							r="6"
+							fill="currentColor"
+							stroke="var(--color-base-100, white)"
+							stroke-width="1.5"
+							pointer-events="none"
+						/>
+					</g>
 				</Stage>
 			</FigureCard>
 
@@ -226,8 +234,7 @@
 		<div class="flex flex-wrap items-center justify-center gap-8">
 			<VectorStepper value={vektor} onchange={setVektor} />
 			<div class="flex flex-col items-center gap-2">
-				<span class="text-sm font-semibold tracking-wide uppercase opacity-60"
-					>Vektor translasi</span
+				<span class="text-sm font-semibold tracking-wide uppercase ink-muted">Vektor translasi</span
 				>
 				<ColumnVector value={vektor} />
 			</div>
@@ -264,7 +271,7 @@
 					<div class="flex flex-wrap items-center justify-center gap-8">
 						<VectorStepper value={latihan.draft} onchange={(next) => (latihan.draft = next)} />
 						<div class="flex flex-col items-center gap-2">
-							<span class="text-sm font-semibold tracking-wide uppercase opacity-60">
+							<span class="text-sm font-semibold tracking-wide uppercase ink-muted">
 								Jawapan anda
 							</span>
 							<ColumnVector value={latihan.draft} />

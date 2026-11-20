@@ -76,7 +76,7 @@
 
 <div class="space-y-4">
 	<div class="flex flex-wrap items-center justify-center gap-2">
-		<span class="text-sm font-semibold tracking-wide uppercase opacity-60">{t.ladder.number}</span>
+		<span class="text-sm font-semibold tracking-wide uppercase ink-muted">{t.ladder.number}</span>
 		{#each presets as preset, i (i)}
 			<button
 				class="btn btn-sm {i === presetIndex ? 'btn-primary' : 'btn-outline'}"

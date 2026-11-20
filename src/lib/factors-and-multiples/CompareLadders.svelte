@@ -89,7 +89,7 @@
 					<h3 class="text-lg font-bold {isHcf ? 'text-primary' : 'text-secondary'}">
 						{isHcf ? t.ladder.hcf : t.ladder.lcm}
 					</h3>
-					<p class="mb-3 text-sm opacity-80">
+					<p class="mb-3 opacity-80">
 						<Rich text={isHcf ? t.compare.hcfRule : t.compare.lcmRule} />
 					</p>
 
@@ -163,7 +163,7 @@
 				{t.ladder.reset}
 			</button>
 			{#if steps > 0}
-				<span class="text-sm opacity-70">{t.compare.stepsTaken(steps)}</span>
+				<span class="ink-muted">{t.compare.stepsTaken(steps)}</span>
 			{/if}
 		</div>
 	{/if}

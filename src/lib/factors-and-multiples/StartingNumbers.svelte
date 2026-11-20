@@ -21,7 +21,7 @@
 
 {#if presets.length > 1 || custom}
 	<div class="flex flex-wrap items-center justify-center gap-2">
-		<span class="text-sm font-semibold tracking-wide uppercase opacity-60">{t.number}</span>
+		<span class="text-sm font-semibold tracking-wide uppercase ink-muted">{t.number}</span>
 		{#each presets as preset, i (i)}
 			<button
 				class="btn btn-sm {i === picker.index ? 'btn-primary' : 'btn-outline'}"

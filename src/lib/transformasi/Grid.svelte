@@ -84,8 +84,8 @@
 	}
 	.tick {
 		fill: currentColor;
-		font-size: 6px;
-		opacity: 0.55;
+		font-size: 6.5px;
+		opacity: 0.75;
 		text-anchor: middle;
 		dominant-baseline: middle;
 	}

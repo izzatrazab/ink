@@ -77,7 +77,7 @@
 				text-anchor="middle"
 				font-size="10"
 				font-weight="bold"
-				fill="var(--color-warning)"
+				fill="var(--ink-warning-ink)"
 				style:opacity={playing ? 1 : 0}
 				style:transition-delay="{playing ? 400 : 0}ms">✕</text
 			>

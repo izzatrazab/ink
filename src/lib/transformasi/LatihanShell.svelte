@@ -89,7 +89,7 @@
 	}: Props = $props();
 </script>
 
-<p class="text-sm font-semibold tracking-wide uppercase opacity-60">
+<p class="text-sm font-semibold tracking-wide uppercase ink-muted">
 	{t.questionOf(latihan.index, latihan.total)}
 </p>
 
@@ -106,12 +106,29 @@
 {@render input(latihan.answered)}
 
 {#if latihan.answered}
+	<!-- The verdict never rests on colour alone: a tick or a cross and the word say it too. -->
 	<div
-		class="alert"
+		class="alert ink-verdict"
 		class:alert-success={latihan.correct}
 		class:alert-error={!latihan.correct}
 		role="status"
 	>
+		<svg
+			class="size-6 shrink-0"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2.5"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			aria-hidden="true"
+		>
+			{#if latihan.correct}
+				<path d="M5 12.5l4.5 4.5L19 7.5" />
+			{:else}
+				<path d="M6 6l12 12M18 6L6 18" />
+			{/if}
+		</svg>
 		<span>
 			<strong>{latihan.correct ? t.correct : t.incorrect}</strong>
 			{@render feedback()}
@@ -120,7 +137,7 @@
 
 	<div class="text-center">
 		{#if latihan.last}
-			<p class="opacity-70">{t.allDone}</p>
+			<p class="ink-muted">{t.allDone}</p>
 		{:else}
 			<button class="btn btn-primary" onclick={() => latihan.next()}>{t.nextQuestion}</button>
 		{/if}

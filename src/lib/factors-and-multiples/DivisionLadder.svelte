@@ -7,6 +7,7 @@
 	import { startPicker } from './picker.svelte';
 	import { startLadder } from './ladderSession.svelte';
 	import { narrate, type LadderMode } from './ladder';
+	import { motionDuration } from '$lib/motion';
 
 	// The interactive "method of repeated division". The student builds the ladder
 	// one rung at a time by choosing a divisor; every choice is checked by the rules
@@ -67,7 +68,7 @@
 	{#if ready}
 		<div class="ink-card mx-auto max-w-sm p-5 font-mono text-xl" aria-label={t.aria(label(start))}>
 			{#each rows as row, i (i)}
-				<div class="flex min-h-12 items-center" in:fly={{ y: -14, duration: 300 }}>
+				<div class="flex min-h-12 items-center" in:fly={{ y: -14, duration: motionDuration(300) }}>
 					<span
 						class="w-14 pr-3 text-right font-bold {done ? 'text-success' : 'text-primary'}"
 						aria-label={divisors[i] ? t.divisor(divisors[i]) : undefined}
@@ -93,13 +94,13 @@
 		</div>
 
 		<div class="space-y-2 text-center">
-			<p class="text-sm font-semibold tracking-wide uppercase opacity-60">
+			<p class="text-sm font-semibold tracking-wide uppercase ink-muted">
 				{done ? t.finished : t.divideBy}
 			</p>
 			<div class="flex flex-wrap justify-center gap-2">
 				{#each DIVISORS as d (d)}
 					<button
-						class="btn btn-square size-10! min-h-0 {hinting && suggested === d
+						class="btn btn-square size-11! min-h-0 {hinting && suggested === d
 							? 'btn-warning'
 							: refused === d
 								? 'btn-error'
@@ -125,7 +126,11 @@
 		</p>
 
 		{#if done}
-			<div class="alert alert-success justify-center text-xl" in:fade role="status">
+			<div
+				class="alert alert-success justify-center text-xl"
+				in:fade={{ duration: motionDuration(400) }}
+				role="status"
+			>
 				<span class="font-mono font-bold">{finalLine}</span>
 			</div>
 		{/if}

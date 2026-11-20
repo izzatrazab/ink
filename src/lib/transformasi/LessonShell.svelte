@@ -52,11 +52,11 @@
 	<meta name="description" content={description} />
 </svelte:head>
 
-<div class="container mx-auto max-w-4xl space-y-12 px-8 py-16">
+<div class="ink-lesson container mx-auto max-w-4xl space-y-12 px-4 py-10 sm:px-8 sm:py-16">
 	<div class="flex items-start justify-between gap-4">
 		<hgroup class="space-y-2">
 			<p class="ink-eyebrow">{chapterLabel(chapterMeta)} · {chapterMeta.title}</p>
-			<h1 class="text-4xl font-bold">{number} {title}</h1>
+			<h1 class="text-3xl font-bold sm:text-4xl">{number} {title}</h1>
 		</hgroup>
 		<LanguageToggle chapter={base} />
 	</div>
