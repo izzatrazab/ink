@@ -77,8 +77,12 @@ export const chapters: Chapter[] = [
 				number: '2.3',
 				slug: '2-3',
 				title: 'HCF and LCM Compared',
-				description: 'Splitting or waiting? Two ladders, two questions.',
-				outline: ['What each one asks', 'The two ladders side by side', 'Which one do I need?']
+				description: 'Splitting or waiting? Two repeated divisions, two questions.',
+				outline: [
+					'What each one asks',
+					'The two repeated divisions side by side',
+					'Which one do I need?'
+				]
 			}
 		],
 		translations: {
@@ -108,10 +112,10 @@ export const chapters: Chapter[] = [
 					},
 					'2-3': {
 						title: 'FSTB dan GSTK Dibandingkan',
-						description: 'Membahagi atau menunggu? Dua tangga, dua soalan.',
+						description: 'Membahagi atau menunggu? Dua pembahagian berulang, dua soalan.',
 						outline: [
 							'Apa yang ditanya oleh setiap satu',
-							'Dua tangga bersebelahan',
+							'Dua pembahagian berulang bersebelahan',
 							'Yang mana satu perlu saya guna?'
 						]
 					}

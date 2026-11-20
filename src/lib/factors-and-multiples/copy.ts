@@ -29,6 +29,7 @@ export interface Copy {
 		primeMethod: string;
 		hcfHeading: string;
 		hcfIntro: string;
+		hcfLanesIntro: string;
 		isFactorQ: (size: number, total: number) => string;
 		factorYes: (total: number, size: number, rows: number) => string;
 		leftOver: (rest: number) => string;
@@ -40,6 +41,7 @@ export interface Copy {
 		lcmHeading: string;
 		lcmIntro: string;
 		lcmMethod: string;
+		lcmLanesIntro: string;
 		isCommonQ: (n: number, list: string) => string;
 		commonYes: (n: number) => string;
 		commonNo: (miss: number, n: number) => string;
@@ -53,6 +55,8 @@ export interface Copy {
 		tableHeading: string;
 		aspectHead: string;
 		rows: { aspect: string; hcf: string; lcm: string }[];
+		lanesHeading: string;
+		lanesIntro: string;
 		ladderHeading: string;
 		ladderIntro: string;
 		cluesHeading: string;
@@ -100,7 +104,15 @@ export interface Copy {
 		many: (common: number[], first: number) => string;
 		one: (first: number) => string;
 	};
-	lanes: { label: (d: number) => string };
+	lanes: {
+		label: (d: number) => string;
+		piece: (size: number) => string;
+		hcfTitle: string;
+		lcmTitle: string;
+		hcfCaption: (list: string, hcf: number) => string;
+		lcmCaption: (list: string, lcm: number) => string;
+		replay: string;
+	};
 	ladder: {
 		number: string;
 		own: string;
@@ -146,11 +158,11 @@ const en: Copy = {
 	},
 	meta: {
 		desc21:
-			'Section 2.1: factors, prime factors and the highest common factor — explored with tiles and a step-by-step division ladder.',
+			'Section 2.1: factors, prime factors and the highest common factor — explored with tiles and a step-by-step repeated division.',
 		desc22:
-			'Section 2.2: multiples, common multiples and the lowest common multiple — explored with a number chart and a division ladder.',
+			'Section 2.2: multiples, common multiples and the lowest common multiple — explored with a number chart and repeated division.',
 		desc23:
-			'Section 2.3: HCF and LCM compared — what each one asks, how their division ladders differ, and which to use.'
+			'Section 2.3: HCF and LCM compared — what each one asks, how their repeated divisions differ, and which to use.'
 	},
 	practice: 'Practice',
 	yes: 'Yes',
@@ -175,7 +187,9 @@ const en: Copy = {
 			'Find it by **repeated division**: keep dividing by primes until you reach **1**. The primes on the left are the prime factors.',
 		hcfHeading: 'Highest common factor (HCF)',
 		hcfIntro:
-			'A number that divides them all is a **common factor**. The biggest is the **highest common factor (HCF)**. Find it with the ladder — the prime must go into **every** number. Multiply the left column.',
+			'A number that divides them all is a **common factor**. The biggest is the **highest common factor (HCF)**. Find it by repeated division — the prime must go into **every** number. Multiply the left column.',
+		hcfLanesIntro:
+			'Another way to see the HCF: cut every length into equal pieces. The longest piece that fits every number exactly is the HCF.',
 		isFactorQ: (size, total) => `Is **${size}** a factor of **${total}**?`,
 		factorYes: (total, size, rows) => `${total} = ${size} × ${rows}. Nothing left over.`,
 		leftOver: (rest) => `${rest} ${rest === 1 ? 'tile is' : 'tiles are'} left over.`
@@ -189,7 +203,9 @@ const en: Copy = {
 		lcmIntro:
 			'The smallest common multiple of 6 and 8 is 24 — the **lowest common multiple (LCM)**.',
 		lcmMethod:
-			'Use the ladder again, with one change: the prime needs to go into **at least one** number. The others come down unchanged. Stop at all 1s, then multiply the left column.',
+			'Use repeated division again, with one change: the prime needs to go into **at least one** number. The others come down unchanged. Stop at all 1s, then multiply the left column.',
+		lcmLanesIntro:
+			'See it first: each number hops along its own lane in equal jumps. The first place where every lane lands together is the LCM.',
 		isCommonQ: (n, list) => `Is **${n}** a common multiple of **${list}**?`,
 		commonYes: (n) => `Counting in each one lands on ${n}.`,
 		commonNo: (miss, n) => `Counting in ${miss}s skips over ${n}.`,
@@ -234,9 +250,12 @@ const en: Copy = {
 				lcm: 'at the same time, meet again, repeats every, smallest amount'
 			}
 		],
-		ladderHeading: 'The two ladders side by side',
+		lanesHeading: 'The same numbers on lanes',
+		lanesIntro:
+			'Left: the HCF cuts each number into equal pieces, the biggest piece that fits all of them. Right: the LCM hops along each lane until they all land together, the first meeting point.',
+		ladderHeading: 'The two repeated divisions side by side',
 		ladderIntro:
-			'Both ladders start from the same numbers. Press **Step** and watch them part ways: the HCF ladder may only use a prime that goes into every number, while the LCM ladder takes any prime that goes into one — and brings the rest down.',
+			'Both start from the same numbers. Press **Step** and watch them part ways: the HCF method may only use a prime that goes into every number, while the LCM method takes any prime that goes into one — and brings the rest down.',
 		cluesHeading: 'Which one do I need?',
 		cluesIntro: 'Look for the clue in the problem: are you splitting, or waiting?',
 		hcfClue: {
@@ -271,7 +290,7 @@ const en: Copy = {
 				kind === 'hcf'
 					? `Splitting into equal parts needs a number that goes into all of them: HCF of ${list} = ${result}.`
 					: `Waiting for things to line up needs a number they all go into: LCM of ${list} = ${result}.`,
-			tryLadder: 'Check it on the ladders: press Step and see which one gives the answer.'
+			tryLadder: 'Check it with repeated division: press Step and see which one gives the answer.'
 		}
 	},
 	compare: {
@@ -283,7 +302,7 @@ const en: Copy = {
 		broughtDown: 'Brought down unchanged',
 		summary: (hcf, lcm) =>
 			`**HCF = ${hcf}**: small, it goes into every number. **LCM = ${lcm}**: big, every number goes into it.`,
-		aria: (row) => `HCF and LCM ladders for ${row}`
+		aria: (row) => `HCF and LCM repeated division for ${row}`
 	},
 
 	tiles: {
@@ -316,7 +335,17 @@ const en: Copy = {
 			`Common multiples: **${common.join(', ')}**. All are multiples of ${first}.`,
 		one: (first) => `Common multiple: **${first}**. Next: ${first * 2}, ${first * 3}, …`
 	},
-	lanes: { label: (d) => `${d}s` },
+	lanes: {
+		label: (d) => `${d}s`,
+		piece: (size) => `pieces of ${size}`,
+		hcfTitle: 'HCF: cut into equal pieces',
+		lcmTitle: 'LCM: wait until they line up',
+		hcfCaption: (list, hcf) =>
+			`Every length of ${list} cuts into whole pieces of **${hcf}**. No longer piece fits them all: **HCF = ${hcf}**.`,
+		lcmCaption: (list, lcm) =>
+			`Jumping in ${list}, the lanes first land together on **${lcm}**: **LCM = ${lcm}**.`,
+		replay: 'Replay'
+	},
 	ladder: {
 		number: 'Number',
 		own: 'Your own',
@@ -327,7 +356,7 @@ const en: Copy = {
 			single
 				? 'Enter one whole number from 2 to 999.'
 				: 'Enter 2 to 4 whole numbers from 2 to 999, separated by commas.',
-		aria: (row) => `Division ladder for ${row}`,
+		aria: (row) => `Repeated division for ${row}`,
 		divisor: (d) => `divisor ${d}`,
 		finished: 'Finished',
 		divideBy: 'Divide by…',
@@ -369,11 +398,11 @@ const ms: Copy = {
 	},
 	meta: {
 		desc21:
-			'Bahagian 2.1: faktor, faktor perdana dan faktor sepunya terbesar — diterokai dengan jubin dan tangga pembahagian langkah demi langkah.',
+			'Bahagian 2.1: faktor, faktor perdana dan faktor sepunya terbesar — diterokai dengan jubin dan pembahagian berulang langkah demi langkah.',
 		desc22:
-			'Bahagian 2.2: gandaan, gandaan sepunya dan gandaan sepunya terkecil — diterokai dengan carta nombor dan tangga pembahagian.',
+			'Bahagian 2.2: gandaan, gandaan sepunya dan gandaan sepunya terkecil — diterokai dengan carta nombor dan pembahagian berulang.',
 		desc23:
-			'Bahagian 2.3: FSTB dan GSTK dibandingkan — apa yang ditanya, bagaimana tangga pembahagian berbeza, dan bila menggunakan yang mana satu.'
+			'Bahagian 2.3: FSTB dan GSTK dibandingkan — apa yang ditanya, bagaimana pembahagian berulang berbeza, dan bila menggunakan yang mana satu.'
 	},
 	practice: 'Latihan',
 	yes: 'Ya',
@@ -398,7 +427,9 @@ const ms: Copy = {
 			'Cari dengan **pembahagian berulang**: terus bahagi dengan nombor perdana sehingga mencapai **1**. Nombor perdana di sebelah kiri ialah faktor perdana.',
 		hcfHeading: 'Faktor sepunya terbesar (FSTB)',
 		hcfIntro:
-			'Nombor yang membahagikan kesemuanya ialah **faktor sepunya**. Yang terbesar ialah **faktor sepunya terbesar (FSTB)**. Cari dengan tangga — nombor perdana mesti membahagi **setiap** nombor. Darabkan lajur kiri.',
+			'Nombor yang membahagikan kesemuanya ialah **faktor sepunya**. Yang terbesar ialah **faktor sepunya terbesar (FSTB)**. Cari dengan pembahagian berulang — nombor perdana mesti membahagi **setiap** nombor. Darabkan lajur kiri.',
+		hcfLanesIntro:
+			'Cara lain untuk melihat FSTB: potong setiap panjang kepada bahagian yang sama. Bahagian terpanjang yang muat tepat pada setiap nombor ialah FSTB.',
 		isFactorQ: (size, total) => `Adakah **${size}** faktor bagi **${total}**?`,
 		factorYes: (total, size, rows) => `${total} = ${size} × ${rows}. Tiada baki.`,
 		leftOver: (rest) => `${rest} jubin berbaki.`
@@ -412,7 +443,9 @@ const ms: Copy = {
 		lcmIntro:
 			'Gandaan sepunya yang paling kecil bagi 6 dan 8 ialah 24 — **gandaan sepunya terkecil (GSTK)**.',
 		lcmMethod:
-			'Guna tangga itu semula, dengan satu perubahan: nombor perdana perlu membahagi **sekurang-kurangnya satu** nombor. Yang lain diturunkan tanpa berubah. Berhenti apabila semuanya 1, kemudian darabkan lajur kiri.',
+			'Guna pembahagian berulang semula, dengan satu perubahan: nombor perdana perlu membahagi **sekurang-kurangnya satu** nombor. Yang lain diturunkan tanpa berubah. Berhenti apabila semuanya 1, kemudian darabkan lajur kiri.',
+		lcmLanesIntro:
+			'Lihat dahulu: setiap nombor melompat di lorongnya sendiri dengan lompatan yang sama. Tempat pertama semua lorong mendarat serentak ialah GSTK.',
 		isCommonQ: (n, list) => `Adakah **${n}** gandaan sepunya bagi **${list}**?`,
 		commonYes: (n) => `Mengira dalam setiap satu akan sampai ke ${n}.`,
 		commonNo: (miss, n) => `Mengira dalam ${miss} melangkaui ${n}.`,
@@ -457,9 +490,12 @@ const ms: Copy = {
 				lcm: 'pada masa yang sama, bertemu semula, berulang setiap, jumlah terkecil'
 			}
 		],
-		ladderHeading: 'Dua tangga bersebelahan',
+		lanesHeading: 'Nombor yang sama pada lorong',
+		lanesIntro:
+			'Kiri: FSTB memotong setiap nombor kepada bahagian yang sama, bahagian terbesar yang muat pada semuanya. Kanan: GSTK melompat di setiap lorong sehingga semuanya mendarat serentak, titik pertemuan pertama.',
+		ladderHeading: 'Dua pembahagian berulang bersebelahan',
 		ladderIntro:
-			'Kedua-dua tangga bermula dengan nombor yang sama. Tekan **Langkah** dan lihat cara kedua-duanya berbeza: tangga FSTB hanya boleh menggunakan nombor perdana yang membahagi setiap nombor, manakala tangga GSTK menerima mana-mana nombor perdana yang membahagi satu nombor — dan menurunkan yang lain.',
+			'Kedua-duanya bermula dengan nombor yang sama. Tekan **Langkah** dan lihat cara kedua-duanya berbeza: kaedah FSTB hanya boleh menggunakan nombor perdana yang membahagi setiap nombor, manakala kaedah GSTK menerima mana-mana nombor perdana yang membahagi satu nombor — dan menurunkan yang lain.',
 		cluesHeading: 'Yang mana satu perlu saya guna?',
 		cluesIntro: 'Cari petunjuk dalam masalah: adakah anda membahagi, atau menunggu?',
 		hcfClue: {
@@ -494,7 +530,8 @@ const ms: Copy = {
 				kind === 'hcf'
 					? `Membahagi sama banyak memerlukan nombor yang membahagi kesemuanya: FSTB bagi ${list} = ${result}.`
 					: `Menunggu sehingga serentak memerlukan nombor yang boleh dibahagi oleh kesemuanya: GSTK bagi ${list} = ${result}.`,
-			tryLadder: 'Semak dengan tangga: tekan Langkah dan lihat yang mana satu memberi jawapan.'
+			tryLadder:
+				'Semak dengan pembahagian berulang: tekan Langkah dan lihat yang mana satu memberi jawapan.'
 		}
 	},
 	compare: {
@@ -506,7 +543,7 @@ const ms: Copy = {
 		broughtDown: 'Diturunkan tanpa berubah',
 		summary: (hcf, lcm) =>
 			`**FSTB = ${hcf}**: kecil, ia membahagi setiap nombor. **GSTK = ${lcm}**: besar, setiap nombor membahagi ia.`,
-		aria: (row) => `Tangga FSTB dan GSTK untuk ${row}`
+		aria: (row) => `Pembahagian berulang FSTB dan GSTK untuk ${row}`
 	},
 
 	tiles: {
@@ -540,7 +577,17 @@ const ms: Copy = {
 			`Gandaan sepunya: **${common.join(', ')}**. Semuanya gandaan bagi ${first}.`,
 		one: (first) => `Gandaan sepunya: **${first}**. Seterusnya: ${first * 2}, ${first * 3}, …`
 	},
-	lanes: { label: (d) => `+${d}` },
+	lanes: {
+		label: (d) => `+${d}`,
+		piece: (size) => `bahagian ${size}`,
+		hcfTitle: 'FSTB: potong kepada bahagian yang sama',
+		lcmTitle: 'GSTK: tunggu sehingga serentak',
+		hcfCaption: (list, hcf) =>
+			`Setiap panjang ${list} terpotong kepada bahagian penuh bernilai **${hcf}**. Tiada bahagian lebih panjang yang muat pada semuanya: **FSTB = ${hcf}**.`,
+		lcmCaption: (list, lcm) =>
+			`Melompat dengan ${list}, semua lorong mula-mula mendarat serentak pada **${lcm}**: **GSTK = ${lcm}**.`,
+		replay: 'Main semula'
+	},
 	ladder: {
 		number: 'Nombor',
 		own: 'Nombor sendiri',
@@ -551,7 +598,7 @@ const ms: Copy = {
 			single
 				? 'Masukkan satu nombor bulat antara 2 dengan 999.'
 				: 'Masukkan 2 hingga 4 nombor bulat antara 2 dengan 999, dipisahkan dengan koma.',
-		aria: (row) => `Tangga pembahagian untuk ${row}`,
+		aria: (row) => `Pembahagian berulang untuk ${row}`,
 		divisor: (d) => `pembahagi ${d}`,
 		finished: 'Selesai',
 		divideBy: 'Bahagi dengan…',

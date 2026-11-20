@@ -3,6 +3,7 @@
 	import LatihanShell from '$lib/transformasi/LatihanShell.svelte';
 	import DivisionLadder from '$lib/factors-and-multiples/DivisionLadder.svelte';
 	import CommonMultiples from '$lib/factors-and-multiples/CommonMultiples.svelte';
+	import LanesExplorer from '$lib/factors-and-multiples/LanesExplorer.svelte';
 	import MultipleLanes from '$lib/factors-and-multiples/MultipleLanes.svelte';
 	import { startLatihan } from '$lib/transformasi/latihan.svelte';
 	import {
@@ -84,6 +85,16 @@
 	<section class="space-y-4">
 		<h2 class="text-2xl font-semibold">{t.s22.lcmHeading}</h2>
 		<p class="leading-relaxed"><Rich text={t.s22.lcmIntro} /></p>
+		<p class="leading-relaxed"><Rich text={t.s22.lcmLanesIntro} /></p>
+		<LanesExplorer
+			show="lcm"
+			presets={[
+				[4, 6],
+				[6, 8],
+				[3, 6, 9],
+				[10, 12, 15]
+			]}
+		/>
 		<p class="leading-relaxed"><Rich text={t.s22.lcmMethod} /></p>
 		<DivisionLadder
 			mode="lcm"

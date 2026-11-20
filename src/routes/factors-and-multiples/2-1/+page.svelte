@@ -2,6 +2,7 @@
 	import LessonShell from '$lib/transformasi/LessonShell.svelte';
 	import LatihanShell from '$lib/transformasi/LatihanShell.svelte';
 	import DivisionLadder from '$lib/factors-and-multiples/DivisionLadder.svelte';
+	import LanesExplorer from '$lib/factors-and-multiples/LanesExplorer.svelte';
 	import FactorTiles from '$lib/factors-and-multiples/FactorTiles.svelte';
 	import TileArray from '$lib/factors-and-multiples/TileArray.svelte';
 	import { startLatihan } from '$lib/transformasi/latihan.svelte';
@@ -93,6 +94,16 @@
 	<section class="space-y-4">
 		<h2 class="text-2xl font-semibold">{t.s21.hcfHeading}</h2>
 		<p class="leading-relaxed"><Rich text={t.s21.hcfIntro} /></p>
+		<p class="leading-relaxed"><Rich text={t.s21.hcfLanesIntro} /></p>
+		<LanesExplorer
+			show="hcf"
+			presets={[
+				[24, 36],
+				[48, 72],
+				[18, 24],
+				[36, 60, 72]
+			]}
+		/>
 		<DivisionLadder
 			mode="hcf"
 			custom

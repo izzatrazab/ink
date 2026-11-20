@@ -1,6 +1,9 @@
 <script lang="ts">
 	import LessonShell from '$lib/transformasi/LessonShell.svelte';
 	import LatihanShell from '$lib/transformasi/LatihanShell.svelte';
+	import HcfLanes from '$lib/factors-and-multiples/HcfLanes.svelte';
+	import MultipleLanes from '$lib/factors-and-multiples/MultipleLanes.svelte';
+	import LanesExplorer from '$lib/factors-and-multiples/LanesExplorer.svelte';
 	import CompareLadders from '$lib/factors-and-multiples/CompareLadders.svelte';
 	import { startLatihan } from '$lib/transformasi/latihan.svelte';
 	import { pairs, latihanConfig, result } from '$lib/factors-and-multiples/hcfLcmQuiz';
@@ -56,7 +59,22 @@
 		</div>
 	</section>
 
-	<!-- Beat 3 — The two ladders side by side (Explorable) -->
+	<!-- Beat 3 — The same numbers on lanes: HCF cuts, LCM waits (Explorable) -->
+	<section class="space-y-4">
+		<h2 class="text-2xl font-semibold">{t.s23.lanesHeading}</h2>
+		<p class="leading-relaxed"><Rich text={t.s23.lanesIntro} /></p>
+		<LanesExplorer
+			show="both"
+			presets={[
+				[12, 18],
+				[24, 36],
+				[8, 12],
+				[15, 20]
+			]}
+		/>
+	</section>
+
+	<!-- Beat 4 — The two ladders side by side (Explorable) -->
 	<section class="space-y-4">
 		<h2 class="text-2xl font-semibold">{t.s23.ladderHeading}</h2>
 		<p class="leading-relaxed"><Rich text={t.s23.ladderIntro} /></p>
@@ -70,7 +88,7 @@
 		/>
 	</section>
 
-	<!-- Beat 4 — Which one do I need? -->
+	<!-- Beat 5 — Which one do I need? -->
 	<section class="space-y-4">
 		<h2 class="text-2xl font-semibold">{t.s23.cluesHeading}</h2>
 		<p class="leading-relaxed">{t.s23.cluesIntro}</p>
@@ -88,7 +106,7 @@
 		</div>
 	</section>
 
-	<!-- Beat 5 — Latihan: HCF or LCM? -->
+	<!-- Beat 6 — Latihan: HCF or LCM? -->
 	<section class="space-y-4">
 		<h2 class="text-2xl font-semibold">{t.practice}</h2>
 
@@ -100,18 +118,19 @@
 			viewBox="0 0 200 120"
 		>
 			{#snippet reveal(playing)}
-				<text x="100" y="45" text-anchor="middle" class="fill-current text-2xl font-bold">
-					{latihan.pair.numbers.join(' · ')}
-				</text>
-				<text
-					x="100"
-					y="85"
-					text-anchor="middle"
-					class="fill-current text-xl font-bold transition-opacity duration-500"
-					opacity={playing ? 1 : 0}
-				>
-					{answerKind === 'hcf' ? t.ladder.hcf : t.ladder.lcm} = {answer}
-				</text>
+				<!-- Until answered, only the numbers show: the lane type would give the kind away. -->
+				{#if !playing}
+					<text x="100" y="65" text-anchor="middle" class="fill-current text-2xl font-bold">
+						{latihan.pair.numbers.join(' · ')}
+					</text>
+				{/if}
+				<g opacity={playing ? 1 : 0}>
+					{#if answerKind === 'hcf'}
+						<HcfLanes of={latihan.pair.numbers} {playing} />
+					{:else}
+						<MultipleLanes n={answer} of={latihan.pair.numbers} {playing} />
+					{/if}
+				</g>
 			{/snippet}
 
 			{#snippet input(answered)}
