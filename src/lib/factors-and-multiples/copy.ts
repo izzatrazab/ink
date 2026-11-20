@@ -112,6 +112,13 @@ export interface Copy {
 		hcfCaption: (list: string, hcf: number) => string;
 		lcmCaption: (list: string, lcm: number) => string;
 		replay: string;
+		addLane: string;
+		removeLane: (n: number) => string;
+		laneLabel: (n: number) => string;
+		addSecond: string;
+		ownInvalid: string;
+		tooLong: (lcm: number) => string;
+		tooManyPieces: (hcf: number) => string;
 	};
 	ladder: {
 		number: string;
@@ -344,7 +351,15 @@ const en: Copy = {
 			`Every length of ${list} cuts into whole pieces of **${hcf}**. No longer piece fits them all: **HCF = ${hcf}**.`,
 		lcmCaption: (list, lcm) =>
 			`Jumping in ${list}, the lanes first land together on **${lcm}**: **LCM = ${lcm}**.`,
-		replay: 'Replay'
+		replay: 'Replay',
+		addLane: 'Add lane',
+		removeLane: (n) => `Remove lane ${n}`,
+		laneLabel: (n) => `Lane ${n}`,
+		addSecond: 'Type a number on the lane, then add a second lane to compare.',
+		ownInvalid: 'Use whole numbers from 2 to 999, each different.',
+		tooLong: (lcm) => `The LCM is ${lcm}, too long to draw. Try smaller numbers.`,
+		tooManyPieces: (hcf) =>
+			`With HCF = ${hcf}, the pieces would be too small to draw. Try other numbers.`
 	},
 	ladder: {
 		number: 'Number',
@@ -586,7 +601,16 @@ const ms: Copy = {
 			`Setiap panjang ${list} terpotong kepada bahagian penuh bernilai **${hcf}**. Tiada bahagian lebih panjang yang muat pada semuanya: **FSTB = ${hcf}**.`,
 		lcmCaption: (list, lcm) =>
 			`Melompat dengan ${list}, semua lorong mula-mula mendarat serentak pada **${lcm}**: **GSTK = ${lcm}**.`,
-		replay: 'Main semula'
+		replay: 'Main semula',
+		addLane: 'Tambah lorong',
+		removeLane: (n) => `Buang lorong ${n}`,
+		laneLabel: (n) => `Lorong ${n}`,
+		addSecond: 'Taip nombor pada lorong, kemudian tambah lorong kedua untuk membandingkan.',
+		ownInvalid: 'Guna nombor bulat dari 2 hingga 999, setiap satu berbeza.',
+		tooLong: (lcm) =>
+			`GSTK ialah ${lcm}, terlalu panjang untuk dilukis. Cuba nombor yang lebih kecil.`,
+		tooManyPieces: (hcf) =>
+			`Dengan FSTB = ${hcf}, bahagiannya terlalu kecil untuk dilukis. Cuba nombor lain.`
 	},
 	ladder: {
 		number: 'Nombor',

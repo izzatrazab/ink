@@ -52,7 +52,7 @@
 	<meta name="description" content={description} />
 </svelte:head>
 
-<div class="container mx-auto max-w-2xl space-y-12 px-8 py-16">
+<div class="container mx-auto max-w-4xl space-y-12 px-8 py-16">
 	<div class="flex items-start justify-between gap-4">
 		<hgroup class="space-y-2">
 			<p class="text-sm font-semibold tracking-wide uppercase opacity-60">

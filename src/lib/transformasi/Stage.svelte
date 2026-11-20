@@ -15,10 +15,18 @@
 		/** When set, draw a Cartesian grid spanning −range…+range behind children. */
 		range?: number;
 		class?: string;
+		/** True when the stage holds form controls: a plain group, not a flat image. */
+		interactive?: boolean;
 		children?: Snippet;
 	}
 
-	let { viewBox = '0 0 100 100', range, class: className = '', children }: Props = $props();
+	let {
+		viewBox = '0 0 100 100',
+		range,
+		class: className = '',
+		interactive = false,
+		children
+	}: Props = $props();
 
 	const resolvedViewBox = $derived(range !== undefined ? VIEW_BOX : viewBox);
 </script>
@@ -27,7 +35,7 @@
 	viewBox={resolvedViewBox}
 	class={className}
 	xmlns="http://www.w3.org/2000/svg"
-	role="img"
+	role={interactive ? 'group' : 'img'}
 	preserveAspectRatio="xMidYMid meet"
 >
 	{#if range !== undefined}

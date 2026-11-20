@@ -97,6 +97,7 @@
 		<p class="leading-relaxed"><Rich text={t.s21.hcfLanesIntro} /></p>
 		<LanesExplorer
 			show="hcf"
+			custom
 			presets={[
 				[24, 36],
 				[48, 72],

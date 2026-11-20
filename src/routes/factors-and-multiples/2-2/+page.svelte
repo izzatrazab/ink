@@ -88,6 +88,7 @@
 		<p class="leading-relaxed"><Rich text={t.s22.lcmLanesIntro} /></p>
 		<LanesExplorer
 			show="lcm"
+			custom
 			presets={[
 				[4, 6],
 				[6, 8],

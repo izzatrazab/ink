@@ -65,6 +65,7 @@
 		<p class="leading-relaxed"><Rich text={t.s23.lanesIntro} /></p>
 		<LanesExplorer
 			show="both"
+			custom
 			presets={[
 				[12, 18],
 				[24, 36],
