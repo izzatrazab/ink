@@ -93,6 +93,14 @@
 	<section class="space-y-4">
 		<h2 class="text-2xl font-semibold">{t.s21.hcfHeading}</h2>
 		<p class="leading-relaxed"><Rich text={t.s21.hcfIntro} /></p>
-		<DivisionLadder mode="hcf" presets={[[36, 60, 72]]} />
+		<DivisionLadder
+			mode="hcf"
+			custom
+			presets={[
+				[36, 60, 72],
+				[48, 72],
+				[45, 75, 120]
+			]}
+		/>
 	</section>
 </LessonShell>

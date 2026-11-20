@@ -72,6 +72,13 @@ export const chapters: Chapter[] = [
 				title: 'Multiples, Common Multiples and Lowest Common Multiple (LCM)',
 				description: 'Counting in steps — and where two counts meet.',
 				outline: ['Common multiples', 'Lowest common multiple (LCM)', 'Solving problems with LCM']
+			},
+			{
+				number: '2.3',
+				slug: '2-3',
+				title: 'HCF and LCM Compared',
+				description: 'Splitting or waiting? Two ladders, two questions.',
+				outline: ['What each one asks', 'The two ladders side by side', 'Which one do I need?']
 			}
 		],
 		translations: {
@@ -97,6 +104,15 @@ export const chapters: Chapter[] = [
 							'Gandaan sepunya',
 							'Gandaan sepunya terkecil (GSTK)',
 							'Penyelesaian masalah dengan GSTK'
+						]
+					},
+					'2-3': {
+						title: 'FSTB dan GSTK Dibandingkan',
+						description: 'Membahagi atau menunggu? Dua tangga, dua soalan.',
+						outline: [
+							'Apa yang ditanya oleh setiap satu',
+							'Dua tangga bersebelahan',
+							'Yang mana satu perlu saya guna?'
 						]
 					}
 				}

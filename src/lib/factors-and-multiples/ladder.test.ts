@@ -1,5 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { hint, isDone, narrate, product, rowsOf, tryDivisor, type LadderMode } from './ladder';
+import {
+	autoDivisors,
+	hint,
+	isDone,
+	narrate,
+	product,
+	rowsOf,
+	tryDivisor,
+	type LadderMode
+} from './ladder';
 import { hcf, lcm } from './numbers';
 import { copy } from './copy';
 
@@ -166,5 +175,18 @@ describe('narrate', () => {
 				'Bahagi dengan 2: 3, 6, 9 → 3, 3, 9. 3 dan 9 diturunkan tanpa berubah.'
 			);
 		});
+	});
+});
+
+describe('autoDivisors', () => {
+	it('works the HCF ladder to the point no prime goes into every number', () => {
+		expect(autoDivisors([36, 60, 72], 'hcf')).toEqual([2, 2, 3]);
+		expect(autoDivisors([8, 9], 'hcf')).toEqual([]);
+	});
+	it('works the LCM ladder until every number is 1', () => {
+		expect(autoDivisors([12, 18], 'lcm')).toEqual([2, 2, 3, 3]);
+	});
+	it('works a single number down to its prime factors', () => {
+		expect(autoDivisors([60], 'single')).toEqual([2, 2, 3, 5]);
 	});
 });

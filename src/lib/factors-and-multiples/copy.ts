@@ -10,9 +10,9 @@ import type { Language } from '$lib/chapters';
 import type { LatihanWording } from '$lib/transformasi/latihanWording';
 
 export interface Copy {
-	nav: { next21: string; prev22: string; next22: string };
+	nav: { next21: string; prev22: string; next22: string; prev23: string; next23: string };
 	/** Page <meta name="description"> per Section (titles live in the chapter registry). */
-	meta: { desc21: string; desc22: string };
+	meta: { desc21: string; desc22: string; desc23: string };
 	practice: string;
 	yes: string;
 	no: string;
@@ -46,6 +46,30 @@ export interface Copy {
 		and: (numbers: number[]) => string;
 	};
 
+	s23: {
+		introHeading: string;
+		intro: string;
+		tableHeading: string;
+		aspectHead: string;
+		rows: { aspect: string; hcf: string; lcm: string }[];
+		ladderHeading: string;
+		ladderIntro: string;
+		cluesHeading: string;
+		cluesIntro: string;
+		hcfClue: { title: string; problem: string; answer: string };
+		lcmClue: { title: string; problem: string; answer: string };
+	};
+	compare: {
+		hcfRule: string;
+		lcmRule: string;
+		step: string;
+		stepsTaken: (n: number) => string;
+		stopHcf: string;
+		broughtDown: string;
+		summary: (hcf: number, lcm: number) => string;
+		aria: (row: string) => string;
+	};
+
 	tiles: {
 		fewer: string;
 		more: string;
@@ -72,6 +96,11 @@ export interface Copy {
 	lanes: { label: (d: number) => string };
 	ladder: {
 		number: string;
+		own: string;
+		ownPlaceholder: string;
+		ownGo: string;
+		ownEmpty: string;
+		ownInvalid: (single: boolean) => string;
 		aria: (row: string) => string;
 		divisor: (d: number) => string;
 		finished: string;
@@ -104,13 +133,17 @@ const en: Copy = {
 	nav: {
 		next21: '2.1 Factors and HCF →',
 		prev22: '← 2.1 Factors and HCF',
-		next22: '2.2 Multiples and LCM →'
+		next22: '2.2 Multiples and LCM →',
+		prev23: '← 2.2 Multiples and LCM',
+		next23: '2.3 HCF vs LCM →'
 	},
 	meta: {
 		desc21:
 			'Section 2.1: factors, prime factors and the highest common factor — explored with tiles and a step-by-step division ladder.',
 		desc22:
-			'Section 2.2: multiples, common multiples and the lowest common multiple — explored with a number chart and a division ladder.'
+			'Section 2.2: multiples, common multiples and the lowest common multiple — explored with a number chart and a division ladder.',
+		desc23:
+			'Section 2.3: HCF and LCM compared — what each one asks, how their division ladders differ, and which to use.'
 	},
 	practice: 'Practice',
 	yes: 'Yes',
@@ -156,6 +189,74 @@ const en: Copy = {
 		and: (nums) => nums.join(', ').replace(/, (\d+)$/, ' and $1')
 	},
 
+	s23: {
+		introHeading: 'Same numbers, two different questions',
+		intro:
+			'Take 12 and 18. The **HCF** asks: what is the biggest number that goes **into** both? The **LCM** asks: what is the smallest number that **both go into**? One looks down, the other looks up.',
+		tableHeading: 'HCF and LCM at a glance',
+		aspectHead: '',
+		rows: [
+			{
+				aspect: 'The question',
+				hcf: 'Biggest number that divides **all** of them',
+				lcm: 'Smallest number that **all** of them divide'
+			},
+			{
+				aspect: 'The prime must go into',
+				hcf: '**every** number',
+				lcm: '**at least one** number'
+			},
+			{
+				aspect: 'A number it does not divide',
+				hcf: 'The prime is refused',
+				lcm: 'The number comes down unchanged'
+			},
+			{
+				aspect: 'You stop when',
+				hcf: 'No prime goes into every number',
+				lcm: 'Every number is 1'
+			},
+			{
+				aspect: 'Size of the answer',
+				hcf: 'At most the smallest number',
+				lcm: 'At least the biggest number'
+			},
+			{
+				aspect: 'Clues in a problem',
+				hcf: 'share equally, split into groups, greatest size',
+				lcm: 'at the same time, meet again, repeats every, smallest amount'
+			}
+		],
+		ladderHeading: 'The two ladders side by side',
+		ladderIntro:
+			'Both ladders start from the same numbers. Press **Step** and watch them part ways: the HCF ladder may only use a prime that goes into every number, while the LCM ladder takes any prime that goes into one — and brings the rest down.',
+		cluesHeading: 'Which one do I need?',
+		cluesIntro: 'Look for the clue in the problem: are you splitting, or waiting?',
+		hcfClue: {
+			title: 'Splitting → HCF',
+			problem:
+				'A florist has 24 roses and 36 tulips. She makes identical bouquets using every flower. What is the greatest number of bouquets?',
+			answer: 'HCF of 24 and 36 = **12** bouquets.'
+		},
+		lcmClue: {
+			title: 'Waiting → LCM',
+			problem:
+				'One bus leaves every 12 minutes and another every 18 minutes. They leave together now. When do they next leave together?',
+			answer: 'LCM of 12 and 18 = **36** minutes.'
+		}
+	},
+	compare: {
+		hcfRule: 'The prime must go into **every** number.',
+		lcmRule: 'The prime must go into **at least one** number.',
+		step: 'Step',
+		stepsTaken: (n) => `Step ${n}`,
+		stopHcf: 'Stop: no prime goes into all of them.',
+		broughtDown: 'Brought down unchanged',
+		summary: (hcf, lcm) =>
+			`**HCF = ${hcf}**: small, it goes into every number. **LCM = ${lcm}**: big, every number goes into it.`,
+		aria: (row) => `HCF and LCM ladders for ${row}`
+	},
+
 	tiles: {
 		fewer: 'Fewer tiles',
 		more: 'More tiles',
@@ -189,6 +290,14 @@ const en: Copy = {
 	lanes: { label: (d) => `${d}s` },
 	ladder: {
 		number: 'Number',
+		own: 'Your own',
+		ownPlaceholder: 'e.g. 48, 90',
+		ownGo: 'Start',
+		ownEmpty: 'Type your own numbers above, then press Start.',
+		ownInvalid: (single) =>
+			single
+				? 'Enter one whole number from 2 to 999.'
+				: 'Enter 2 to 4 whole numbers from 2 to 999, separated by commas.',
 		aria: (row) => `Division ladder for ${row}`,
 		divisor: (d) => `divisor ${d}`,
 		finished: 'Finished',
@@ -225,13 +334,17 @@ const ms: Copy = {
 	nav: {
 		next21: '2.1 Faktor dan FSTB →',
 		prev22: '← 2.1 Faktor dan FSTB',
-		next22: '2.2 Gandaan dan GSTK →'
+		next22: '2.2 Gandaan dan GSTK →',
+		prev23: '← 2.2 Gandaan dan GSTK',
+		next23: '2.3 FSTB lawan GSTK →'
 	},
 	meta: {
 		desc21:
 			'Bahagian 2.1: faktor, faktor perdana dan faktor sepunya terbesar — diterokai dengan jubin dan tangga pembahagian langkah demi langkah.',
 		desc22:
-			'Bahagian 2.2: gandaan, gandaan sepunya dan gandaan sepunya terkecil — diterokai dengan carta nombor dan tangga pembahagian.'
+			'Bahagian 2.2: gandaan, gandaan sepunya dan gandaan sepunya terkecil — diterokai dengan carta nombor dan tangga pembahagian.',
+		desc23:
+			'Bahagian 2.3: FSTB dan GSTK dibandingkan — apa yang ditanya, bagaimana tangga pembahagian berbeza, dan bila menggunakan yang mana satu.'
 	},
 	practice: 'Latihan',
 	yes: 'Ya',
@@ -277,6 +390,74 @@ const ms: Copy = {
 		and: (nums) => nums.join(', ').replace(/, (\d+)$/, ' dan $1')
 	},
 
+	s23: {
+		introHeading: 'Nombor yang sama, dua soalan berbeza',
+		intro:
+			'Ambil 12 dan 18. **FSTB** bertanya: apakah nombor terbesar yang **membahagi** kedua-duanya? **GSTK** bertanya: apakah nombor terkecil yang **boleh dibahagi oleh** kedua-duanya? Satu melihat ke bawah, satu lagi melihat ke atas.',
+		tableHeading: 'FSTB dan GSTK sepintas lalu',
+		aspectHead: '',
+		rows: [
+			{
+				aspect: 'Soalannya',
+				hcf: 'Nombor terbesar yang membahagi **semua** nombor itu',
+				lcm: 'Nombor terkecil yang boleh dibahagi oleh **semua** nombor itu'
+			},
+			{
+				aspect: 'Nombor perdana mesti membahagi',
+				hcf: '**setiap** nombor',
+				lcm: '**sekurang-kurangnya satu** nombor'
+			},
+			{
+				aspect: 'Nombor yang tidak dapat dibahagi',
+				hcf: 'Nombor perdana itu ditolak',
+				lcm: 'Nombor itu diturunkan tanpa berubah'
+			},
+			{
+				aspect: 'Anda berhenti apabila',
+				hcf: 'Tiada nombor perdana yang membahagi setiap nombor',
+				lcm: 'Setiap nombor ialah 1'
+			},
+			{
+				aspect: 'Saiz jawapan',
+				hcf: 'Paling besar sama dengan nombor terkecil',
+				lcm: 'Paling kecil sama dengan nombor terbesar'
+			},
+			{
+				aspect: 'Petunjuk dalam masalah',
+				hcf: 'bahagi sama banyak, kumpulan, saiz terbesar',
+				lcm: 'pada masa yang sama, bertemu semula, berulang setiap, jumlah terkecil'
+			}
+		],
+		ladderHeading: 'Dua tangga bersebelahan',
+		ladderIntro:
+			'Kedua-dua tangga bermula dengan nombor yang sama. Tekan **Langkah** dan lihat cara kedua-duanya berbeza: tangga FSTB hanya boleh menggunakan nombor perdana yang membahagi setiap nombor, manakala tangga GSTK menerima mana-mana nombor perdana yang membahagi satu nombor — dan menurunkan yang lain.',
+		cluesHeading: 'Yang mana satu perlu saya guna?',
+		cluesIntro: 'Cari petunjuk dalam masalah: adakah anda membahagi, atau menunggu?',
+		hcfClue: {
+			title: 'Membahagi → FSTB',
+			problem:
+				'Seorang penjual bunga mempunyai 24 kuntum ros dan 36 kuntum tulip. Dia membuat jambangan yang serupa dengan menggunakan semua bunga. Apakah bilangan jambangan yang paling banyak?',
+			answer: 'FSTB bagi 24 dan 36 = **12** jambangan.'
+		},
+		lcmClue: {
+			title: 'Menunggu → GSTK',
+			problem:
+				'Sebuah bas bertolak setiap 12 minit dan sebuah lagi setiap 18 minit. Kedua-duanya bertolak bersama sekarang. Bilakah kedua-duanya bertolak bersama lagi?',
+			answer: 'GSTK bagi 12 dan 18 = **36** minit.'
+		}
+	},
+	compare: {
+		hcfRule: 'Nombor perdana mesti membahagi **setiap** nombor.',
+		lcmRule: 'Nombor perdana mesti membahagi **sekurang-kurangnya satu** nombor.',
+		step: 'Langkah',
+		stepsTaken: (n) => `Langkah ${n}`,
+		stopHcf: 'Berhenti: tiada nombor perdana yang membahagi semuanya.',
+		broughtDown: 'Diturunkan tanpa berubah',
+		summary: (hcf, lcm) =>
+			`**FSTB = ${hcf}**: kecil, ia membahagi setiap nombor. **GSTK = ${lcm}**: besar, setiap nombor membahagi ia.`,
+		aria: (row) => `Tangga FSTB dan GSTK untuk ${row}`
+	},
+
 	tiles: {
 		fewer: 'Kurangkan jubin',
 		more: 'Tambah jubin',
@@ -311,6 +492,14 @@ const ms: Copy = {
 	lanes: { label: (d) => `+${d}` },
 	ladder: {
 		number: 'Nombor',
+		own: 'Nombor sendiri',
+		ownPlaceholder: 'cth. 48, 90',
+		ownGo: 'Mula',
+		ownEmpty: 'Taip nombor anda sendiri di atas, kemudian tekan Mula.',
+		ownInvalid: (single) =>
+			single
+				? 'Masukkan satu nombor bulat antara 2 dengan 999.'
+				: 'Masukkan 2 hingga 4 nombor bulat antara 2 dengan 999, dipisahkan dengan koma.',
 		aria: (row) => `Tangga pembahagian untuk ${row}`,
 		divisor: (d) => `pembahagi ${d}`,
 		finished: 'Selesai',

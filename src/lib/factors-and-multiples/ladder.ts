@@ -113,3 +113,28 @@ export function narrate(
 	if (mode === 'single') return t.keepGoing(list(before), d, list(next));
 	return t.step(list(before), d, list(next), mode === 'lcm' ? down : '');
 }
+
+/** Reads the student's own numbers ("48, 90" or "48 90"): whole numbers 2–999,
+ *  one for a single factorisation, 2–4 otherwise. Null when the text does not fit. */
+export function parseNumbers(text: string, mode: LadderMode): number[] | null {
+	const parts = text
+		.trim()
+		.split(/[\s,;]+/)
+		.filter(Boolean);
+	const nums = parts.map((p) => (/^\d+$/.test(p) ? Number(p) : NaN));
+	const [min, max] = mode === 'single' ? [1, 1] : [2, 4];
+	if (nums.length < min || nums.length > max) return null;
+	return nums.every((n) => Number.isInteger(n) && n >= 2 && n <= 999) ? nums : null;
+}
+
+/** The whole ladder worked by always taking the smallest prime that fits — the
+ *  divisors "Watch" would choose. Empty when no prime fits at all (e.g. HCF of 8 and 9). */
+export function autoDivisors(start: number[], mode: LadderMode): number[] {
+	const divisors: number[] = [];
+	let row = start;
+	for (let d = hint(row, mode); d !== undefined; d = hint(row, mode)) {
+		divisors.push(d);
+		row = rowsOf(row, [d], mode)[1];
+	}
+	return divisors;
+}

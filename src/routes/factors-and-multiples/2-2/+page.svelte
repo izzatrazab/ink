@@ -31,6 +31,7 @@
 	number="2.2"
 	description={t.meta.desc22}
 	prev={{ href: '/factors-and-multiples/2-1', label: t.nav.prev22 }}
+	next={{ href: '/factors-and-multiples/2-3', label: t.nav.next23 }}
 >
 	<!-- Beat 1 — Multiples and common multiples (concept + Explorable: number chart) -->
 	<section class="space-y-4">
@@ -84,6 +85,14 @@
 		<h2 class="text-2xl font-semibold">{t.s22.lcmHeading}</h2>
 		<p class="leading-relaxed"><Rich text={t.s22.lcmIntro} /></p>
 		<p class="leading-relaxed"><Rich text={t.s22.lcmMethod} /></p>
-		<DivisionLadder mode="lcm" presets={[[3, 6, 9]]} />
+		<DivisionLadder
+			mode="lcm"
+			custom
+			presets={[
+				[3, 6, 9],
+				[4, 6, 10],
+				[12, 18, 30]
+			]}
+		/>
 	</section>
 </LessonShell>
