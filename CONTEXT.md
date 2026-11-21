@@ -2,7 +2,7 @@
 
 An interactive web app that _teaches_ (not merely drills) Form 2 KSSM Mathematics **Chapter 11, Transformasi Isometri**, through manipulable SVG. The chapter is built one **Section** at a time: **Transformation + Congruency** (Section 11.1, the conceptual on-ramp), **Translation** (Section 11.2), and **Reflection** (Section 11.3). Rotation (11.4), combined transformations (11.5), and rotational symmetry (11.6) remain deferred — each is a new interaction model, a separate build (ADR-0008 as amended by ADR-0010).
 
-> The site now hosts more than one chapter (ADR-0011): the chapter registry in `src/lib/chapters.ts` lists them, and `/` is a chapter index. Form 1 Chapter 2, **Factors and Multiples** (`/factors-and-multiples`, written in English to follow its textbook), has Sections 2.1, 2.2 and 2.3 built, and offers Malay as a translation (see **Reader language**). The rest of this document describes the Transformasi Isometri chapter.
+> The site now hosts more than one chapter (ADR-0011): the chapter registry in `src/lib/chapters.ts` lists them, and `/` is a chapter index. Form 1 Chapter 2, **Factors and Multiples** (`/factors-and-multiples`, written in English to follow its textbook), has Sections 2.1, 2.2 and 2.3 built plus a **Mini-games hub** (Prime Hunt, ADR-0012), and offers Malay as a translation (see **Reader language**). The rest of this document describes the Transformasi Isometri chapter.
 
 > The earlier PDF drill generator is superseded but its code is still in the repo, parked at `/generator`. ADR-0001–0007 describe that prior system, not this one.
 
@@ -82,6 +82,30 @@ _Avoid_: animation, transition, tween (those name the CSS, not the concept).
 The graded exercise that closes a **Section**: a deck of authored pairs walked one at a time, where the student commits a single answer, sees whether it is correct and a **Reveal** "why", then advances to the next pair. The commitment is final — a second answer for the same pair is ignored. Every **Section** has one. What varies between Sections is only the answer (a congruency verdict in 11.1, a **Translation vector** in 11.2, an **Axis of reflection** in 11.3), how the correct answer is derived from the pair (never authored separately), which pairs reveal the "why" on commit, and which reveal plays it (**Slide-to-overlay** in 11.1/11.2, **Fold-to-overlay** in 11.3). Everything else is shared, in three pieces: the stepping rules (`latihan.ts`, a pure state machine); the live object a Section starts from its config and deck (`startLatihan` in `latihan.svelte.ts`), which holds the snapshot, exposes the derived view-state, and owns the student's in-progress answer (the _draft_, reset to the Section's blank on each new pair); and the rendered chrome — progress counter, the **Reveal** replay, the verdict, the advance — (`LatihanShell.svelte`), which takes that live object plus each Section's answer input, feedback sentence, and **Reveal** as snippets.
 _Avoid_: quiz, drill, test, exercise engine.
 
+**Mini-game**:
+A short, replayable game a chapter offers beside its **Sections**, for practising a skill until it sticks. Unlike a **Section** it is not a textbook subsection: it has no textbook number and mirrors nothing in the textbook. Unlike a **Latihan** it is not a graded deck closing a Section; the student plays as many rounds as they like. A chapter's mini-games are listed on its **Mini-games hub**, which the chapter landing links to apart from its Sections.
+_Avoid_: Section 2.4 (it has no textbook number), activity, extra, exercise.
+
+**Mini-games hub**:
+The unnumbered page that lists a chapter's **Mini-games** (e.g. `/factors-and-multiples/mini-games`), with each game on its own route beneath it.
+_Avoid_: games page, arcade.
+
+**Prime Hunt**:
+The first **Mini-game**, in Factors and Multiples: a board of numbers appears and the student taps every prime. The student recalls the primes: nothing marks which numbers are prime until one is tapped. A wrong tap is called out at once and shows why the number is not prime, as a factor pair (e.g. 51 = 3 × 17). Played in three **Prime tiers**.
+_Avoid_: prime quiz, prime bingo.
+
+**Prime tier**:
+One of the ranges of primes a student memorises in **Prime Hunt**: 2–20, 2–50, 2–100. A student works through the tiers in order, each unlocking when the one before it is mastered: when every prime in it is a **Known prime**.
+_Avoid_: level, stage.
+
+**Board**:
+One round of **Prime Hunt**: 16 numbers drawn from a **Prime tier**, a mix of primes, composites and look-alikes (odd composites such as 51, 57, 87, 91 that pass for prime), and occasionally 1. The student taps the numbers they think are prime and every tap is judged at once: a prime turns green with a chime, a non-prime turns red with a buzz and shows why (its factor pair, e.g. 51 = 3 × 17). A counter shows how many primes are left to find. The Board is complete when the last prime is found; it has no Check step. Untimed, and scored 1–3 stars by the number of mistakes (none, one, more); a perfect Board earns confetti. Sound can be muted.
+_Avoid_: round, level, puzzle, grid (a Board is not the tier's full table).
+
+**Known prime**:
+A prime the student has found **cleanly** on two **Boards**: found before any mistake on that Board. A prime found after a wrong tap does not count, so tapping at random cannot earn it. A wrong tap never takes anything away. Boards favour primes that are not yet known. Kept in the reader's browser, so it lasts across visits.
+_Avoid_: learned, mastered (that word is for a **Prime tier**), memorised.
+
 **Reader language** (_Bahasa pembaca_):
 The language the reader chose to read in, remembered across pages and visits. It applies only to a chapter that offers it; a chapter that does not offer the choice shows its own language. Until the reader chooses, every chapter shows its own language.
 _Avoid_: locale, i18n, user language.
@@ -108,6 +132,8 @@ _Avoid_: autoplay, animation, demo.
 - An **Isometric transformation** produces an **Image** that is **congruent** to its **Object**.
 - A **Translation** is an **Isometric transformation** described by exactly one **Translation vector**; it preserves shape, size, and **Orientation**.
 - A **Section** mirrors one textbook subsection and contains at most one primary **Explorable** and one **Latihan**.
+- A chapter may list **Mini-games** on a **Mini-games hub**, apart from its **Sections**. A **Mini-game** is not graded by a **Latihan** and does not use the Latihan deck-walker.
+- **Prime Hunt** is played one **Board** at a time within a **Prime tier**; its **Known primes** decide when the next tier unlocks.
 - Section 11.2's **Explorable** is vector-controlled: the student sets the **Translation vector**, and the **Image** slides to match while the **Object** stays fixed.
 - The **Slide-to-overlay** reveal derives its motion from the geometry seam (`translate`/`translationVector`); Section 11.2's **Explorable** is the same mechanic with a student-controlled **Translation vector** instead of a scripted one.
 - A **Reflection** is an **Isometric transformation** described by exactly one **Axis of reflection**; it preserves shape and size but **reverses Orientation**.

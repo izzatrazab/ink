@@ -1,6 +1,12 @@
 <script lang="ts">
 	import SectionCard from '$lib/transformasi/SectionCard.svelte';
-	import { chapterLabel, chapterText, sectionHref, type Chapter } from '$lib/chapters';
+	import {
+		chapterLabel,
+		chapterText,
+		miniGamesHref,
+		sectionHref,
+		type Chapter
+	} from '$lib/chapters';
 	import { reader } from '$lib/language.svelte';
 	import LanguageToggle from './LanguageToggle.svelte';
 
@@ -50,5 +56,16 @@
 		</nav>
 	{:else}
 		<p class="ink-card p-6 opacity-80">{t.noSections}</p>
+	{/if}
+
+	<!-- Mini-games sit beside the Sections, not among them: no textbook number (ADR-0012). -->
+	{#if chapter.miniGames?.length}
+		<a href={miniGamesHref(chapter)} class="ink-card block space-y-1 p-6">
+			<span class="bg-secondary/10 text-secondary rounded-full px-3 py-0.5 text-sm font-semibold"
+				>{t.play}</span
+			>
+			<span class="font-display block text-xl font-bold">{t.miniGames}</span>
+			<span class="block opacity-70">{t.miniGamesBlurb}</span>
+		</a>
 	{/if}
 </div>

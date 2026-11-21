@@ -153,6 +153,41 @@ export interface Copy {
 		keepGoing: (before: string, d: number, next: string) => string;
 		step: (before: string, d: number, next: string, down: string) => string;
 	};
+	games: {
+		/** <meta name="description"> for the mini-games hub. */
+		hubDesc: string;
+		primeHunt: {
+			/** <meta name="description"> for the game page. */
+			desc: string;
+			intro: string;
+			loading: string;
+			tierGroup: string;
+			tier: (max: number) => string;
+			lockedTier: (max: number, before: number) => string;
+			known: (known: number, total: number) => string;
+			studyOpen: string;
+			studyClose: string;
+			studyHeading: (max: number) => string;
+			studyNote: string;
+			studyLocked: string;
+			instruction: string;
+			left: (n: number) => string;
+			soundOn: string;
+			soundOff: string;
+			next: string;
+			boardAria: string;
+			cell: (n: number, state: 'open' | 'found' | 'wrong') => string;
+			headline: (stars: 1 | 2 | 3) => string;
+			stars: (stars: number) => string;
+			streak: (n: number) => string;
+			reviewHeading: string;
+			explainOne: string;
+			explainPrime: (n: number) => string;
+			explainPair: (n: number, a: number, b: number) => string;
+			wrong: string;
+			unlocked: (max: number) => string;
+		};
+	};
 }
 
 const en: Copy = {
@@ -400,6 +435,46 @@ const en: Copy = {
 			`${b} ÷ ${d} = ${n}.${down} All 1s, so stop. Multiply the left column: that is the LCM.`,
 		keepGoing: (b, d, n) => `${b} ÷ ${d} = ${n}. Keep going.`,
 		step: (b, d, n, down) => `Divide by ${d}: ${b} → ${n}.${down}`
+	},
+	games: {
+		hubDesc: 'Short games for Factors and Multiples: practise until the facts stick.',
+		primeHunt: {
+			desc: 'Prime Hunt: tap every prime number on the board, and learn the primes up to 100 by heart.',
+			intro:
+				'Sixteen numbers, some of them prime. Tap **every prime** you can spot: each tap is judged straight away. A prime has exactly two factors: 1 and itself.',
+			loading: 'Dealing a board…',
+			tierGroup: 'Primes to learn',
+			tier: (max) => `2–${max}`,
+			lockedTier: (max, before) => `2–${max}, unlocks when you know every prime up to ${before}`,
+			known: (known, total) => `${known} of ${total} primes known`,
+			studyOpen: 'Study the primes',
+			studyClose: 'Hide the primes',
+			studyHeading: (max) => `The primes up to ${max}`,
+			studyNote: 'Each of these has only two factors: 1 and itself.',
+			studyLocked: 'Studying is closed while a board is in play. Finish it first.',
+			instruction: 'Tap the numbers you think are prime.',
+			left: (n) => (n === 1 ? '1 prime left' : `${n} primes left`),
+			soundOn: 'Sound on',
+			soundOff: 'Sound off',
+			next: 'Next board',
+			boardAria: 'Numbers on the board',
+			cell: (n, state) =>
+				({
+					open: `${n}`,
+					found: `${n}: prime, found`,
+					wrong: `${n}: not prime`
+				})[state],
+			headline: (stars) =>
+				stars === 3 ? 'Perfect board!' : stars === 2 ? 'So close: one slip.' : 'Keep hunting!',
+			stars: (stars) => `${stars} of 3 stars`,
+			streak: (n) => `${n} perfect ${n === 1 ? 'board' : 'boards'} in a row`,
+			reviewHeading: 'Look again at these',
+			explainOne: '1 has only one factor, so it is not prime.',
+			explainPrime: (n) => `${n} is prime: its only factors are 1 and ${n}.`,
+			explainPair: (n, a, b) => `${n} is not prime: ${n} = ${a} × ${b}.`,
+			wrong: 'Not prime',
+			unlocked: (max) => `Well done! Primes 2–${max} unlocked.`
+		}
 	}
 };
 
@@ -652,6 +727,51 @@ const ms: Copy = {
 			`${b} ÷ ${d} = ${n}.${down} Semuanya 1, jadi berhenti. Darabkan lajur kiri: itulah GSTK.`,
 		keepGoing: (b, d, n) => `${b} ÷ ${d} = ${n}. Teruskan.`,
 		step: (b, d, n, down) => `Bahagi dengan ${d}: ${b} → ${n}.${down}`
+	},
+	games: {
+		hubDesc: 'Permainan pendek untuk Faktor dan Gandaan: berlatih sehingga fakta itu melekat.',
+		primeHunt: {
+			desc: 'Buru Nombor Perdana: ketik setiap nombor perdana pada papan, dan hafal nombor perdana sehingga 100.',
+			intro:
+				'Enam belas nombor, sebahagiannya perdana. Ketik **setiap nombor perdana** yang anda nampak: setiap ketikan dinilai serta-merta. Nombor perdana mempunyai tepat dua faktor: 1 dan dirinya sendiri.',
+			loading: 'Mengedar papan…',
+			tierGroup: 'Nombor perdana untuk dipelajari',
+			tier: (max) => `2–${max}`,
+			lockedTier: (max, before) =>
+				`2–${max}, dibuka apabila anda tahu semua nombor perdana sehingga ${before}`,
+			known: (known, total) => `${known} daripada ${total} nombor perdana diketahui`,
+			studyOpen: 'Pelajari nombor perdana',
+			studyClose: 'Sembunyikan nombor perdana',
+			studyHeading: (max) => `Nombor perdana sehingga ${max}`,
+			studyNote: 'Setiap satu mempunyai dua faktor sahaja: 1 dan dirinya sendiri.',
+			studyLocked: 'Pembelajaran ditutup semasa papan dimainkan. Habiskan papan dahulu.',
+			instruction: 'Ketik nombor yang anda fikir perdana.',
+			left: (n) => `${n} nombor perdana lagi`,
+			soundOn: 'Bunyi hidup',
+			soundOff: 'Bunyi mati',
+			next: 'Papan seterusnya',
+			boardAria: 'Nombor pada papan',
+			cell: (n, state) =>
+				({
+					open: `${n}`,
+					found: `${n}: perdana, dijumpai`,
+					wrong: `${n}: bukan perdana`
+				})[state],
+			headline: (stars) =>
+				stars === 3
+					? 'Papan sempurna!'
+					: stars === 2
+						? 'Hampir: satu kesilapan.'
+						: 'Teruskan memburu!',
+			stars: (stars) => `${stars} daripada 3 bintang`,
+			streak: (n) => `${n} papan sempurna berturut-turut`,
+			reviewHeading: 'Lihat semula yang ini',
+			explainOne: '1 hanya mempunyai satu faktor, jadi ia bukan nombor perdana.',
+			explainPrime: (n) => `${n} ialah nombor perdana: faktornya hanya 1 dan ${n}.`,
+			explainPair: (n, a, b) => `${n} bukan nombor perdana: ${n} = ${a} × ${b}.`,
+			wrong: 'Bukan perdana',
+			unlocked: (max) => `Hebat! Nombor perdana 2–${max} dibuka.`
+		}
 	}
 };
 

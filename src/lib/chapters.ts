@@ -19,11 +19,21 @@ export interface SectionMeta {
 	ready?: boolean;
 }
 
-/** A chapter's text in another language: same shape, sections matched by `slug`. */
+/** A Mini-game a chapter offers beside its Sections: no textbook number (ADR-0012). */
+export interface MiniGameMeta {
+	/** Route segment under the chapter's mini-games hub, e.g. "prime-hunt". */
+	slug: string;
+	title: string;
+	/** One-line summary shown on the hub. */
+	description: string;
+}
+
+/** A chapter's text in another language: same shape, sections and games matched by `slug`. */
 export interface ChapterTranslation {
 	title: string;
 	description: string;
 	sections: Record<string, Pick<SectionMeta, 'title' | 'description' | 'outline'>>;
+	miniGames?: Record<string, Pick<MiniGameMeta, 'title' | 'description'>>;
 }
 
 export interface Chapter {
@@ -39,6 +49,8 @@ export interface Chapter {
 	description: string;
 	/** Sections in textbook order. Empty while a chapter is only scaffolded. */
 	sections: SectionMeta[];
+	/** Mini-games, listed on the chapter's hub at `/<slug>/mini-games`. A chapter without any has no hub. */
+	miniGames?: MiniGameMeta[];
 	/** Other languages the reader can switch to, keyed by language. A chapter with
 	 *  translations shows a language toggle; the others stay in their own language. */
 	translations?: Partial<Record<Language, ChapterTranslation>>;
@@ -85,6 +97,13 @@ export const chapters: Chapter[] = [
 				]
 			}
 		],
+		miniGames: [
+			{
+				slug: 'prime-hunt',
+				title: 'Prime Hunt',
+				description: 'Tap every prime on the board — and learn the primes by heart.'
+			}
+		],
 		translations: {
 			ms: {
 				title: 'Faktor dan Gandaan',
@@ -118,6 +137,12 @@ export const chapters: Chapter[] = [
 							'Dua pembahagian berulang bersebelahan',
 							'Yang mana satu perlu saya guna?'
 						]
+					}
+				},
+				miniGames: {
+					'prime-hunt': {
+						title: 'Buru Nombor Perdana',
+						description: 'Ketik setiap nombor perdana pada papan — dan hafal nombor perdana.'
 					}
 				}
 			}
@@ -165,7 +190,8 @@ export function localize(chapter: Chapter, lang: Language): Chapter {
 		lang,
 		title: tr.title,
 		description: tr.description,
-		sections: chapter.sections.map((s) => ({ ...s, ...tr.sections[s.slug] }))
+		sections: chapter.sections.map((s) => ({ ...s, ...tr.sections[s.slug] })),
+		miniGames: chapter.miniGames?.map((g) => ({ ...g, ...tr.miniGames?.[g.slug] }))
 	};
 }
 
@@ -182,12 +208,27 @@ export function sectionTitle(chapter: Chapter, number: string): string {
 	return section.title;
 }
 
+/** The title of the Mini-game `slug` in this chapter's language. */
+export function miniGameTitle(chapter: Chapter, slug: string): string {
+	const game = chapter.miniGames?.find((g) => g.slug === slug);
+	if (!game) throw new Error(`Unknown mini-game ${slug} in chapter ${chapter.slug}`);
+	return game.title;
+}
+
 export function chapterHref(chapter: Chapter): string {
 	return `/${chapter.slug}`;
 }
 
 export function sectionHref(chapter: Chapter, section: SectionMeta): string {
 	return `/${chapter.slug}/${section.slug}`;
+}
+
+export function miniGamesHref(chapter: Chapter): string {
+	return `/${chapter.slug}/mini-games`;
+}
+
+export function miniGameHref(chapter: Chapter, game: MiniGameMeta): string {
+	return `${miniGamesHref(chapter)}/${game.slug}`;
 }
 
 /** Fixed UI wording for a chapter's pages, in the chapter's own language. */
@@ -200,7 +241,13 @@ const ui = {
 		comingSoon: 'Coming soon',
 		noSections: 'Sections for this chapter are coming soon.',
 		sectionNav: 'Section navigation',
-		interactive: 'interactive lessons'
+		interactive: 'interactive lessons',
+		miniGames: 'Mini-games',
+		miniGamesBlurb: 'Short games to practise until it sticks.',
+		play: 'Play',
+		allMiniGames: '← All mini-games',
+		backToChapter: '← Chapter home',
+		miniGameNav: 'Mini-game navigation'
 	},
 	ms: {
 		form: 'Tingkatan',
@@ -210,7 +257,13 @@ const ui = {
 		comingSoon: 'Akan datang',
 		noSections: 'Bahagian untuk bab ini akan datang.',
 		sectionNav: 'Navigasi bahagian',
-		interactive: 'pelajaran interaktif'
+		interactive: 'pelajaran interaktif',
+		miniGames: 'Mini-permainan',
+		miniGamesBlurb: 'Permainan pendek untuk berlatih sehingga lekat di kepala.',
+		play: 'Main',
+		allMiniGames: '← Semua mini-permainan',
+		backToChapter: '← Laman bab',
+		miniGameNav: 'Navigasi mini-permainan'
 	}
 } as const;
 

@@ -6,7 +6,11 @@ import {
 	getChapter,
 	languagesOf,
 	localize,
-	sectionHref
+	miniGameHref,
+	miniGamesHref,
+	miniGameTitle,
+	sectionHref,
+	uiText
 } from './chapters';
 
 describe('chapter registry', () => {
@@ -51,5 +55,34 @@ describe('localize', () => {
 		expect(localize(t, 'en')).toBe(t);
 		const fm = getChapter('factors-and-multiples');
 		expect(localize(fm, 'en')).toBe(fm);
+	});
+});
+
+describe('mini-games', () => {
+	const fm = getChapter('factors-and-multiples');
+
+	it('lists Prime Hunt under Factors and Multiples, apart from its sections', () => {
+		expect(fm.miniGames?.map((g) => g.slug)).toEqual(['prime-hunt']);
+		expect(fm.sections.map((s) => s.number)).toEqual(['2.1', '2.2', '2.3']);
+	});
+	it('gives chapters without games no hub', () => {
+		expect(getChapter('transformasi-isometri').miniGames).toBeUndefined();
+	});
+	it('routes the hub and each game beneath it', () => {
+		expect(miniGamesHref(fm)).toBe('/factors-and-multiples/mini-games');
+		expect(miniGameHref(fm, fm.miniGames![0])).toBe('/factors-and-multiples/mini-games/prime-hunt');
+	});
+	it('translates the games along with the chapter', () => {
+		const ms = localize(fm, 'ms');
+		expect(miniGameTitle(fm, 'prime-hunt')).toBe('Prime Hunt');
+		expect(miniGameTitle(ms, 'prime-hunt')).toBe('Buru Nombor Perdana');
+		expect(ms.miniGames![0].slug).toBe('prime-hunt');
+	});
+	it('throws on an unknown game', () => {
+		expect(() => miniGameTitle(fm, 'nope')).toThrow();
+	});
+	it('words the hub in both languages', () => {
+		expect(uiText('en').miniGames).toBe('Mini-games');
+		expect(uiText('ms').miniGames).toBe('Mini-permainan');
 	});
 });
