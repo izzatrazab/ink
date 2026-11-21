@@ -1,6 +1,7 @@
 <script lang="ts">
 	import FigureCard from '$lib/transformasi/FigureCard.svelte';
 	import Stage from '$lib/transformasi/Stage.svelte';
+	import CommonFactors from './CommonFactors.svelte';
 	import HcfLanes from './HcfLanes.svelte';
 	import LaneInputs from './LaneInputs.svelte';
 	import MultipleLanes from './MultipleLanes.svelte';
@@ -99,14 +100,24 @@
 				{#if show === 'both'}
 					<h3 class="text-primary text-center font-bold">{t.lanes.hcfTitle}</h3>
 				{/if}
-				<FigureCard aspect="5/3" class="max-w-md">
-					<Stage viewBox="0 0 200 120" class="h-full w-full" interactive={isCustom}>
-						<HcfLanes of={drawHcf ? rows : bare} {playing} labels={!isCustom} />
-						{#if isCustom}{@render editing()}{/if}
-					</Stage>
-				</FigureCard>
+				{#if show === 'hcf'}
+					{#if isCustom}
+						<CommonFactors of={rows} {playing} bind:inputs onremove={remove} />
+					{:else}
+						<CommonFactors of={rows} {playing} />
+					{/if}
+				{:else}
+					<FigureCard aspect="5/3" class="max-w-md">
+						<Stage viewBox="0 0 200 120" class="h-full w-full" interactive={isCustom}>
+							<HcfLanes of={drawHcf ? rows : bare} {playing} labels={!isCustom} />
+							{#if isCustom}{@render editing()}{/if}
+						</Stage>
+					</FigureCard>
+				{/if}
 				<p class="text-center leading-relaxed" aria-live="polite">
-					{#if showHcf}
+					{#if show === 'hcf' && enough}
+						<Rich text={t.lanes.commonCaption(list, hcf(numbers))} />
+					{:else if showHcf}
 						<Rich text={t.lanes.hcfCaption(list, hcf(numbers))} />
 					{:else if enough}
 						<span class="opacity-70">{t.lanes.tooManyPieces(hcf(numbers))}</span>

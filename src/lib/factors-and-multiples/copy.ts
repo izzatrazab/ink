@@ -25,6 +25,7 @@ export interface Copy {
 		factorsIntro: string;
 		oneIsFactor: string;
 		primeHeading: string;
+		primeWhy: string;
 		primeIntro: string;
 		primeMethod: string;
 		hcfHeading: string;
@@ -111,6 +112,9 @@ export interface Copy {
 		lcmTitle: string;
 		hcfCaption: (list: string, hcf: number) => string;
 		lcmCaption: (list: string, lcm: number) => string;
+		factorsOf: (n: number) => string;
+		commonLegend: string;
+		commonCaption: (list: string, hcf: number) => string;
 		replay: string;
 		addLane: string;
 		removeLane: (n: number) => string;
@@ -223,6 +227,8 @@ const en: Copy = {
 			'A **factor** of a number divides it completely, with nothing left over. Can you split the tiles into equal rows?',
 		oneIsFactor: '1 is a factor of every number.',
 		primeHeading: 'Prime factors',
+		primeWhy:
+			'Listing every factor pair works for small numbers. For a number like 126 the list gets long, and it is easy to miss a pair. Prime numbers are the building blocks of every number, so if we break a number all the way down into primes, nothing is missed. **Repeated division** is a quick way to do that.',
 		primeIntro:
 			'A factor that is a prime number is a **prime factor**. The factors of 18 are 1, **2**, **3**, 6, 9, 18 — so 18 = 2 × 3 × 3. This is called **prime factorisation**.',
 		primeMethod:
@@ -231,7 +237,7 @@ const en: Copy = {
 		hcfIntro:
 			'A number that divides them all is a **common factor**. The biggest is the **highest common factor (HCF)**. Find it by repeated division — the prime must go into **every** number. Multiply the left column.',
 		hcfLanesIntro:
-			'Another way to see the HCF: cut every length into equal pieces. The longest piece that fits every number exactly is the HCF.',
+			'Another way to see the HCF: write each number as a product in every possible way. The factors that appear for every number are the common factors, and the biggest one is the HCF.',
 		isFactorQ: (size, total) => `Is **${size}** a factor of **${total}**?`,
 		factorYes: (total, size, rows) => `${total} = ${size} × ${rows}. Nothing left over.`,
 		leftOver: (rest) => `${rest} ${rest === 1 ? 'tile is' : 'tiles are'} left over.`
@@ -356,7 +362,7 @@ const en: Copy = {
 		complete: (total, perRow, rows) =>
 			`**${rows}** ${rows === 1 ? 'row' : 'rows'} of **${perRow}**, none left over. So **${perRow}** and **${rows}** are factors!`,
 		leftOver: (rest, perRow) => `**${rest}** left over. ${perRow} is not a factor.`,
-		found: (total, found, all) => `Factors of ${total} found: ${found} of ${all}`,
+		found: (total, found, all) => `Factor pairs of ${total} found: ${found} of ${all}`,
 		allFound: (total, factors) => `All found! Factors of ${total}: ${factors.join(', ')}.`,
 		primeNote: (total) => `Only one rectangle (1 × ${total}) — that makes it a **prime number**.`
 	},
@@ -386,6 +392,10 @@ const en: Copy = {
 			`Every length of ${list} cuts into whole pieces of **${hcf}**. No longer piece fits them all: **HCF = ${hcf}**.`,
 		lcmCaption: (list, lcm) =>
 			`Jumping in ${list}, the lanes first land together on **${lcm}**: **LCM = ${lcm}**.`,
+		factorsOf: (n) => `Factors of ${n}`,
+		commonLegend: 'Highlighted = a factor of every number (common factor)',
+		commonCaption: (list, hcf) =>
+			`Only some factors of ${list} appear for every number. These are the **common factors**. The biggest of them is the **HCF = ${hcf}**.`,
 		replay: 'Replay',
 		addLane: 'Add lane',
 		removeLane: (n) => `Remove lane ${n}`,
@@ -511,6 +521,8 @@ const ms: Copy = {
 			'**Faktor** bagi sesuatu nombor membahagikannya dengan tepat, tanpa baki. Bolehkah anda membahagikan jubin kepada baris yang sama banyak?',
 		oneIsFactor: '1 ialah faktor bagi setiap nombor.',
 		primeHeading: 'Faktor perdana',
+		primeWhy:
+			'Menyenaraikan setiap pasangan faktor sesuai untuk nombor kecil. Bagi nombor seperti 126, senarainya panjang dan mudah terlepas satu pasangan. Nombor perdana ialah blok binaan bagi setiap nombor, jadi jika kita memecahkan nombor sehingga menjadi nombor perdana, tiada yang terlepas. **Pembahagian berulang** ialah cara pantas untuk melakukannya.',
 		primeIntro:
 			'Faktor yang merupakan nombor perdana ialah **faktor perdana**. Faktor bagi 18 ialah 1, **2**, **3**, 6, 9, 18 — jadi 18 = 2 × 3 × 3. Ini dipanggil **pemfaktoran perdana**.',
 		primeMethod:
@@ -519,7 +531,7 @@ const ms: Copy = {
 		hcfIntro:
 			'Nombor yang membahagikan kesemuanya ialah **faktor sepunya**. Yang terbesar ialah **faktor sepunya terbesar (FSTB)**. Cari dengan pembahagian berulang — nombor perdana mesti membahagi **setiap** nombor. Darabkan lajur kiri.',
 		hcfLanesIntro:
-			'Cara lain untuk melihat FSTB: potong setiap panjang kepada bahagian yang sama. Bahagian terpanjang yang muat tepat pada setiap nombor ialah FSTB.',
+			'Cara lain untuk melihat FSTB: tulis setiap nombor sebagai hasil darab dengan semua cara yang mungkin. Faktor yang muncul pada setiap nombor ialah faktor sepunya, dan yang terbesar ialah FSTB.',
 		isFactorQ: (size, total) => `Adakah **${size}** faktor bagi **${total}**?`,
 		factorYes: (total, size, rows) => `${total} = ${size} × ${rows}. Tiada baki.`,
 		leftOver: (rest) => `${rest} jubin berbaki.`
@@ -645,7 +657,7 @@ const ms: Copy = {
 		complete: (total, perRow, rows) =>
 			`**${rows}** baris, setiap baris **${perRow}**, tiada baki. Jadi **${perRow}** dan **${rows}** ialah faktor!`,
 		leftOver: (rest, perRow) => `Berbaki **${rest}**. ${perRow} bukan faktor.`,
-		found: (total, found, all) => `Faktor bagi ${total} ditemui: ${found} daripada ${all}`,
+		found: (total, found, all) => `Pasangan faktor bagi ${total} ditemui: ${found} daripada ${all}`,
 		allFound: (total, factors) => `Semua ditemui! Faktor bagi ${total}: ${factors.join(', ')}.`,
 		primeNote: (total) =>
 			`Hanya satu segi empat tepat (1 × ${total}) — itu menjadikannya **nombor perdana**.`
@@ -676,6 +688,10 @@ const ms: Copy = {
 			`Setiap panjang ${list} terpotong kepada bahagian penuh bernilai **${hcf}**. Tiada bahagian lebih panjang yang muat pada semuanya: **FSTB = ${hcf}**.`,
 		lcmCaption: (list, lcm) =>
 			`Melompat dengan ${list}, semua lorong mula-mula mendarat serentak pada **${lcm}**: **GSTK = ${lcm}**.`,
+		factorsOf: (n) => `Faktor bagi ${n}`,
+		commonLegend: 'Diserlahkan = faktor bagi setiap nombor (faktor sepunya)',
+		commonCaption: (list, hcf) =>
+			`Hanya sebahagian faktor bagi ${list} muncul pada setiap nombor. Itulah **faktor sepunya**. Yang terbesar ialah **FSTB = ${hcf}**.`,
 		replay: 'Main semula',
 		addLane: 'Tambah lorong',
 		removeLane: (n) => `Buang lorong ${n}`,

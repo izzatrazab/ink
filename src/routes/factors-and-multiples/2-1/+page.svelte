@@ -85,6 +85,7 @@
 	<!-- Beat 3 — Prime factors, then the repeated-division ladder -->
 	<section class="space-y-4">
 		<h2 class="text-2xl font-semibold">{t.s21.primeHeading}</h2>
+		<p class="leading-relaxed"><Rich text={t.s21.primeWhy} /></p>
 		<p class="leading-relaxed"><Rich text={t.s21.primeIntro} /></p>
 		<p class="leading-relaxed"><Rich text={t.s21.primeMethod} /></p>
 		<DivisionLadder presets={[[60], [72], [84], [90], [126]]} />

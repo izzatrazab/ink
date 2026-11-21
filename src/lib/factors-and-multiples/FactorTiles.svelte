@@ -4,6 +4,7 @@
 	import TileArray from './TileArray.svelte';
 	import { useCopy } from './useCopy';
 	import Rich from './Rich.svelte';
+	import FactorPair from './FactorPair.svelte';
 	import { discover, factors, isPrime, leftover } from './numbers';
 
 	// The Explorable for "What are factors?": put N tiles into rows of k. When the
@@ -23,6 +24,12 @@
 	const all = $derived(factors(total));
 	const size = $derived(perRow ?? total);
 	const rest = $derived(perRow === null ? 0 : leftover(total, perRow));
+	// Each factor pair a × b with a ≤ b (a perfect square's 4 × 4 is one row). A pair
+	// is found once the student has made complete rows of either of its numbers.
+	const pairs = $derived(
+		all.filter((a) => a * a <= total).map((a): [number, number] => [a, total / a])
+	);
+	const foundPairs = $derived(pairs.filter(([a]) => found.includes(a)));
 	const done = $derived(found.length === all.length);
 
 	function pick(k: number) {
@@ -90,12 +97,18 @@
 
 	<div class="space-y-2 text-center">
 		<p class="text-sm font-semibold tracking-wide uppercase ink-muted">
-			{t.found(total, found.length, all.length)}
+			{t.found(total, foundPairs.length, pairs.length)}
 		</p>
-		<ul class="flex flex-wrap justify-center gap-2">
-			{#each all as factor (factor)}
-				<li class="badge badge-lg {found.includes(factor) ? 'badge-success' : 'badge-ghost'}">
-					{found.includes(factor) ? factor : '?'}
+		<ul class="mx-auto grid max-w-xs gap-2">
+			{#each pairs as [a, b] (a)}
+				{@const known = found.includes(a)}
+				<li>
+					<FactorPair
+						a={known ? a : '?'}
+						b={known ? b : '?'}
+						markA={known ? 'on' : 'dim'}
+						markB={known ? 'on' : 'dim'}
+					/>
 				</li>
 			{/each}
 		</ul>
