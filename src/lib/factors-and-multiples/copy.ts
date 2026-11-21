@@ -62,8 +62,8 @@ export interface Copy {
 		ladderIntro: string;
 		cluesHeading: string;
 		cluesIntro: string;
-		hcfClue: { title: string; problem: string; answer: string };
-		lcmClue: { title: string; problem: string; answer: string };
+		hcfClue: { title: string; problem: string; answer: string; why: string };
+		lcmClue: { title: string; problem: string; answer: string; why: string };
 		quiz: {
 			question: string;
 			problems: Record<ProblemKey, string>;
@@ -107,10 +107,8 @@ export interface Copy {
 	};
 	lanes: {
 		label: (d: number) => string;
-		piece: (size: number) => string;
 		hcfTitle: string;
 		lcmTitle: string;
-		hcfCaption: (list: string, hcf: number) => string;
 		lcmCaption: (list: string, lcm: number) => string;
 		factorsOf: (n: number) => string;
 		commonLegend: string;
@@ -122,7 +120,6 @@ export interface Copy {
 		addSecond: string;
 		ownInvalid: string;
 		tooLong: (lcm: number) => string;
-		tooManyPieces: (hcf: number) => string;
 	};
 	ladder: {
 		number: string;
@@ -300,7 +297,7 @@ const en: Copy = {
 		],
 		lanesHeading: 'The same numbers on lanes',
 		lanesIntro:
-			'Left: the HCF cuts each number into equal pieces, the biggest piece that fits all of them. Right: the LCM hops along each lane until they all land together, the first meeting point.',
+			'HCF: write each number as factor pairs and spot the factors every number shares, the biggest is the HCF. LCM: hop along each lane until they all land together, the first meeting point.',
 		ladderHeading: 'The two repeated divisions side by side',
 		ladderIntro:
 			'Both start from the same numbers. Press **Step** and watch them part ways: the HCF method may only use a prime that goes into every number, while the LCM method takes any prime that goes into one — and brings the rest down.',
@@ -310,13 +307,15 @@ const en: Copy = {
 			title: 'Splitting → HCF',
 			problem:
 				'A florist has 24 roses and 36 tulips. She makes identical bouquets using every flower. What is the greatest number of bouquets?',
-			answer: 'HCF of 24 and 36 = **12** bouquets.'
+			answer: 'HCF of 24 and 36 = **12** bouquets.',
+			why: 'Cut the flowers into equal groups: 12 is the biggest group count that divides both 24 and 36.'
 		},
 		lcmClue: {
 			title: 'Waiting → LCM',
 			problem:
 				'One bus leaves every 12 minutes and another every 18 minutes. They leave together now. When do they next leave together?',
-			answer: 'LCM of 12 and 18 = **36** minutes.'
+			answer: 'LCM of 12 and 18 = **36** minutes.',
+			why: 'Wait for the buses to meet: 36 is the first time both 12 and 18 land together.'
 		},
 		quiz: {
 			question: 'Is this an HCF problem or an LCM problem?',
@@ -385,11 +384,8 @@ const en: Copy = {
 	},
 	lanes: {
 		label: (d) => `${d}s`,
-		piece: (size) => `pieces of ${size}`,
-		hcfTitle: 'HCF: cut into equal pieces',
+		hcfTitle: 'HCF: list the factor pairs',
 		lcmTitle: 'LCM: wait until they line up',
-		hcfCaption: (list, hcf) =>
-			`Every length of ${list} cuts into whole pieces of **${hcf}**. No longer piece fits them all: **HCF = ${hcf}**.`,
 		lcmCaption: (list, lcm) =>
 			`Jumping in ${list}, the lanes first land together on **${lcm}**: **LCM = ${lcm}**.`,
 		factorsOf: (n) => `Factors of ${n}`,
@@ -402,9 +398,7 @@ const en: Copy = {
 		laneLabel: (n) => `Lane ${n}`,
 		addSecond: 'Type a number on the lane, then add a second lane to compare.',
 		ownInvalid: 'Use whole numbers from 2 to 999, each different.',
-		tooLong: (lcm) => `The LCM is ${lcm}, too long to draw. Try smaller numbers.`,
-		tooManyPieces: (hcf) =>
-			`With HCF = ${hcf}, the pieces would be too small to draw. Try other numbers.`
+		tooLong: (lcm) => `The LCM is ${lcm}, too long to draw. Try smaller numbers.`
 	},
 	ladder: {
 		number: 'Number',
@@ -594,7 +588,7 @@ const ms: Copy = {
 		],
 		lanesHeading: 'Nombor yang sama pada lorong',
 		lanesIntro:
-			'Kiri: FSTB memotong setiap nombor kepada bahagian yang sama, bahagian terbesar yang muat pada semuanya. Kanan: GSTK melompat di setiap lorong sehingga semuanya mendarat serentak, titik pertemuan pertama.',
+			'FSTB: tulis setiap nombor sebagai pasangan faktor dan cari faktor yang dikongsi oleh semua nombor, yang terbesar ialah FSTB. GSTK: melompat di setiap lorong sehingga semuanya mendarat serentak, titik pertemuan pertama.',
 		ladderHeading: 'Dua pembahagian berulang bersebelahan',
 		ladderIntro:
 			'Kedua-duanya bermula dengan nombor yang sama. Tekan **Langkah** dan lihat cara kedua-duanya berbeza: kaedah FSTB hanya boleh menggunakan nombor perdana yang membahagi setiap nombor, manakala kaedah GSTK menerima mana-mana nombor perdana yang membahagi satu nombor — dan menurunkan yang lain.',
@@ -604,13 +598,15 @@ const ms: Copy = {
 			title: 'Membahagi → FSTB',
 			problem:
 				'Seorang penjual bunga mempunyai 24 kuntum ros dan 36 kuntum tulip. Dia membuat jambangan yang serupa dengan menggunakan semua bunga. Apakah bilangan jambangan yang paling banyak?',
-			answer: 'FSTB bagi 24 dan 36 = **12** jambangan.'
+			answer: 'FSTB bagi 24 dan 36 = **12** jambangan.',
+			why: 'Bahagikan bunga kepada kumpulan yang sama: 12 ialah bilangan kumpulan terbesar yang membahagi 24 dan 36.'
 		},
 		lcmClue: {
 			title: 'Menunggu → GSTK',
 			problem:
 				'Sebuah bas bertolak setiap 12 minit dan sebuah lagi setiap 18 minit. Kedua-duanya bertolak bersama sekarang. Bilakah kedua-duanya bertolak bersama lagi?',
-			answer: 'GSTK bagi 12 dan 18 = **36** minit.'
+			answer: 'GSTK bagi 12 dan 18 = **36** minit.',
+			why: 'Tunggu bas bertemu: 36 ialah kali pertama 12 dan 18 tiba serentak.'
 		},
 		quiz: {
 			question: 'Adakah ini masalah FSTB atau masalah GSTK?',
@@ -681,11 +677,8 @@ const ms: Copy = {
 	},
 	lanes: {
 		label: (d) => `+${d}`,
-		piece: (size) => `bahagian ${size}`,
-		hcfTitle: 'FSTB: potong kepada bahagian yang sama',
+		hcfTitle: 'FSTB: senaraikan pasangan faktor',
 		lcmTitle: 'GSTK: tunggu sehingga serentak',
-		hcfCaption: (list, hcf) =>
-			`Setiap panjang ${list} terpotong kepada bahagian penuh bernilai **${hcf}**. Tiada bahagian lebih panjang yang muat pada semuanya: **FSTB = ${hcf}**.`,
 		lcmCaption: (list, lcm) =>
 			`Melompat dengan ${list}, semua lorong mula-mula mendarat serentak pada **${lcm}**: **GSTK = ${lcm}**.`,
 		factorsOf: (n) => `Faktor bagi ${n}`,
@@ -699,9 +692,7 @@ const ms: Copy = {
 		addSecond: 'Taip nombor pada lorong, kemudian tambah lorong kedua untuk membandingkan.',
 		ownInvalid: 'Guna nombor bulat dari 2 hingga 999, setiap satu berbeza.',
 		tooLong: (lcm) =>
-			`GSTK ialah ${lcm}, terlalu panjang untuk dilukis. Cuba nombor yang lebih kecil.`,
-		tooManyPieces: (hcf) =>
-			`Dengan FSTB = ${hcf}, bahagiannya terlalu kecil untuk dilukis. Cuba nombor lain.`
+			`GSTK ialah ${lcm}, terlalu panjang untuk dilukis. Cuba nombor yang lebih kecil.`
 	},
 	ladder: {
 		number: 'Nombor',

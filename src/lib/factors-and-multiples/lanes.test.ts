@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { hcfDrawable, laneY, lcmDrawable, rowIssue, rowValues } from './lanes';
+import { laneY, lcmDrawable, rowIssue, rowValues, stageHeight } from './lanes';
 
 describe('rowValues', () => {
 	it('reads whole numbers from 2 to 999, lane by lane', () => {
@@ -37,8 +37,9 @@ describe('drawable limits', () => {
 		expect(lcmDrawable([10, 12, 15])).toBe(true);
 		expect(lcmDrawable([89, 97])).toBe(false);
 	});
-	it('stops an HCF that would cut into slivers', () => {
-		expect(hcfDrawable([24, 36])).toBe(true);
-		expect(hcfDrawable([89, 97])).toBe(false);
+	it('sizes the stage to its lanes', () => {
+		expect(stageHeight(1)).toBe(56);
+		expect(stageHeight(2)).toBe(64);
+		expect(stageHeight(4)).toBe(112);
 	});
 });

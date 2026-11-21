@@ -58,8 +58,8 @@
 	interface Props {
 		/** The started Latihan this shell renders. */
 		latihan: LatihanView;
-		/** Aspect ratio of the figure card, e.g. "2/1" or "1/1". */
-		aspect: string;
+		/** Aspect ratio of the figure card, e.g. "2/1" or "1/1". Unused with a `stage`. */
+		aspect?: string;
 		/** Extra classes for the figure card (e.g. a max-width like "max-w-md"). */
 		cardClass?: string;
 		/** A fixed viewBox for the Stage — Section 11.1's raw px space. */
@@ -67,7 +67,13 @@
 		/** A Cartesian grid half-extent for the Stage — Section 11.2's satah Cartes. */
 		range?: number;
 		/** The Reveal drawn inside the Stage, given `playing`. Remounted per pair. */
-		reveal: Snippet<[boolean]>;
+		reveal?: Snippet<[boolean]>;
+		/**
+		 * Instead of the SVG card, a Section may draw its own figure (plain HTML), given
+		 * `playing`. Remounted per pair, like the Reveal. For figures that are lists or
+		 * tables, which an SVG stage would only shrink.
+		 */
+		stage?: Snippet<[boolean]>;
 		/** The answer control, given the current `answered` flag. */
 		input: Snippet<[boolean]>;
 		/** The feedback sentence, rendered after the Betul/Belum-tepat verdict. */
@@ -83,6 +89,7 @@
 		viewBox,
 		range,
 		reveal,
+		stage,
 		input,
 		feedback,
 		wording: t = malayWording
@@ -94,13 +101,19 @@
 </p>
 
 <figure>
-	<FigureCard {aspect} class={cardClass}>
+	{#if stage}
 		{#key latihan.index}
-			<Stage {viewBox} {range} class="h-full w-full">
-				{@render reveal(latihan.revealing)}
-			</Stage>
+			{@render stage(latihan.revealing)}
 		{/key}
-	</FigureCard>
+	{:else if reveal && aspect}
+		<FigureCard {aspect} class={cardClass}>
+			{#key latihan.index}
+				<Stage {viewBox} {range} class="h-full w-full">
+					{@render reveal(latihan.revealing)}
+				</Stage>
+			{/key}
+		</FigureCard>
+	{/if}
 </figure>
 
 {@render input(latihan.answered)}

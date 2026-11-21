@@ -2,23 +2,22 @@
 	import FigureCard from '$lib/transformasi/FigureCard.svelte';
 	import Stage from '$lib/transformasi/Stage.svelte';
 	import CommonFactors from './CommonFactors.svelte';
-	import HcfLanes from './HcfLanes.svelte';
 	import LaneInputs from './LaneInputs.svelte';
 	import MultipleLanes from './MultipleLanes.svelte';
 	import Rich from './Rich.svelte';
 	import { hcf, lcm } from './numbers';
-	import { MAX_LANES, hcfDrawable, lcmDrawable, rowIssue, rowValues } from './lanes';
+	import { MAX_LANES, lcmDrawable, rowIssue, rowValues, stageHeight } from './lanes';
 	import { useCopy } from './useCopy';
 
-	// An Explorable built on the two lane Reveals. The student picks a set of numbers
-	// and watches it: the LCM as jumps that finally land together (<MultipleLanes>),
-	// the HCF as every length cut into equal pieces (<HcfLanes>). `show` chooses
-	// one or both; with both, the same numbers sit side by side so the contrast
-	// (splitting vs waiting) is visible.
+	// An Explorable built on two pictures. The student picks a set of numbers and
+	// watches it: the HCF as every number's factor pairs with the shared factors lit
+	// (<CommonFactors>), the LCM as jumps that finally land together
+	// (<MultipleLanes>). `show` chooses one or both; with both, the same numbers sit
+	// side by side so the contrast (looking down vs waiting) is visible.
 	//
-	// "Your own" starts with a single empty lane whose number is a box on the lane
-	// itself; typing draws it at once, and "Add lane" below adds the next. With both
-	// figures shown, the first one carries the boxes and the second labels its lanes.
+	// "Your own" starts with a single empty row whose number is a box at its head;
+	// typing draws it at once, and "Add lane" below adds the next. With both figures
+	// shown, the HCF one carries the boxes and the LCM one labels its lanes.
 	// State is the chosen preset, the typed boxes and a replay counter; everything
 	// drawn is derived from them.
 	interface Props {
@@ -48,10 +47,9 @@
 	// What can be drawn: a single typed lane already draws; a set too big for the stage
 	// falls back to bare lanes plus a message.
 	const drawLcm = $derived(numbers.length > 0 && lcmDrawable(numbers));
-	const drawHcf = $derived(numbers.length > 0 && hcfDrawable(numbers));
 	const bare = $derived(rows.map(() => null));
+	const height = $derived(stageHeight(rows.length));
 	const showLcm = $derived(enough && drawLcm);
-	const showHcf = $derived(enough && drawHcf);
 	const anyInvalid = $derived(
 		isCustom && inputs.some((_, i) => rowIssue(inputs, rows, i) === 'invalid')
 	);
@@ -100,27 +98,14 @@
 				{#if show === 'both'}
 					<h3 class="text-primary text-center font-bold">{t.lanes.hcfTitle}</h3>
 				{/if}
-				{#if show === 'hcf'}
-					{#if isCustom}
-						<CommonFactors of={rows} {playing} bind:inputs onremove={remove} />
-					{:else}
-						<CommonFactors of={rows} {playing} />
-					{/if}
+				{#if isCustom}
+					<CommonFactors of={rows} {playing} bind:inputs onremove={remove} />
 				{:else}
-					<FigureCard aspect="5/3" class="max-w-md">
-						<Stage viewBox="0 0 200 120" class="h-full w-full" interactive={isCustom}>
-							<HcfLanes of={drawHcf ? rows : bare} {playing} labels={!isCustom} />
-							{#if isCustom}{@render editing()}{/if}
-						</Stage>
-					</FigureCard>
+					<CommonFactors of={rows} {playing} />
 				{/if}
 				<p class="text-center leading-relaxed" aria-live="polite">
-					{#if show === 'hcf' && enough}
+					{#if enough}
 						<Rich text={t.lanes.commonCaption(list, hcf(numbers))} />
-					{:else if showHcf}
-						<Rich text={t.lanes.hcfCaption(list, hcf(numbers))} />
-					{:else if enough}
-						<span class="opacity-70">{t.lanes.tooManyPieces(hcf(numbers))}</span>
 					{:else if isCustom}
 						<span class="opacity-70">{t.lanes.addSecond}</span>
 					{/if}
@@ -132,9 +117,9 @@
 				{#if show === 'both'}
 					<h3 class="text-secondary text-center font-bold">{t.lanes.lcmTitle}</h3>
 				{/if}
-				<FigureCard aspect="5/3" class="max-w-md">
+				<FigureCard aspect="200/{height}" class="max-w-md">
 					<Stage
-						viewBox="0 0 200 120"
+						viewBox="0 0 200 {height}"
 						class="h-full w-full"
 						interactive={isCustom && show === 'lcm'}
 					>

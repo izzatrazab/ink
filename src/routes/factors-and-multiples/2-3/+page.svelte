@@ -1,7 +1,9 @@
 <script lang="ts">
 	import LessonShell from '$lib/transformasi/LessonShell.svelte';
 	import LatihanShell from '$lib/transformasi/LatihanShell.svelte';
-	import HcfLanes from '$lib/factors-and-multiples/HcfLanes.svelte';
+	import CommonFactors from '$lib/factors-and-multiples/CommonFactors.svelte';
+	import FigureCard from '$lib/transformasi/FigureCard.svelte';
+	import Stage from '$lib/transformasi/Stage.svelte';
 	import MultipleLanes from '$lib/factors-and-multiples/MultipleLanes.svelte';
 	import LanesExplorer from '$lib/factors-and-multiples/LanesExplorer.svelte';
 	import CompareLadders from '$lib/factors-and-multiples/CompareLadders.svelte';
@@ -9,6 +11,7 @@
 	import { pairs, latihanConfig, result } from '$lib/factors-and-multiples/hcfLcmQuiz';
 	import Rich from '$lib/factors-and-multiples/Rich.svelte';
 	import { useCopy } from '$lib/factors-and-multiples/useCopy';
+	import { stageHeight } from '$lib/factors-and-multiples/lanes';
 
 	const copy = useCopy();
 	const t = $derived(copy.t);
@@ -32,31 +35,6 @@
 	<section class="space-y-4">
 		<h2 class="text-2xl font-semibold">{t.s23.introHeading}</h2>
 		<p class="leading-relaxed"><Rich text={t.s23.intro} /></p>
-	</section>
-
-	<!-- Beat 2 — The differences at a glance -->
-	<section class="space-y-4">
-		<h2 class="text-2xl font-semibold">{t.s23.tableHeading}</h2>
-		<div class="overflow-x-auto">
-			<table class="table-zebra table min-w-lg">
-				<thead>
-					<tr>
-						<th scope="col"><span class="sr-only">{t.s23.tableHeading}</span></th>
-						<th scope="col" class="text-primary text-base">{t.ladder.hcf}</th>
-						<th scope="col" class="text-secondary text-base">{t.ladder.lcm}</th>
-					</tr>
-				</thead>
-				<tbody>
-					{#each t.s23.rows as row (row.aspect)}
-						<tr>
-							<th scope="row" class="font-semibold">{row.aspect}</th>
-							<td><Rich text={row.hcf} /></td>
-							<td><Rich text={row.lcm} /></td>
-						</tr>
-					{/each}
-				</tbody>
-			</table>
-		</div>
 	</section>
 
 	<!-- Beat 3 — The same numbers on lanes: HCF cuts, LCM waits (Explorable) -->
@@ -89,6 +67,31 @@
 		/>
 	</section>
 
+	<!-- Beat 2 — The differences at a glance -->
+	<section class="space-y-4">
+		<h2 class="text-2xl font-semibold">{t.s23.tableHeading}</h2>
+		<div class="overflow-x-auto">
+			<table class="table-zebra table min-w-lg">
+				<thead>
+					<tr>
+						<th scope="col"><span class="sr-only">{t.s23.tableHeading}</span></th>
+						<th scope="col" class="text-primary text-base">{t.ladder.hcf}</th>
+						<th scope="col" class="text-secondary text-base">{t.ladder.lcm}</th>
+					</tr>
+				</thead>
+				<tbody>
+					{#each t.s23.rows as row (row.aspect)}
+						<tr>
+							<th scope="row" class="font-semibold">{row.aspect}</th>
+							<td><Rich text={row.hcf} /></td>
+							<td><Rich text={row.lcm} /></td>
+						</tr>
+					{/each}
+				</tbody>
+			</table>
+		</div>
+	</section>
+
 	<!-- Beat 5 — Which one do I need? -->
 	<section class="space-y-4">
 		<h2 class="text-2xl font-semibold">{t.s23.cluesHeading}</h2>
@@ -98,11 +101,13 @@
 				<h3 class="text-primary font-bold">{t.s23.hcfClue.title}</h3>
 				<p>{t.s23.hcfClue.problem}</p>
 				<p class="font-semibold"><Rich text={t.s23.hcfClue.answer} /></p>
+				<p class="ink-muted text-sm">{t.s23.hcfClue.why}</p>
 			</div>
 			<div class="bg-secondary/5 border-secondary/20 space-y-2 rounded-3xl border p-5">
 				<h3 class="text-secondary font-bold">{t.s23.lcmClue.title}</h3>
 				<p>{t.s23.lcmClue.problem}</p>
 				<p class="font-semibold"><Rich text={t.s23.lcmClue.answer} /></p>
+				<p class="ink-muted text-sm">{t.s23.lcmClue.why}</p>
 			</div>
 		</div>
 	</section>
@@ -111,27 +116,24 @@
 	<section class="space-y-4">
 		<h2 class="text-2xl font-semibold">{t.practice}</h2>
 
-		<LatihanShell
-			{latihan}
-			wording={t.quiz}
-			aspect="5/3"
-			cardClass="max-w-md"
-			viewBox="0 0 200 120"
-		>
-			{#snippet reveal(playing)}
-				<!-- Until answered, only the numbers show: the lane type would give the kind away. -->
-				{#if !playing}
-					<text x="100" y="65" text-anchor="middle" class="fill-current text-2xl font-bold">
-						{latihan.pair.numbers.join(' · ')}
-					</text>
-				{/if}
-				<g opacity={playing ? 1 : 0}>
+		<LatihanShell {latihan} wording={t.quiz}>
+			{#snippet stage(playing)}
+				<!-- Until answered, only the numbers show: the figure's type would give the kind away. -->
+				<p class="text-primary text-center text-4xl font-bold">
+					{latihan.pair.numbers.join(' · ')}
+				</p>
+				{#if playing}
 					{#if answerKind === 'hcf'}
-						<HcfLanes of={latihan.pair.numbers} {playing} />
+						<CommonFactors of={latihan.pair.numbers} {playing} />
 					{:else}
-						<MultipleLanes n={answer} of={latihan.pair.numbers} {playing} />
+						{@const h = stageHeight(latihan.pair.numbers.length)}
+						<FigureCard aspect="200/{h}" class="max-w-md">
+							<Stage viewBox="0 0 200 {h}" class="h-full w-full">
+								<MultipleLanes n={answer} of={latihan.pair.numbers} {playing} />
+							</Stage>
+						</FigureCard>
 					{/if}
-				</g>
+				{/if}
 			{/snippet}
 
 			{#snippet input(answered)}
