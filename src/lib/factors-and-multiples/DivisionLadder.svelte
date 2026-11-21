@@ -27,7 +27,9 @@
 	const copy = useCopy();
 	const t = $derived(copy.t.ladder);
 
-	const DIVISORS = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 17, 19];
+	// Primes only: the ladder divides by primes, so the buttons are the primes the
+	// student should recall. Composites are no longer offered to pick.
+	const DIVISORS = [2, 3, 5, 7, 11, 13, 17, 19];
 
 	const picker = startPicker(
 		() => ({ presets, custom, count: mode === 'single' ? 'one' : 'several' }),
