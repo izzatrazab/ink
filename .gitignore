@@ -24,3 +24,6 @@ vite.config.ts.timestamp-*
 # workspace
 .plans
 .scratch
+
+# Local reference copies of the textbooks (copyrighted, not for the repo)
+docs/textbooks/
