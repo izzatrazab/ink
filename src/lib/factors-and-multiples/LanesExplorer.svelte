@@ -1,7 +1,7 @@
 <script lang="ts">
 	import FigureCard from '$lib/transformasi/FigureCard.svelte';
 	import Stage from '$lib/transformasi/Stage.svelte';
-	import CommonFactors from './CommonFactors.svelte';
+	import FactorPairs from './FactorPairs.svelte';
 	import LaneInputs from './LaneInputs.svelte';
 	import MultipleLanes from './MultipleLanes.svelte';
 	import Rich from './Rich.svelte';
@@ -11,7 +11,7 @@
 
 	// An Explorable built on two pictures. The student picks a set of numbers and
 	// watches it: the HCF as every number's factor pairs with the shared factors lit
-	// (<CommonFactors>), the LCM as jumps that finally land together
+	// (<FactorPairs>), the LCM as jumps that finally land together
 	// (<MultipleLanes>). `show` chooses one or both; with both, the same numbers sit
 	// side by side so the contrast (looking down vs waiting) is visible.
 	//
@@ -99,9 +99,9 @@
 					<h3 class="text-primary text-center font-bold">{t.lanes.hcfTitle}</h3>
 				{/if}
 				{#if isCustom}
-					<CommonFactors of={rows} {playing} bind:inputs onremove={remove} />
+					<FactorPairs of={rows} {playing} bind:inputs onremove={remove} />
 				{:else}
-					<CommonFactors of={rows} {playing} />
+					<FactorPairs of={rows} {playing} />
 				{/if}
 				<p class="text-center leading-relaxed" aria-live="polite">
 					{#if enough}

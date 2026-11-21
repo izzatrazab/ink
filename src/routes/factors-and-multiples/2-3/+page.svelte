@@ -1,7 +1,7 @@
 <script lang="ts">
 	import LessonShell from '$lib/transformasi/LessonShell.svelte';
 	import LatihanShell from '$lib/transformasi/LatihanShell.svelte';
-	import CommonFactors from '$lib/factors-and-multiples/CommonFactors.svelte';
+	import FactorPairs from '$lib/factors-and-multiples/FactorPairs.svelte';
 	import FigureCard from '$lib/transformasi/FigureCard.svelte';
 	import Stage from '$lib/transformasi/Stage.svelte';
 	import MultipleLanes from '$lib/factors-and-multiples/MultipleLanes.svelte';
@@ -124,7 +124,7 @@
 				</p>
 				{#if playing}
 					{#if answerKind === 'hcf'}
-						<CommonFactors of={latihan.pair.numbers} {playing} />
+						<FactorPairs of={latihan.pair.numbers} {playing} />
 					{:else}
 						{@const h = stageHeight(latihan.pair.numbers.length)}
 						<FigureCard aspect="200/{h}" class="max-w-md">

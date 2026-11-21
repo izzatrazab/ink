@@ -118,6 +118,10 @@ _Avoid_: strings, translations (as the name of the wording), translation file.
 The textbook's method of repeated division, drawn as rows: each rung divides the current row by a prime and writes the result below. It serves three uses that differ only in what a divisor must do — prime factorisation of one number, **HCF** (the divisor must divide every number), and **LCM** (the divisor need divide only one number; the rest are brought down unchanged). The student's progress is the list of divisors chosen; the rows and the answer follow from it.
 _Avoid_: ladder method, staircase, division table.
 
+**Factor pair**:
+Two whole numbers whose product is a given number, written `a × b` with a ≤ b (24 → 1 × 24, 2 × 12, 3 × 8, 4 × 6; a perfect square's 4 × 4 is one pair). Factor pairs are how the chapter shows factors: the "What are factors?" tiles reveal one each time the rows come out complete (a pair is found by either of its numbers), and Prime Hunt shows one to explain why a number is not prime. **Factor pairs** (the HCF comparison, `FactorPairs.svelte`) lists every number's factor pairs side by side and highlights each factor that every number has — the **common factors** — with the biggest, the **HCF**, ringed. It is the HCF's picture in 2.1 and 2.3, in place of the old "cut into equal pieces" lanes. The pair row itself is `FactorPair.svelte`, shared by the tiles and the comparison so a pair looks the same everywhere.
+_Avoid_: factor chart, factor table, pieces (the retired HCF picture).
+
 **Starting numbers**:
 The row a **Division ladder** begins with: either one of the chapter's preset sets, or numbers the student types under "Your own". Changing the starting numbers restarts the ladder.
 _Avoid_: input, seed, initial values.
