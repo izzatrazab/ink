@@ -2,7 +2,19 @@
 
 An interactive web app that _teaches_ (not merely drills) Form 2 KSSM Mathematics **Chapter 11, Transformasi Isometri**, through manipulable SVG. The chapter is built one **Section** at a time: **Transformation + Congruency** (Section 11.1, the conceptual on-ramp), **Translation** (Section 11.2), and **Reflection** (Section 11.3). Rotation (11.4), combined transformations (11.5), and rotational symmetry (11.6) remain deferred — each is a new interaction model, a separate build (ADR-0008 as amended by ADR-0010).
 
-> The site now hosts more than one chapter (ADR-0011): the chapter registry in `src/lib/chapters.ts` lists them, and `/` is a chapter index. Form 1 Chapter 2, **Factors and Multiples** (`/factors-and-multiples`, written in English to follow its textbook), has Sections 2.1, 2.2 and 2.3 built plus a **Mini-games hub** (Prime Hunt, ADR-0012), and offers Malay as a translation (see **Reader language**). The rest of this document describes the Transformasi Isometri chapter.
+> The site now hosts more than one chapter (ADR-0011): the chapter registry in `src/lib/chapters.ts` lists them, and `/` is a chapter index. Form 1 Chapter 2, **Factors and Multiples** (`/factors-and-multiples`, written in English to follow its textbook), has Sections 2.1, 2.2 and 2.3 built plus a **Mini-games hub** (Prime Hunt and Prime Breaker, ADR-0012), and offers Malay as a translation (see **Prime Breaker**:
+The second **Mini-game**, in Factors and Multiples: a **Round** hands the student a **Division ladder** to finish by tapping primes (2, 3, 5, 7, 11, 13). Every tap is judged at once by the ladder's own rules (`ladder.ts`): a prime that fits drops a new row with a chime; one that does not is refused with a buzz and the same reason the lesson gives ("180 ÷ 7 leaves 5, so 7 does not go in"). There is no hint, undo or Watch, and the prime buttons stay above the ladder so they do not move as it grows. Played in three **Break kinds**.
+_Avoid_: factor tree game, ladder game.
+
+**Round**:
+One ladder in **Prime Breaker**: a start row dealt for a **Break kind**, finished when the ladder's own rule says it is done (every number is 1; for HCF, when no prime goes into every number). Untimed, scored 1–3 stars by mistakes (none, one, more); tapping the same refused prime again on the same rung counts once. A perfect Round earns confetti. A Round with no mistake is a **clean Round**.
+_Avoid_: level, board (that word is **Prime Hunt**'s), question.
+
+**Break kind**:
+What a **Round** asks the student to break: prime factors of one number (**single** ladder mode), the HCF of two or three numbers, or their LCM. The kinds unlock in that order, each after three **clean Rounds** of the one before. Dealt numbers need only the offered primes, and an HCF Round always has an HCF above 1. Progress is kept in the reader's browser.
+_Avoid_: level, tier (that word is **Prime Hunt**'s), mode (that is the ladder's).
+
+**Reader language**). The rest of this document describes the Transformasi Isometri chapter.
 
 > The earlier PDF drill generator is superseded but its code is still in the repo, parked at `/generator`. ADR-0001–0007 describe that prior system, not this one.
 

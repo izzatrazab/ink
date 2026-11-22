@@ -188,6 +188,26 @@ export interface Copy {
 			wrong: string;
 			unlocked: (max: number) => string;
 		};
+		primeBreaker: {
+			desc: string;
+			intro: string;
+			loading: string;
+			kindGroup: string;
+			kind: (kind: 'single' | 'hcf' | 'lcm') => string;
+			lockedKind: (kind: string, before: string) => string;
+			clean: (n: number, of: number) => string;
+			task: (kind: 'single' | 'hcf' | 'lcm', row: string) => string;
+			primesGroup: string;
+			soundOn: string;
+			soundOff: string;
+			skip: string;
+			next: string;
+			headline: (stars: 1 | 2 | 3) => string;
+			stars: (stars: number) => string;
+			streak: (n: number) => string;
+			mistakes: (n: number) => string;
+			unlocked: (kind: string) => string;
+		};
 	};
 }
 
@@ -478,6 +498,33 @@ const en: Copy = {
 			explainPair: (n, a, b) => `${n} is not prime: ${n} = ${a} × ${b}.`,
 			wrong: 'Not prime',
 			unlocked: (max) => `Well done! Primes 2–${max} unlocked.`
+		},
+		primeBreaker: {
+			desc: 'Prime Breaker: break numbers down by dividing with primes, one rung at a time, for prime factors, HCF and LCM.',
+			intro:
+				'Break the number down by **repeated division**. Tap a prime to divide by it: a prime that fits drops a new row, and one that does not fit is refused at once, with the reason. Finish the ladder with as few slips as you can.',
+			loading: 'Dealing a round…',
+			kindGroup: 'What to break',
+			kind: (k) => ({ single: 'Prime factors', hcf: 'HCF', lcm: 'LCM' })[k],
+			lockedKind: (kind, before) => `${kind}, unlocks after 3 perfect rounds of ${before}`,
+			clean: (n, of) => `${Math.min(n, of)} of ${of} perfect rounds`,
+			task: (kind, row) =>
+				({
+					single: `Break **${row}** into prime factors.`,
+					hcf: `Find the **HCF** of **${row}**.`,
+					lcm: `Find the **LCM** of **${row}**.`
+				})[kind],
+			primesGroup: 'Primes to divide by',
+			soundOn: 'Sound on',
+			soundOff: 'Sound off',
+			skip: 'Skip this round',
+			next: 'Next round',
+			headline: (stars) =>
+				stars === 3 ? 'Perfect round!' : stars === 2 ? 'So close: one slip.' : 'Keep breaking!',
+			stars: (stars) => `${stars} of 3 stars`,
+			streak: (n) => `${n} perfect ${n === 1 ? 'round' : 'rounds'} in a row`,
+			mistakes: (n) => (n === 1 ? '1 slip' : `${n} slips`),
+			unlocked: (kind) => `Well done! ${kind} unlocked.`
 		}
 	}
 };
@@ -778,6 +825,37 @@ const ms: Copy = {
 			explainPair: (n, a, b) => `${n} bukan nombor perdana: ${n} = ${a} × ${b}.`,
 			wrong: 'Bukan perdana',
 			unlocked: (max) => `Hebat! Nombor perdana 2–${max} dibuka.`
+		},
+		primeBreaker: {
+			desc: 'Pemecah Perdana: pecahkan nombor dengan membahagi menggunakan nombor perdana, satu anak tangga demi satu anak tangga, untuk faktor perdana, FSTB dan GSTK.',
+			intro:
+				'Pecahkan nombor itu dengan **pembahagian berulang**. Ketik nombor perdana untuk membahagi dengannya: nombor perdana yang sesuai menurunkan satu baris baharu, dan yang tidak sesuai ditolak serta-merta, dengan sebabnya. Siapkan tangga dengan sesedikit mungkin kesilapan.',
+			loading: 'Mengedar pusingan…',
+			kindGroup: 'Apa yang hendak dipecahkan',
+			kind: (k) => ({ single: 'Faktor perdana', hcf: 'FSTB', lcm: 'GSTK' })[k],
+			lockedKind: (kind, before) => `${kind}, dibuka selepas 3 pusingan sempurna ${before}`,
+			clean: (n, of) => `${Math.min(n, of)} daripada ${of} pusingan sempurna`,
+			task: (kind, row) =>
+				({
+					single: `Pecahkan **${row}** kepada faktor perdana.`,
+					hcf: `Cari **FSTB** bagi **${row}**.`,
+					lcm: `Cari **GSTK** bagi **${row}**.`
+				})[kind],
+			primesGroup: 'Nombor perdana untuk membahagi',
+			soundOn: 'Bunyi hidup',
+			soundOff: 'Bunyi mati',
+			skip: 'Langkau pusingan ini',
+			next: 'Pusingan seterusnya',
+			headline: (stars) =>
+				stars === 3
+					? 'Pusingan sempurna!'
+					: stars === 2
+						? 'Hampir: satu kesilapan.'
+						: 'Teruskan memecah!',
+			stars: (stars) => `${stars} daripada 3 bintang`,
+			streak: (n) => `${n} pusingan sempurna berturut-turut`,
+			mistakes: (n) => `${n} kesilapan`,
+			unlocked: (kind) => `Hebat! ${kind} dibuka.`
 		}
 	}
 };

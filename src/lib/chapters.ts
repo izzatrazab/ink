@@ -102,6 +102,12 @@ export const chapters: Chapter[] = [
 				slug: 'prime-hunt',
 				title: 'Prime Hunt',
 				description: 'Tap every prime on the board — and learn the primes by heart.'
+			},
+			{
+				slug: 'prime-breaker',
+				title: 'Prime Breaker',
+				description:
+					'Break numbers down with primes — prime factors, HCF and LCM by repeated division.'
 			}
 		],
 		translations: {
@@ -143,6 +149,11 @@ export const chapters: Chapter[] = [
 					'prime-hunt': {
 						title: 'Buru Nombor Perdana',
 						description: 'Ketik setiap nombor perdana pada papan — dan hafal nombor perdana.'
+					},
+					'prime-breaker': {
+						title: 'Pemecah Perdana',
+						description:
+							'Pecahkan nombor dengan nombor perdana — faktor perdana, FSTB dan GSTK melalui pembahagian berulang.'
 					}
 				}
 			}

@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
-	import { fly, fade } from 'svelte/transition';
+	import { fade } from 'svelte/transition';
 	import { useCopy } from './useCopy';
+	import LadderRows from './LadderRows.svelte';
 	import Rich from './Rich.svelte';
 	import StartingNumbers from './StartingNumbers.svelte';
 	import { startPicker } from './picker.svelte';
@@ -68,32 +69,7 @@
 	<StartingNumbers {picker} {presets} {custom} {t} single={mode === 'single'} />
 
 	{#if ready}
-		<div class="ink-card mx-auto max-w-sm p-5 font-mono text-xl" aria-label={t.aria(label(start))}>
-			{#each rows as row, i (i)}
-				<div class="flex min-h-12 items-center" in:fly={{ y: -14, duration: motionDuration(300) }}>
-					<span
-						class="w-14 pr-3 text-right font-bold {done ? 'text-success' : 'text-primary'}"
-						aria-label={divisors[i] ? t.divisor(divisors[i]) : undefined}
-					>
-						{divisors[i] ?? ''}
-					</span>
-					<span
-						class="border-base-content/60 flex-1 border-l-2 py-1 pl-4 {i === rows.length - 1 &&
-						!done
-							? 'font-bold'
-							: ''}"
-					>
-						{label(row)}
-					</span>
-				</div>
-				{#if i < rows.length - 1 || !done}
-					<div class="flex h-0">
-						<span class="w-14"></span>
-						<span class="border-base-content/60 flex-1 border-t-2 border-l-2"></span>
-					</div>
-				{/if}
-			{/each}
-		</div>
+		<LadderRows {rows} {divisors} {done} label={t.aria(label(start))} />
 
 		<div class="space-y-2 text-center">
 			<p class="text-sm font-semibold tracking-wide uppercase ink-muted">
