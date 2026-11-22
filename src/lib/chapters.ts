@@ -113,6 +113,11 @@ export const chapters: Chapter[] = [
 				slug: 'multiples-hunt',
 				title: 'Multiples Hunt',
 				description: 'Tap every multiple — then every common multiple of two or three numbers.'
+			},
+			{
+				slug: 'meet-again',
+				title: 'Meet Again',
+				description: 'Lights blink at different rhythms — tap when they all light up together.'
 			}
 		],
 		translations: {
@@ -164,6 +169,11 @@ export const chapters: Chapter[] = [
 						title: 'Buru Gandaan',
 						description:
 							'Ketik setiap gandaan — kemudian setiap gandaan sepunya bagi dua atau tiga nombor.'
+					},
+					'meet-again': {
+						title: 'Bertemu Lagi',
+						description:
+							'Lampu berkelip dengan rentak berbeza — ketik apabila semuanya menyala serentak.'
 					}
 				}
 			}

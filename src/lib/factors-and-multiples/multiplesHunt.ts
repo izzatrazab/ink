@@ -6,6 +6,7 @@
 // Board, many numbers are a multiple of one of the numbers but not all of them.
 // Progress is a count per kind: Boards finished with no mistake.
 
+import { kindProgress } from './kindProgress';
 import { isFactor, lcm } from './numbers';
 
 /** The kinds of Board, in the order they unlock: how many numbers to be a multiple of. */
@@ -172,37 +173,16 @@ export function miss(set: number[], n: number): Miss | null {
 	return { s, rest: n % s, of: set.find((x) => isFactor(n, x)) ?? null };
 }
 
+const kinds = kindProgress(KINDS, MASTERED_BOARDS);
+
 /** Progress after a finished Board: only a mistake-free one counts. */
 export const applyBoard = (progress: Progress, kind: Kind, mistakes: number): Progress =>
-	mistakes === 0 ? { ...progress, [kind]: (progress[kind] ?? 0) + 1 } : progress;
+	kinds.apply(progress, kind, mistakes);
 
-export const isMastered = (progress: Progress, kind: Kind) =>
-	(progress[kind] ?? 0) >= MASTERED_BOARDS;
+export const isMastered = kinds.isMastered;
 
 /** The kinds the student may play: the first, and each one after a mastered kind. */
-export function unlockedKinds(progress: Progress): Kind[] {
-	const open: Kind[] = [];
-	for (const [i, kind] of KINDS.entries()) {
-		if (i === 0 || isMastered(progress, KINDS[i - 1])) open.push(kind);
-		else break;
-	}
-	return open;
-}
+export const unlockedKinds = kinds.unlocked;
 
 /** Reads saved progress, dropping anything that is not a known kind with a whole, non-negative count. */
-export function parseProgress(raw: string | null): Progress {
-	if (!raw) return {};
-	let data: unknown;
-	try {
-		data = JSON.parse(raw);
-	} catch {
-		return {};
-	}
-	if (!data || typeof data !== 'object' || Array.isArray(data)) return {};
-	const progress: Progress = {};
-	for (const kind of KINDS) {
-		const value = (data as Record<string, unknown>)[kind];
-		if (Number.isInteger(value) && (value as number) >= 0) progress[kind] = value as number;
-	}
-	return progress;
-}
+export const parseProgress = kinds.parse;

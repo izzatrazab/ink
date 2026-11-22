@@ -6,6 +6,7 @@
 // disagree with the lesson. Progress is a count per kind: Rounds finished with no
 // mistake. Reuses the ladder seam; adds only the dealing, scoring and unlocking.
 
+import { kindProgress } from './kindProgress';
 import { hcf, lcm } from './numbers';
 import { tryDivisor, type LadderMode, type Rejection } from './ladder';
 
@@ -118,38 +119,16 @@ export function scoreRound(mistakes: number): RoundResult {
 	return { mistakes, stars: mistakes === 0 ? 3 : mistakes === 1 ? 2 : 1 };
 }
 
-/** Progress after a finished Round: only a mistake-free one counts. */
-export function applyRound(progress: Progress, kind: Kind, mistakes: number): Progress {
-	return mistakes === 0 ? { ...progress, [kind]: (progress[kind] ?? 0) + 1 } : progress;
-}
+const kinds = kindProgress(KINDS, MASTERED_ROUNDS);
 
-export const isMastered = (progress: Progress, kind: Kind) =>
-	(progress[kind] ?? 0) >= MASTERED_ROUNDS;
+/** Progress after a finished Round: only a mistake-free one counts. */
+export const applyRound = (progress: Progress, kind: Kind, mistakes: number): Progress =>
+	kinds.apply(progress, kind, mistakes);
+
+export const isMastered = kinds.isMastered;
 
 /** The kinds the student may play: the first, and each one after a mastered kind. */
-export function unlockedKinds(progress: Progress): Kind[] {
-	const open: Kind[] = [];
-	for (const [i, kind] of KINDS.entries()) {
-		if (i === 0 || isMastered(progress, KINDS[i - 1])) open.push(kind);
-		else break;
-	}
-	return open;
-}
+export const unlockedKinds = kinds.unlocked;
 
 /** Reads saved progress, dropping anything that is not a known kind with a whole, non-negative count. */
-export function parseProgress(raw: string | null): Progress {
-	if (!raw) return {};
-	let data: unknown;
-	try {
-		data = JSON.parse(raw);
-	} catch {
-		return {};
-	}
-	if (!data || typeof data !== 'object' || Array.isArray(data)) return {};
-	const progress: Progress = {};
-	for (const kind of KINDS) {
-		const value = (data as Record<string, unknown>)[kind];
-		if (Number.isInteger(value) && (value as number) >= 0) progress[kind] = value as number;
-	}
-	return progress;
-}
+export const parseProgress = kinds.parse;

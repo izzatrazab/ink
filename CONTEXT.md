@@ -2,7 +2,7 @@
 
 An interactive web app that _teaches_ (not merely drills) Form 2 KSSM Mathematics **Chapter 11, Transformasi Isometri**, through manipulable SVG. The chapter is built one **Section** at a time: **Transformation + Congruency** (Section 11.1, the conceptual on-ramp), **Translation** (Section 11.2), and **Reflection** (Section 11.3). Rotation (11.4), combined transformations (11.5), and rotational symmetry (11.6) remain deferred — each is a new interaction model, a separate build (ADR-0008 as amended by ADR-0010).
 
-> The site now hosts more than one chapter (ADR-0011): the chapter registry in `src/lib/chapters.ts` lists them, and `/` is a chapter index. Form 1 Chapter 2, **Factors and Multiples** (`/factors-and-multiples`, written in English to follow its textbook), has Sections 2.1, 2.2 and 2.3 built plus a **Mini-games hub** (Prime Hunt, Prime Breaker and Multiples Hunt, ADR-0012), and offers Malay as a translation (see **Prime Breaker**:
+> The site now hosts more than one chapter (ADR-0011): the chapter registry in `src/lib/chapters.ts` lists them, and `/` is a chapter index. Form 1 Chapter 2, **Factors and Multiples** (`/factors-and-multiples`, written in English to follow its textbook), has Sections 2.1, 2.2 and 2.3 built plus a **Mini-games hub** (Prime Hunt, Prime Breaker, Multiples Hunt and Meet Again, ADR-0012), and offers Malay as a translation (see **Prime Breaker**:
 The second **Mini-game**, in Factors and Multiples: a **Round** hands the student a **Division ladder** to finish by tapping primes (2, 3, 5, 7, 11, 13). Every tap is judged at once by the ladder's own rules (`ladder.ts`): a prime that fits drops a new row with a chime; one that does not is refused with a buzz and the same reason the lesson gives ("180 ÷ 7 leaves 5, so 7 does not go in"). There is no hint, undo or Watch, and the prime buttons stay above the ladder so they do not move as it grows. Played in three **Break kinds**.
 _Avoid_: factor tree game, ladder game.
 
@@ -21,6 +21,18 @@ _Avoid_: times-table drill, multiples quiz.
 **Hunt kind**:
 What a **Multiples Hunt** Board asks for: multiples of one number, common multiples of two, or of three. Unlocks in that order, each after three **clean Boards** of the one before (a clean Board has no wrong tap). Dealt sets never have one number a multiple of all the rest, and every Board has at least three multiples to find. Progress is kept in the reader's browser.
 _Avoid_: level, tier (that word is **Prime Hunt**'s), mode.
+
+**Meet Again**:
+The fourth **Mini-game**, in Factors and Multiples, and the only one with a clock. Two or three lights each blink every so many **beats** (a light with period 4 is lit on beats 4, 8, 12, …); the student taps **Together!** on the beats where every light is lit at once. Those are the common multiples of the periods, so the first is their LCM, found by feel. A tap is judged against the beat now lit; a tap on any other beat is a slip, and so is a meeting that passes untapped. A finished Round shows the lights as lanes landing on the LCM. The speed is the student's choice (**step by step** has no clock at all, then slow, then normal), a timed Round pauses when the tab is hidden, a lit light says ON as well as glowing, and nothing blinks faster than the beat. Beats tick softly and identically, so the sound never gives a meeting away.
+_Avoid_: rhythm game, reaction game, timer.
+
+**Beat**:
+One tick of a **Meet Again** Round, counted from 1. A light with period p is lit on every beat that is a multiple of p. A Round lasts for a few meetings (three, or two when the LCM is over 12), after which it is over.
+_Avoid_: second, turn, step (that word belongs to **Division ladder**'s Watch).
+
+**Meeting**:
+A **beat** on which every light in a **Meet Again** Round is lit: L, 2L, 3L, … where L is the LCM of the periods. The student catches a meeting by tapping on it.
+_Avoid_: match, hit, together (that is the button).
 
 **Reader language**). The rest of this document describes the Transformasi Isometri chapter.
 

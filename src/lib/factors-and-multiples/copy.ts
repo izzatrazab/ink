@@ -235,6 +235,44 @@ export interface Copy {
 			lcmNote: (lcm: number, list: string) => string;
 			unlocked: (kind: string) => string;
 		};
+		meetAgain: {
+			desc: string;
+			intro: string;
+			loading: string;
+			kindGroup: string;
+			kind: (kind: 'two' | 'wide' | 'three') => string;
+			lockedKind: (kind: string, before: string) => string;
+			clean: (n: number, of: number) => string;
+			tempoGroup: string;
+			tempo: (tempo: 'step' | 'slow' | 'normal') => string;
+			tempoHeld: string;
+			task: string;
+			lightsAria: string;
+			light: (period: number) => string;
+			on: string;
+			off: string;
+			beat: (n: number) => string;
+			ready: string;
+			start: string;
+			together: string;
+			pause: string;
+			resume: string;
+			paused: string;
+			nextBeat: string;
+			caught: (n: number, of: number) => string;
+			early: (beat: number, period: number, rest: number) => string;
+			missed: (beat: number, list: string) => string;
+			headline: (stars: 1 | 2 | 3) => string;
+			stars: (stars: number) => string;
+			streak: (n: number) => string;
+			reviewHeading: string;
+			wrong: string;
+			meetNote: (beats: string, lcm: number) => string;
+			soundOn: string;
+			soundOff: string;
+			next: string;
+			unlocked: (kind: string) => string;
+		};
 	};
 }
 
@@ -593,6 +631,50 @@ const en: Copy = {
 				`${n} is a multiple of ${of}, but not of ${s}: ${n} ÷ ${s} leaves ${rest}.`,
 			lcmNote: (lcm, list) =>
 				`Every common multiple of ${list} is a multiple of their LCM, **${lcm}**.`,
+			unlocked: (kind) => `Well done! ${kind} unlocked.`
+		},
+		meetAgain: {
+			desc: 'Meet Again: lights blink at different rhythms, and you tap when they all light up together. Find the LCM by feel.',
+			intro:
+				'Each light blinks **every so many beats**. Sometimes they are all lit at once. Tap **Together!** on those beats, and only those. The first time they meet is their LCM.',
+			loading: 'Setting the lights…',
+			kindGroup: 'How many lights',
+			kind: (k) =>
+				({ two: 'Two lights', wide: 'Two lights, longer waits', three: 'Three lights' })[k],
+			lockedKind: (kind, before) => `${kind}, unlocks after 3 perfect rounds of ${before}`,
+			clean: (n, of) => `${Math.min(n, of)} of ${of} perfect rounds`,
+			tempoGroup: 'Speed',
+			tempo: (t) => ({ step: 'Step by step', slow: 'Slow', normal: 'Normal' })[t],
+			tempoHeld: 'Change the speed between rounds.',
+			task: 'Tap Together! on the beats when every light is lit.',
+			lightsAria: 'The blinking lights',
+			light: (p) => `every ${p}`,
+			on: 'ON',
+			off: 'off',
+			beat: (n) => (n === 0 ? 'Ready' : `Beat ${n}`),
+			ready: 'Press Start: the first beat lights at once.',
+			start: 'Start',
+			together: 'Together!',
+			pause: 'Pause',
+			resume: 'Resume',
+			paused: 'Paused. Press Resume to carry on.',
+			nextBeat: 'Next beat',
+			caught: (n, of) => `Meetings caught: ${n} of ${of}`,
+			early: (beat, p, rest) =>
+				`Not yet: on beat ${beat} the every-${p} light is off (${beat} ÷ ${p} leaves ${rest}).`,
+			missed: (beat, list) =>
+				`Beat ${beat}: every light was lit, because ${beat} is a multiple of ${list}. Tap Together! on beats like this.`,
+			headline: (stars) =>
+				stars === 3 ? 'Perfect round!' : stars === 2 ? 'So close: one slip.' : 'Keep watching!',
+			stars: (stars) => `${stars} of 3 stars`,
+			streak: (n) => `${n} perfect ${n === 1 ? 'round' : 'rounds'} in a row`,
+			reviewHeading: 'Look again at these',
+			wrong: 'Slip',
+			meetNote: (beats, lcm) =>
+				`They met on beats ${beats}: the multiples of their LCM, **${lcm}**.`,
+			soundOn: 'Sound on',
+			soundOff: 'Sound off',
+			next: 'Next round',
 			unlocked: (kind) => `Well done! ${kind} unlocked.`
 		}
 	}
@@ -970,6 +1052,54 @@ const ms: Copy = {
 				`${n} ialah gandaan ${of}, tetapi bukan gandaan ${s}: ${n} ÷ ${s} berbaki ${rest}.`,
 			lcmNote: (lcm, list) =>
 				`Setiap gandaan sepunya bagi ${list} ialah gandaan bagi GSTK mereka, **${lcm}**.`,
+			unlocked: (kind) => `Hebat! ${kind} dibuka.`
+		},
+		meetAgain: {
+			desc: 'Bertemu Lagi: lampu berkelip dengan rentak berbeza, dan anda mengetik apabila semuanya menyala serentak. Cari GSTK dengan rasa.',
+			intro:
+				'Setiap lampu berkelip **setiap beberapa rentak**. Kadangkala semuanya menyala serentak. Ketik **Serentak!** pada rentak itu sahaja. Kali pertama mereka bertemu ialah GSTK mereka.',
+			loading: 'Menyediakan lampu…',
+			kindGroup: 'Bilangan lampu',
+			kind: (k) =>
+				({ two: 'Dua lampu', wide: 'Dua lampu, tunggu lebih lama', three: 'Tiga lampu' })[k],
+			lockedKind: (kind, before) => `${kind}, dibuka selepas 3 pusingan sempurna ${before}`,
+			clean: (n, of) => `${Math.min(n, of)} daripada ${of} pusingan sempurna`,
+			tempoGroup: 'Kelajuan',
+			tempo: (t) => ({ step: 'Langkah demi langkah', slow: 'Perlahan', normal: 'Biasa' })[t],
+			tempoHeld: 'Tukar kelajuan antara pusingan.',
+			task: 'Ketik Serentak! pada rentak apabila setiap lampu menyala.',
+			lightsAria: 'Lampu yang berkelip',
+			light: (p) => `setiap ${p}`,
+			on: 'HIDUP',
+			off: 'mati',
+			beat: (n) => (n === 0 ? 'Sedia' : `Rentak ${n}`),
+			ready: 'Tekan Mula: rentak pertama menyala serta-merta.',
+			start: 'Mula',
+			together: 'Serentak!',
+			pause: 'Jeda',
+			resume: 'Sambung',
+			paused: 'Dijeda. Tekan Sambung untuk meneruskan.',
+			nextBeat: 'Rentak seterusnya',
+			caught: (n, of) => `Pertemuan ditangkap: ${n} daripada ${of}`,
+			early: (beat, p, rest) =>
+				`Belum lagi: pada rentak ${beat} lampu setiap-${p} mati (${beat} ÷ ${p} berbaki ${rest}).`,
+			missed: (beat, list) =>
+				`Rentak ${beat}: setiap lampu menyala, kerana ${beat} ialah gandaan ${list}. Ketik Serentak! pada rentak seperti ini.`,
+			headline: (stars) =>
+				stars === 3
+					? 'Pusingan sempurna!'
+					: stars === 2
+						? 'Hampir: satu kesilapan.'
+						: 'Teruskan memerhati!',
+			stars: (stars) => `${stars} daripada 3 bintang`,
+			streak: (n) => `${n} pusingan sempurna berturut-turut`,
+			reviewHeading: 'Lihat semula yang ini',
+			wrong: 'Silap',
+			meetNote: (beats, lcm) =>
+				`Mereka bertemu pada rentak ${beats}: gandaan GSTK mereka, **${lcm}**.`,
+			soundOn: 'Bunyi hidup',
+			soundOff: 'Bunyi mati',
+			next: 'Pusingan seterusnya',
 			unlocked: (kind) => `Hebat! ${kind} dibuka.`
 		}
 	}

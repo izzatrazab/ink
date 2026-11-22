@@ -65,7 +65,8 @@ describe('mini-games', () => {
 		expect(fm.miniGames?.map((g) => g.slug)).toEqual([
 			'prime-hunt',
 			'prime-breaker',
-			'multiples-hunt'
+			'multiples-hunt',
+			'meet-again'
 		]);
 		expect(fm.sections.map((s) => s.number)).toEqual(['2.1', '2.2', '2.3']);
 	});

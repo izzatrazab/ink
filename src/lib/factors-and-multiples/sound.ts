@@ -12,6 +12,8 @@ export interface Sounds {
 	wrong(): void;
 	/** The Board is complete. */
 	done(): void;
+	/** A beat passed, for the games that keep time. Optional: most games have none. */
+	tick?(): void;
 }
 
 export const silent: Sounds = { success() {}, wrong() {}, done() {} };
@@ -97,6 +99,11 @@ export function webAudioSounds(): Sounds {
 				[C5, C5 * 1.26, C5 * 1.5, C5 * 2].forEach((f, i) =>
 					tone(c, f, 0.25 + i * 0.1, 0.26, 'triangle', 0.14)
 				);
+			}),
+		// A soft, short click, the same on every beat so it never gives a meeting away.
+		tick: () =>
+			play((c) => {
+				tone(c, 330, 0, 0.05, 'sine', 0.05);
 			})
 	};
 }
