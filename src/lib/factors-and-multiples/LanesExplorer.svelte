@@ -117,7 +117,7 @@
 				{#if show === 'both'}
 					<h3 class="text-secondary text-center font-bold">{t.lanes.lcmTitle}</h3>
 				{/if}
-				<FigureCard aspect="200/{height}" class="max-w-md">
+				<FigureCard aspect="200/{height}" class="max-w-md text-secondary!">
 					<Stage
 						viewBox="0 0 200 {height}"
 						class="h-full w-full"

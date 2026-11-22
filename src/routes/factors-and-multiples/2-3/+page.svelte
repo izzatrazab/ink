@@ -127,7 +127,7 @@
 						<FactorPairs of={latihan.pair.numbers} {playing} />
 					{:else}
 						{@const h = stageHeight(latihan.pair.numbers.length)}
-						<FigureCard aspect="200/{h}" class="max-w-md">
+						<FigureCard aspect="200/{h}" class="max-w-md text-secondary!">
 							<Stage viewBox="0 0 200 {h}" class="h-full w-full">
 								<MultipleLanes n={answer} of={latihan.pair.numbers} {playing} />
 							</Stage>
