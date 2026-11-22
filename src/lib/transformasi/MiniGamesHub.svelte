@@ -12,7 +12,18 @@
 	// The Mini-games hub: the unnumbered page listing a chapter's Mini-games, one
 	// card each, linked from the chapter landing (ADR-0012). Titles and summaries
 	// come from the registry, so the hub and the game pages cannot disagree.
-	let { chapter: base, description }: { chapter: Chapter; description: string } = $props();
+	// A game card can also say how far the reader has got (`progress`, by game slug),
+	// so a game filling up is something to come back to.
+	interface GameProgress {
+		done: number;
+		total: number;
+		label: string;
+	}
+	let {
+		chapter: base,
+		description,
+		progress = {}
+	}: { chapter: Chapter; description: string; progress?: Record<string, GameProgress> } = $props();
 	const chapter = $derived(reader.view(base));
 	const t = $derived(chapterText(chapter));
 
@@ -49,6 +60,18 @@
 					>
 					<span class="font-display block text-xl font-bold">{game.title}</span>
 					<span class="block opacity-70">{game.description}</span>
+					{#if progress[game.slug]}
+						{@const p = progress[game.slug]}
+						<span class="flex items-center gap-3 pt-2">
+							<progress
+								class="progress progress-secondary w-32"
+								value={p.done}
+								max={p.total}
+								aria-hidden="true"
+							></progress>
+							<span class="text-sm font-semibold opacity-80">{p.label}</span>
+						</span>
+					{/if}
 				</a>
 			</li>
 		{/each}

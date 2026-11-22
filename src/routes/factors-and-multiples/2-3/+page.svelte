@@ -10,6 +10,7 @@
 	import { startLatihan } from '$lib/transformasi/latihan.svelte';
 	import { pairs, latihanConfig, result } from '$lib/factors-and-multiples/hcfLcmQuiz';
 	import Rich from '$lib/factors-and-multiples/Rich.svelte';
+	import GameLinks from '$lib/factors-and-multiples/GameLinks.svelte';
 	import { useCopy } from '$lib/factors-and-multiples/useCopy';
 	import { stageHeight } from '$lib/factors-and-multiples/lanes';
 
@@ -162,5 +163,6 @@
 				<CompareLadders presets={[latihan.pair.numbers]} />
 			{/key}
 		{/if}
+		<GameLinks games={['prime-breaker', 'meet-again']} />
 	</section>
 </LessonShell>

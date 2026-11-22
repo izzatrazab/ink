@@ -157,6 +157,14 @@ export interface Copy {
 	games: {
 		/** <meta name="description"> for the mini-games hub. */
 		hubDesc: string;
+		/** What each game card on the hub says about the reader's progress. */
+		hub: {
+			notPlayed: string;
+			primesKnown: (n: number, total: number) => string;
+			levelsMastered: (n: number, total: number) => string;
+		};
+		/** The "play a game" box at the end of a lesson beat. */
+		practise: { heading: string; play: string };
 		primeHunt: {
 			/** <meta name="description"> for the game page. */
 			desc: string;
@@ -527,6 +535,12 @@ const en: Copy = {
 	},
 	games: {
 		hubDesc: 'Short games for Factors and Multiples: practise until the facts stick.',
+		hub: {
+			notPlayed: 'Not played yet',
+			primesKnown: (n, total) => `${n} of ${total} primes known`,
+			levelsMastered: (n, total) => `${n} of ${total} levels mastered`
+		},
+		practise: { heading: 'Practise this in a game', play: 'Play' },
 		primeHunt: {
 			desc: 'Prime Hunt: tap every prime number on the board, and learn the primes up to 100 by heart.',
 			intro:
@@ -935,6 +949,12 @@ const ms: Copy = {
 	},
 	games: {
 		hubDesc: 'Permainan pendek untuk Faktor dan Gandaan: berlatih sehingga fakta itu melekat.',
+		hub: {
+			notPlayed: 'Belum dimainkan',
+			primesKnown: (n, total) => `${n} daripada ${total} nombor perdana diketahui`,
+			levelsMastered: (n, total) => `${n} daripada ${total} tahap dikuasai`
+		},
+		practise: { heading: 'Berlatih ini dalam permainan', play: 'Main' },
 		primeHunt: {
 			desc: 'Buru Nombor Perdana: ketik setiap nombor perdana pada papan, dan hafal nombor perdana sehingga 100.',
 			intro:

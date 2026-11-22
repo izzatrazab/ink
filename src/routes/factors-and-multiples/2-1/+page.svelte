@@ -9,6 +9,7 @@
 	import { pairs, latihanConfig, correctAnswer } from '$lib/factors-and-multiples/factorQuiz';
 	import { leftover } from '$lib/factors-and-multiples/numbers';
 	import Rich from '$lib/factors-and-multiples/Rich.svelte';
+	import GameLinks from '$lib/factors-and-multiples/GameLinks.svelte';
 	import { useCopy } from '$lib/factors-and-multiples/useCopy';
 
 	const copy = useCopy();
@@ -115,5 +116,6 @@
 				[45, 75, 120]
 			]}
 		/>
+		<GameLinks games={['prime-hunt', 'prime-breaker']} />
 	</section>
 </LessonShell>

@@ -13,6 +13,7 @@
 		firstMiss
 	} from '$lib/factors-and-multiples/commonMultipleQuiz';
 	import Rich from '$lib/factors-and-multiples/Rich.svelte';
+	import GameLinks from '$lib/factors-and-multiples/GameLinks.svelte';
 	import { useCopy } from '$lib/factors-and-multiples/useCopy';
 
 	const copy = useCopy();
@@ -106,5 +107,6 @@
 				[12, 18, 30]
 			]}
 		/>
+		<GameLinks games={['multiples-hunt', 'meet-again']} />
 	</section>
 </LessonShell>
