@@ -10,6 +10,7 @@
 	import { useCopy } from './useCopy';
 	import Rich from './Rich.svelte';
 	import Confetti from './Confetti.svelte';
+	import ShareResult from './ShareResult.svelte';
 
 	// Meet Again: the Mini-game's screen. The rules live in meetAgain.ts, the live
 	// game (beat clock, Round, progress, sound) in meetAgainStore.svelte.ts; this
@@ -21,6 +22,7 @@
 	const game = startMeetAgain({ sounds: webAudioSounds() });
 	const copy = useCopy();
 	const t = $derived(copy.t.games.meetAgain);
+	const c = $derived(copy.t.games.common);
 
 	// No Round exists until mounted (a random Round would differ between server and browser).
 	let ready = $state(false);
@@ -135,6 +137,7 @@
 				<p class="text-primary font-display text-lg font-bold" aria-live="polite">
 					{t.caught(game.met.length, game.round.meetings)}
 				</p>
+				{#if game.retrying && !game.result}<p class="ink-muted text-sm">{c.practice}</p>{/if}
 			</div>
 
 			<!-- The lights: lit means ON, said in words as well as glowing. -->
@@ -259,11 +262,22 @@
 						</div>
 					{/if}
 
-					<div class="text-center">
+					<div class="flex flex-wrap items-center justify-center gap-3">
 						<button type="button" class="btn btn-primary" onclick={() => game.next()}
 							>{t.next}</button
 						>
+						{#if game.result.stars < 3}
+							<button type="button" class="btn btn-outline" onclick={() => game.retry()}
+								>{c.again}</button
+							>
+						{/if}
 					</div>
+					<ShareResult
+						game="meet-again"
+						stars={game.result.stars}
+						slips={game.mistakes}
+						detail={game.round.periods.join(' · ')}
+					/>
 				</div>
 			{/if}
 		</div>

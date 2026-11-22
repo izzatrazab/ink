@@ -10,6 +10,7 @@
 	import LadderRows from './LadderRows.svelte';
 	import Rich from './Rich.svelte';
 	import Confetti from './Confetti.svelte';
+	import ShareResult from './ShareResult.svelte';
 
 	// Prime Breaker: the Mini-game's screen. The rules live in primeBreaker.ts and
 	// ladder.ts, the live game (Round, taps, progress, sound) in
@@ -21,6 +22,7 @@
 	const game = startPrimeBreaker({ sounds: webAudioSounds() });
 	const copy = useCopy();
 	const t = $derived(copy.t.games.primeBreaker);
+	const c = $derived(copy.t.games.common);
 	const lt = $derived(copy.t.ladder);
 
 	// No Round exists until mounted (a random Round would differ between server and browser).
@@ -120,7 +122,15 @@
 		<div class="ink-card space-y-5 p-5 sm:p-8">
 			<p class="text-center text-lg font-semibold">
 				<Rich text={t.task(game.kind, game.startRow.join(', '))} />
+				{#if game.combo >= 2 && !game.result}
+					<span class="badge badge-secondary ml-2" aria-label={c.comboAria(game.combo)}
+						>{c.combo(game.combo)}</span
+					>
+				{/if}
 			</p>
+			{#if game.retrying && !game.result}
+				<p class="ink-muted text-center text-sm">{c.practice}</p>
+			{/if}
 
 			<div class="space-y-2 text-center">
 				<p class="text-sm font-semibold tracking-wide uppercase ink-muted">
@@ -197,15 +207,29 @@
 						{#if game.streak > 1}
 							<p class="ink-muted text-sm">{t.streak(game.streak)}</p>
 						{/if}
+						{#if game.bestCombo >= 3}
+							<p class="ink-muted text-sm">{c.bestRun(game.bestCombo)}</p>
+						{/if}
 						{#if game.justUnlocked}
 							<p class="text-success font-semibold">{t.unlocked(kindName(game.justUnlocked))}</p>
 						{/if}
 					</div>
-					<div class="text-center">
+					<div class="flex flex-wrap items-center justify-center gap-3">
 						<button type="button" class="btn btn-primary" onclick={() => game.next()}
 							>{t.next}</button
 						>
+						{#if game.result.stars < 3}
+							<button type="button" class="btn btn-outline" onclick={() => game.retry()}
+								>{c.again}</button
+							>
+						{/if}
 					</div>
+					<ShareResult
+						game="prime-breaker"
+						stars={game.result.stars}
+						slips={game.mistakes}
+						detail={answer}
+					/>
 				</div>
 			{:else}
 				<div class="text-center">

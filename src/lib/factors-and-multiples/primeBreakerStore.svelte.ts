@@ -77,6 +77,12 @@ class PrimeBreakerGame {
 	justUnlocked = $state<Kind | null>(null);
 	/** Whether the sounds are off. */
 	muted = $state(false);
+	/** Accepted primes in a row on this Round; a refusal ends the run. */
+	combo = $state(0);
+	/** The longest run on this Round. */
+	bestCombo = $state(0);
+	/** Whether this Round is a replay: it earns stars but does not count toward Progress. */
+	retrying = $state(false);
 
 	constructor({
 		rng = Math.random,
@@ -125,10 +131,13 @@ class PrimeBreakerGame {
 		this.play = t.play;
 		if (t.outcome === 'refused') {
 			this.refusal = { before, d, rejection: t.rejection };
+			this.combo = 0;
 			this.#sound((s) => s.wrong());
 			return;
 		}
 		this.refusal = null;
+		this.combo += 1;
+		this.bestCombo = Math.max(this.bestCombo, this.combo);
 		this.#sound((s) => s.success(t.play.divisors.length - 1));
 		if (isDone(t.next, this.kind)) this.#finish();
 	}
@@ -149,6 +158,17 @@ class PrimeBreakerGame {
 		this.#deal();
 	}
 
+	/** Plays the same Round again. Its stars are the student's own, but a replay does not count toward Progress or the streak. */
+	retry() {
+		this.play = freshPlay();
+		this.result = null;
+		this.refusal = null;
+		this.justUnlocked = null;
+		this.combo = 0;
+		this.bestCombo = 0;
+		this.retrying = true;
+	}
+
 	toggleMute() {
 		this.muted = !this.muted;
 		this.#save(MUTED_KEY, this.muted ? '1' : '0');
@@ -156,12 +176,14 @@ class PrimeBreakerGame {
 
 	#finish() {
 		const result = scoreRound(this.play.mistakes.length);
-		const before = unlockedKinds(this.progress);
-		this.progress = applyRound(this.progress, this.kind, result.mistakes);
 		this.result = result;
-		this.streak = result.stars === 3 ? this.streak + 1 : 0;
-		this.justUnlocked = unlockedKinds(this.progress).find((k) => !before.includes(k)) ?? null;
-		this.#save(PROGRESS_KEY, JSON.stringify(this.progress));
+		if (!this.retrying) {
+			const before = unlockedKinds(this.progress);
+			this.progress = applyRound(this.progress, this.kind, result.mistakes);
+			this.streak = result.stars === 3 ? this.streak + 1 : 0;
+			this.justUnlocked = unlockedKinds(this.progress).find((k) => !before.includes(k)) ?? null;
+			this.#save(PROGRESS_KEY, JSON.stringify(this.progress));
+		}
 		this.#sound((s) => s.done());
 	}
 
@@ -183,6 +205,9 @@ class PrimeBreakerGame {
 		this.result = null;
 		this.refusal = null;
 		this.justUnlocked = null;
+		this.combo = 0;
+		this.bestCombo = 0;
+		this.retrying = false;
 	}
 }
 

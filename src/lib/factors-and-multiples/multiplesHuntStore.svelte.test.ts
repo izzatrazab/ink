@@ -143,3 +143,37 @@ describe('startMultiplesHunt', () => {
 		expect(g.result?.stars).toBe(3);
 	});
 });
+
+describe('combo and replay', () => {
+	it('counts correct taps in a row, and a wrong tap ends the run', () => {
+		const g = make();
+		g.start();
+		const [a, b, c] = hitsOn(g);
+		g.tap(a);
+		g.tap(b);
+		expect(g.combo).toBe(2);
+		g.tap(missesOn(g)[0]);
+		expect(g.combo).toBe(0);
+		expect(g.bestCombo).toBe(2);
+		g.tap(c);
+		expect(g.combo).toBe(1);
+	});
+
+	it('replays the same board for stars, without counting it toward progress or the streak', () => {
+		const g = make();
+		g.start();
+		g.tap(missesOn(g)[0]);
+		findAll(g);
+		expect(g.result?.stars).toBe(2);
+		const board = [...g.board];
+		g.retry();
+		expect(g.board).toEqual(board);
+		expect(g.set).toHaveLength(1);
+		findAll(g);
+		expect(g.result?.stars).toBe(3);
+		expect(g.progress).toEqual({});
+		expect(g.streak).toBe(0);
+		g.next();
+		expect(g.retrying).toBe(false);
+	});
+});

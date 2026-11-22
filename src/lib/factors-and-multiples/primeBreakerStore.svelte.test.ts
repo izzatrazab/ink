@@ -165,3 +165,36 @@ describe('startPrimeBreaker', () => {
 		expect(g.result?.stars).toBe(3);
 	});
 });
+
+describe('combo and replay', () => {
+	it('counts accepted primes in a row, and a refusal ends the run', () => {
+		const g = make();
+		g.start();
+		const [a, b] = autoDivisors(g.startRow, g.kind);
+		g.tap(a);
+		g.tap(b);
+		expect(g.combo).toBe(2);
+		g.tap(wrongPrime(g));
+		expect(g.combo).toBe(0);
+		expect(g.bestCombo).toBe(2);
+	});
+
+	it('replays the same Round for stars, without counting it toward progress or the streak', () => {
+		const g = make();
+		g.start();
+		g.tap(wrongPrime(g));
+		solve(g);
+		expect(g.result?.stars).toBe(2);
+		const start = [...g.startRow];
+		g.retry();
+		expect(g.startRow).toEqual(start);
+		expect(g.rows).toHaveLength(1);
+		expect(g.result).toBeNull();
+		solve(g);
+		expect(g.result?.stars).toBe(3);
+		expect(g.progress).toEqual({});
+		expect(g.streak).toBe(0);
+		g.next();
+		expect(g.retrying).toBe(false);
+	});
+});

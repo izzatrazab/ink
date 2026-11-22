@@ -231,3 +231,29 @@ describe('startMeetAgain', () => {
 		expect(g.result?.stars).toBe(3);
 	});
 });
+
+describe('replay', () => {
+	it('plays the same lights again for stars, without counting it toward progress or the streak', () => {
+		const g = make();
+		g.start();
+		g.begin();
+		g.tapTogether(); // beat 1: early
+		while (g.inPlay) {
+			if (isMeeting(g.round.periods, g.beat)) g.tapTogether();
+			if (g.inPlay) beat();
+		}
+		expect(g.result?.stars).toBe(2);
+		const periods = [...g.round.periods];
+		g.retry();
+		expect(g.round.periods).toEqual(periods);
+		expect(g.started).toBe(false);
+		expect(g.beat).toBe(0);
+		expect(g.result).toBeNull();
+		playPerfect(g);
+		expect(g.result?.stars).toBe(3);
+		expect(g.progress).toEqual({});
+		expect(g.streak).toBe(0);
+		g.next();
+		expect(g.retrying).toBe(false);
+	});
+});

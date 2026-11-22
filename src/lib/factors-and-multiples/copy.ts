@@ -165,6 +165,17 @@ export interface Copy {
 		};
 		/** The "play a game" box at the end of a lesson beat. */
 		practise: { heading: string; play: string };
+		/** What every game says the same way: replays, runs, sharing. */
+		common: {
+			again: string;
+			practice: string;
+			combo: (n: number) => string;
+			comboAria: (n: number) => string;
+			bestRun: (n: number) => string;
+			share: string;
+			copied: string;
+			copyFailed: string;
+		};
 		primeHunt: {
 			/** <meta name="description"> for the game page. */
 			desc: string;
@@ -541,6 +552,16 @@ const en: Copy = {
 			levelsMastered: (n, total) => `${n} of ${total} levels mastered`
 		},
 		practise: { heading: 'Practise this in a game', play: 'Play' },
+		common: {
+			again: 'Try this one again',
+			practice: 'Practice run: it does not count toward unlocking.',
+			combo: (n) => `×${n}`,
+			comboAria: (n) => `${n} in a row`,
+			bestRun: (n) => `Best run: ${n} in a row`,
+			share: 'Copy result',
+			copied: 'Copied!',
+			copyFailed: 'Could not copy. Select the text below and copy it.'
+		},
 		primeHunt: {
 			desc: 'Prime Hunt: tap every prime number on the board, and learn the primes up to 100 by heart.',
 			intro:
@@ -955,6 +976,16 @@ const ms: Copy = {
 			levelsMastered: (n, total) => `${n} daripada ${total} tahap dikuasai`
 		},
 		practise: { heading: 'Berlatih ini dalam permainan', play: 'Main' },
+		common: {
+			again: 'Cuba yang ini sekali lagi',
+			practice: 'Larian latihan: ia tidak dikira untuk membuka tahap.',
+			combo: (n) => `×${n}`,
+			comboAria: (n) => `${n} berturut-turut`,
+			bestRun: (n) => `Larian terbaik: ${n} berturut-turut`,
+			share: 'Salin keputusan',
+			copied: 'Disalin!',
+			copyFailed: 'Tidak dapat menyalin. Pilih teks di bawah dan salinkannya.'
+		},
 		primeHunt: {
 			desc: 'Buru Nombor Perdana: ketik setiap nombor perdana pada papan, dan hafal nombor perdana sehingga 100.',
 			intro:

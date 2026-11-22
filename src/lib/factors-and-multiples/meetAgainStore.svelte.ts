@@ -84,6 +84,8 @@ class MeetAgainGame {
 	/** The kind this Round just unlocked, until the next Round is dealt. */
 	justUnlocked = $state<Kind | null>(null);
 	muted = $state(false);
+	/** Whether this Round is a replay: it earns stars but does not count toward Progress. */
+	retrying = $state(false);
 
 	constructor({ rng = Math.random, storage = browserStorage, sounds = silent }: MeetAgainOptions) {
 		this.#rng = rng;
@@ -161,6 +163,18 @@ class MeetAgainGame {
 		this.#run();
 	}
 
+	/** Plays the same lights again. Its stars are the student's own, but a replay does not count toward Progress or the streak. */
+	retry() {
+		this.#halt();
+		this.play = freshPlay();
+		this.started = false;
+		this.paused = false;
+		this.result = null;
+		this.lastMistake = null;
+		this.justUnlocked = null;
+		this.retrying = true;
+	}
+
 	/** Deals a fresh Round of the same kind, abandoning the one in play. */
 	next() {
 		this.#deal();
@@ -216,12 +230,14 @@ class MeetAgainGame {
 	#finish() {
 		this.#halt();
 		const result = scoreRound(this.play.mistakes.length);
-		const before = unlockedKinds(this.progress);
-		this.progress = applyRound(this.progress, this.kind, result.mistakes);
 		this.result = result;
-		this.streak = result.stars === 3 ? this.streak + 1 : 0;
-		this.justUnlocked = unlockedKinds(this.progress).find((k) => !before.includes(k)) ?? null;
-		this.#save(PROGRESS_KEY, JSON.stringify(this.progress));
+		if (!this.retrying) {
+			const before = unlockedKinds(this.progress);
+			this.progress = applyRound(this.progress, this.kind, result.mistakes);
+			this.streak = result.stars === 3 ? this.streak + 1 : 0;
+			this.justUnlocked = unlockedKinds(this.progress).find((k) => !before.includes(k)) ?? null;
+			this.#save(PROGRESS_KEY, JSON.stringify(this.progress));
+		}
 		this.#sound((s) => s.done());
 	}
 
@@ -246,6 +262,7 @@ class MeetAgainGame {
 		this.result = null;
 		this.lastMistake = null;
 		this.justUnlocked = null;
+		this.retrying = false;
 	}
 }
 

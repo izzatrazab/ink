@@ -74,6 +74,12 @@ class MultiplesHuntGame {
 	justUnlocked = $state<Kind | null>(null);
 	/** Whether the sounds are off. */
 	muted = $state(false);
+	/** Correct taps in a row on this Board; a wrong tap ends the run. */
+	combo = $state(0);
+	/** The longest run on this Board. */
+	bestCombo = $state(0);
+	/** Whether this Board is a replay: it earns stars but does not count toward Progress. */
+	retrying = $state(false);
 
 	constructor({
 		rng = Math.random,
@@ -122,9 +128,12 @@ class MultiplesHuntGame {
 		this.play = play;
 		if (outcome === 'found') {
 			this.lastWrong = null;
+			this.combo += 1;
+			this.bestCombo = Math.max(this.bestCombo, this.combo);
 			this.#sound((s) => s.success(play.found.length - 1));
 		} else {
 			this.lastWrong = n;
+			this.combo = 0;
 			this.#sound((s) => s.wrong());
 		}
 		if (isComplete(this.#round, play)) this.#finish();
@@ -141,6 +150,17 @@ class MultiplesHuntGame {
 		this.#deal();
 	}
 
+	/** Plays the same Board again. Its stars are the student's own, but a replay does not count toward Progress or the streak. */
+	retry() {
+		this.play = freshPlay();
+		this.result = null;
+		this.lastWrong = null;
+		this.justUnlocked = null;
+		this.combo = 0;
+		this.bestCombo = 0;
+		this.retrying = true;
+	}
+
 	toggleMute() {
 		this.muted = !this.muted;
 		this.#save(MUTED_KEY, this.muted ? '1' : '0');
@@ -148,12 +168,14 @@ class MultiplesHuntGame {
 
 	#finish() {
 		const result = scoreBoard(this.play.wrong.length);
-		const before = unlockedKinds(this.progress);
-		this.progress = applyBoard(this.progress, this.kind, result.mistakes);
 		this.result = result;
-		this.streak = result.stars === 3 ? this.streak + 1 : 0;
-		this.justUnlocked = unlockedKinds(this.progress).find((k) => !before.includes(k)) ?? null;
-		this.#save(PROGRESS_KEY, JSON.stringify(this.progress));
+		if (!this.retrying) {
+			const before = unlockedKinds(this.progress);
+			this.progress = applyBoard(this.progress, this.kind, result.mistakes);
+			this.streak = result.stars === 3 ? this.streak + 1 : 0;
+			this.justUnlocked = unlockedKinds(this.progress).find((k) => !before.includes(k)) ?? null;
+			this.#save(PROGRESS_KEY, JSON.stringify(this.progress));
+		}
 		this.#sound((s) => s.done());
 	}
 
@@ -177,6 +199,9 @@ class MultiplesHuntGame {
 		this.result = null;
 		this.lastWrong = null;
 		this.justUnlocked = null;
+		this.combo = 0;
+		this.bestCombo = 0;
+		this.retrying = false;
 	}
 }
 

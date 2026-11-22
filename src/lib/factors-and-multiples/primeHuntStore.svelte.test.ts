@@ -254,3 +254,41 @@ describe('sound', () => {
 		expect(box.get(MUTED_KEY)).toBe('0');
 	});
 });
+
+describe('combo and replay', () => {
+	it('counts correct taps in a row, and a wrong tap ends the run', () => {
+		const g = make();
+		g.start();
+		const [a, b, c] = primesOn(g);
+		g.tap(a);
+		g.tap(b);
+		expect(g.combo).toBe(2);
+		g.tap(wrongOn(g)[0]);
+		expect(g.combo).toBe(0);
+		expect(g.bestCombo).toBe(2);
+		g.tap(c);
+		expect(g.combo).toBe(1);
+		expect(g.bestCombo).toBe(2);
+	});
+
+	it('replays the same board for stars, without counting it toward progress or the streak', () => {
+		const g = make();
+		g.start();
+		g.tap(wrongOn(g)[0]);
+		findAll(g);
+		expect(g.result?.stars).toBe(2);
+		const board = [...g.board];
+		const progress = { ...g.progress };
+		g.retry();
+		expect(g.board).toEqual(board);
+		expect(g.result).toBeNull();
+		expect(g.found).toEqual([]);
+		expect(g.retrying).toBe(true);
+		findAll(g);
+		expect(g.result?.stars).toBe(3);
+		expect(g.progress).toEqual(progress);
+		expect(g.streak).toBe(0);
+		g.next();
+		expect(g.retrying).toBe(false);
+	});
+});

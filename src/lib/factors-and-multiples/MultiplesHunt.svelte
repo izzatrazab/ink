@@ -7,6 +7,7 @@
 	import { useCopy } from './useCopy';
 	import Rich from './Rich.svelte';
 	import Confetti from './Confetti.svelte';
+	import ShareResult from './ShareResult.svelte';
 	import NumberBoard from './NumberBoard.svelte';
 
 	// Multiples Hunt: the Mini-game's screen. The rules live in multiplesHunt.ts, the
@@ -16,6 +17,7 @@
 	const game = startMultiplesHunt({ sounds: webAudioSounds() });
 	const copy = useCopy();
 	const t = $derived(copy.t.games.multiplesHunt);
+	const c = $derived(copy.t.games.common);
 
 	// No Board exists until mounted (a random Board would differ between server and browser).
 	let ready = $state(false);
@@ -111,7 +113,13 @@
 				</p>
 				<p class="text-primary font-display text-lg font-bold" aria-live="polite">
 					{#if !game.result}{t.left(game.left)}{/if}
+					{#if game.combo >= 2 && !game.result}
+						<span class="badge badge-secondary cell-pop ml-2" aria-label={c.comboAria(game.combo)}
+							>{c.combo(game.combo)}</span
+						>
+					{/if}
 				</p>
+				{#if game.retrying && !game.result}<p class="ink-muted text-sm">{c.practice}</p>{/if}
 			</div>
 
 			<NumberBoard
@@ -156,6 +164,9 @@
 						{#if game.streak > 1}
 							<p class="ink-muted text-sm">{t.streak(game.streak)}</p>
 						{/if}
+						{#if game.bestCombo >= 3}
+							<p class="ink-muted text-sm">{c.bestRun(game.bestCombo)}</p>
+						{/if}
 						{#if game.justUnlocked}
 							<p class="text-success font-semibold">{t.unlocked(kindName(game.justUnlocked))}</p>
 						{/if}
@@ -175,11 +186,22 @@
 						</div>
 					{/if}
 
-					<div class="text-center">
+					<div class="flex flex-wrap items-center justify-center gap-3">
 						<button type="button" class="btn btn-primary" onclick={() => game.next()}
 							>{t.next}</button
 						>
+						{#if game.result.stars < 3}
+							<button type="button" class="btn btn-outline" onclick={() => game.retry()}
+								>{c.again}</button
+							>
+						{/if}
 					</div>
+					<ShareResult
+						game="multiples-hunt"
+						stars={game.result.stars}
+						slips={game.wrong.length}
+						detail={game.set.join(' · ')}
+					/>
 				</div>
 			{/if}
 		</div>
