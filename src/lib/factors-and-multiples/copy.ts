@@ -206,6 +206,24 @@ export interface Copy {
 			explainPair: (n: number, a: number, b: number) => string;
 			wrong: string;
 			unlocked: (max: number) => string;
+			collection: {
+				heading: (n: number, total: number) => string;
+				note: string;
+				known: (n: number) => string;
+			};
+			blitz: {
+				open: string;
+				close: string;
+				intro: string;
+				start: string;
+				timeLeft: (n: number) => string;
+				score: (n: number) => string;
+				cleared: (n: number) => string;
+				over: (n: number) => string;
+				newBest: string;
+				best: (n: number) => string;
+				again: string;
+			};
 		};
 		primeBreaker: {
 			desc: string;
@@ -597,7 +615,26 @@ const en: Copy = {
 			explainPrime: (n) => `${n} is prime: its only factors are 1 and ${n}.`,
 			explainPair: (n, a, b) => `${n} is not prime: ${n} = ${a} × ${b}.`,
 			wrong: 'Not prime',
-			unlocked: (max) => `Well done! Primes 2–${max} unlocked.`
+			unlocked: (max) => `Well done! Primes 2–${max} unlocked.`,
+			collection: {
+				heading: (n, total) => `My prime collection: ${n} of ${total}`,
+				note: 'A prime lights up once you have found it cleanly on two boards. Only primes you know are shown.',
+				known: (n) => `${n}: prime, known`
+			},
+			blitz: {
+				open: 'Blitz challenge',
+				close: 'Back to the calm game',
+				intro:
+					'Optional: find as many primes as you can in 60 seconds. A find scores a point and a wrong tap takes one away. It never changes the primes you know.',
+				start: 'Start Blitz',
+				timeLeft: (n) => `${n} s left`,
+				score: (n) => `Score ${n}`,
+				cleared: (n) => (n === 1 ? '1 board cleared' : `${n} boards cleared`),
+				over: (n) => `Time! You scored ${n}.`,
+				newBest: 'New best!',
+				best: (n) => `Best on this range: ${n}`,
+				again: 'Go again'
+			}
 		},
 		primeBreaker: {
 			desc: 'Prime Breaker: break numbers down by dividing with primes, one rung at a time, for prime factors, HCF and LCM.',
@@ -1026,7 +1063,26 @@ const ms: Copy = {
 			explainPrime: (n) => `${n} ialah nombor perdana: faktornya hanya 1 dan ${n}.`,
 			explainPair: (n, a, b) => `${n} bukan nombor perdana: ${n} = ${a} × ${b}.`,
 			wrong: 'Bukan perdana',
-			unlocked: (max) => `Hebat! Nombor perdana 2–${max} dibuka.`
+			unlocked: (max) => `Hebat! Nombor perdana 2–${max} dibuka.`,
+			collection: {
+				heading: (n, total) => `Koleksi nombor perdana saya: ${n} daripada ${total}`,
+				note: 'Nombor perdana menyala apabila anda menjumpainya dengan bersih pada dua papan. Hanya nombor perdana yang anda tahu ditunjukkan.',
+				known: (n) => `${n}: perdana, diketahui`
+			},
+			blitz: {
+				open: 'Cabaran Kilat',
+				close: 'Kembali ke permainan tenang',
+				intro:
+					'Pilihan: cari sebanyak mungkin nombor perdana dalam 60 saat. Setiap penemuan mendapat satu mata dan ketikan salah menolak satu. Ia tidak pernah mengubah nombor perdana yang anda tahu.',
+				start: 'Mula Kilat',
+				timeLeft: (n) => `${n} s lagi`,
+				score: (n) => `Skor ${n}`,
+				cleared: (n) => `${n} papan diselesaikan`,
+				over: (n) => `Masa tamat! Skor anda ${n}.`,
+				newBest: 'Terbaik baharu!',
+				best: (n) => `Terbaik bagi julat ini: ${n}`,
+				again: 'Cuba lagi'
+			}
 		},
 		primeBreaker: {
 			desc: 'Pemecah Perdana: pecahkan nombor dengan membahagi menggunakan nombor perdana, satu anak tangga demi satu anak tangga, untuk faktor perdana, FSTB dan GSTK.',

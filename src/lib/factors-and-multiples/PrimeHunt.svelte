@@ -8,6 +8,8 @@
 	import Confetti from './Confetti.svelte';
 	import ShareResult from './ShareResult.svelte';
 	import NumberBoard from './NumberBoard.svelte';
+	import PrimeBlitz from './PrimeBlitz.svelte';
+	import PrimeCollection from './PrimeCollection.svelte';
 
 	// Prime Hunt: the Mini-game's screen. The rules live in primeHunt.ts, the live
 	// game (board, taps, progress, sound) in primeHuntStore.svelte.ts; this only
@@ -15,7 +17,10 @@
 	// chime, a non-prime turns red with a shake and a buzz, and says why. Verdicts
 	// carry a mark and a word, never colour alone, and the animations drop out for
 	// readers who ask for reduced motion (app.css).
-	const game = startPrimeHunt({ sounds: webAudioSounds() });
+	const sounds = webAudioSounds();
+	const game = startPrimeHunt({ sounds });
+	// The optional 60-second challenge replaces the calm board while it is open.
+	let blitz = $state(false);
 	const copy = useCopy();
 	const t = $derived(copy.t.games.primeHunt);
 	const c = $derived(copy.t.games.common);
@@ -96,10 +101,20 @@
 				class="btn btn-ghost btn-sm"
 				aria-expanded={studyOpen}
 				aria-controls="study-panel"
-				disabled={game.inPlay}
+				disabled={game.inPlay || blitz}
 				onclick={() => (studyOpen = !studyOpen)}
 			>
 				{studyOpen ? t.studyClose : t.studyOpen}
+			</button>
+			<button
+				type="button"
+				class="btn btn-ghost btn-sm"
+				aria-pressed={blitz}
+				disabled={game.inPlay}
+				onclick={() => (blitz = !blitz)}
+			>
+				<span aria-hidden="true">⚡</span>
+				{blitz ? t.blitz.close : t.blitz.open}
 			</button>
 			<button
 				type="button"
@@ -132,7 +147,9 @@
 	</div>
 
 	<!-- The board -->
-	{#if !ready}
+	{#if blitz}
+		<PrimeBlitz tier={game.tier} {sounds} muted={game.muted} />
+	{:else if !ready}
 		<p class="ink-muted min-h-64 text-center" role="status">{t.loading}</p>
 	{:else}
 		<div class="ink-card space-y-5 p-5 sm:p-8">
@@ -230,4 +247,6 @@
 			{/if}
 		</div>
 	{/if}
+
+	{#if ready}<PrimeCollection progress={game.progress} />{/if}
 </div>
