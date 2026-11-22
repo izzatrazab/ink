@@ -2,7 +2,7 @@
 
 An interactive web app that _teaches_ (not merely drills) Form 2 KSSM Mathematics **Chapter 11, Transformasi Isometri**, through manipulable SVG. The chapter is built one **Section** at a time: **Transformation + Congruency** (Section 11.1, the conceptual on-ramp), **Translation** (Section 11.2), and **Reflection** (Section 11.3). Rotation (11.4), combined transformations (11.5), and rotational symmetry (11.6) remain deferred — each is a new interaction model, a separate build (ADR-0008 as amended by ADR-0010).
 
-> The site now hosts more than one chapter (ADR-0011): the chapter registry in `src/lib/chapters.ts` lists them, and `/` is a chapter index. Form 1 Chapter 2, **Factors and Multiples** (`/factors-and-multiples`, written in English to follow its textbook), has Sections 2.1, 2.2 and 2.3 built plus a **Mini-games hub** (Prime Hunt and Prime Breaker, ADR-0012), and offers Malay as a translation (see **Prime Breaker**:
+> The site now hosts more than one chapter (ADR-0011): the chapter registry in `src/lib/chapters.ts` lists them, and `/` is a chapter index. Form 1 Chapter 2, **Factors and Multiples** (`/factors-and-multiples`, written in English to follow its textbook), has Sections 2.1, 2.2 and 2.3 built plus a **Mini-games hub** (Prime Hunt, Prime Breaker and Multiples Hunt, ADR-0012), and offers Malay as a translation (see **Prime Breaker**:
 The second **Mini-game**, in Factors and Multiples: a **Round** hands the student a **Division ladder** to finish by tapping primes (2, 3, 5, 7, 11, 13). Every tap is judged at once by the ladder's own rules (`ladder.ts`): a prime that fits drops a new row with a chime; one that does not is refused with a buzz and the same reason the lesson gives ("180 ÷ 7 leaves 5, so 7 does not go in"). There is no hint, undo or Watch, and the prime buttons stay above the ladder so they do not move as it grows. Played in three **Break kinds**.
 _Avoid_: factor tree game, ladder game.
 
@@ -13,6 +13,14 @@ _Avoid_: level, board (that word is **Prime Hunt**'s), question.
 **Break kind**:
 What a **Round** asks the student to break: prime factors of one number (**single** ladder mode), the HCF of two or three numbers, or their LCM. The kinds unlock in that order, each after three **clean Rounds** of the one before. Dealt numbers need only the offered primes, and an HCF Round always has an HCF above 1. Progress is kept in the reader's browser.
 _Avoid_: level, tier (that word is **Prime Hunt**'s), mode (that is the ladder's).
+
+**Multiples Hunt**:
+The third **Mini-game**, in Factors and Multiples: a **Board** of 16 numbers appears and the student taps every multiple of one number, or every **common multiple** of two or three. Every tap is judged at once from the number seam. The traps are the lesson: in a common-multiple Board most wrong numbers are a multiple of one of the numbers but not all of them, and the wrong tap says so ("8 is a multiple of 4, but not of 6: 8 ÷ 6 leaves 2"). A finished Board shows that every common multiple is a multiple of the LCM. Played in three **Hunt kinds**; shares the Board's look and sounds with **Prime Hunt** through `NumberBoard.svelte`.
+_Avoid_: times-table drill, multiples quiz.
+
+**Hunt kind**:
+What a **Multiples Hunt** Board asks for: multiples of one number, common multiples of two, or of three. Unlocks in that order, each after three **clean Boards** of the one before (a clean Board has no wrong tap). Dealt sets never have one number a multiple of all the rest, and every Board has at least three multiples to find. Progress is kept in the reader's browser.
+_Avoid_: level, tier (that word is **Prime Hunt**'s), mode.
 
 **Reader language**). The rest of this document describes the Transformasi Isometri chapter.
 

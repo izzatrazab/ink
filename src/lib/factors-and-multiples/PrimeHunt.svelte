@@ -6,6 +6,7 @@
 	import { useCopy } from './useCopy';
 	import Rich from './Rich.svelte';
 	import Confetti from './Confetti.svelte';
+	import NumberBoard from './NumberBoard.svelte';
 
 	// Prime Hunt: the Mini-game's screen. The rules live in primeHunt.ts, the live
 	// game (board, taps, progress, sound) in primeHuntStore.svelte.ts; this only
@@ -140,37 +141,14 @@
 				</p>
 			</div>
 
-			<div
-				class="mx-auto grid max-w-md grid-cols-4 gap-2 sm:gap-3"
-				role="group"
-				aria-label={t.boardAria}
-			>
-				{#each game.board as n (n)}
-					{@const state = game.found.includes(n)
-						? 'found'
-						: game.wrong.includes(n)
-							? 'wrong'
-							: 'open'}
-					<button
-						type="button"
-						class="btn font-display relative h-16 text-2xl sm:h-20 {state === 'found'
-							? 'btn-success cell-pop'
-							: state === 'wrong'
-								? 'btn-error cell-shake'
-								: 'btn-outline'}"
-						aria-label={t.cell(n, state)}
-						aria-disabled={state === 'open' ? undefined : true}
-						onclick={() => game.tap(n)}
-					>
-						{n}
-						{#if state !== 'open'}
-							<span class="absolute top-1 right-2 text-xs font-bold" aria-hidden="true"
-								>{state === 'found' ? '✓' : '✗'}</span
-							>
-						{/if}
-					</button>
-				{/each}
-			</div>
+			<NumberBoard
+				numbers={game.board}
+				stateOf={(n) =>
+					game.found.includes(n) ? 'found' : game.wrong.includes(n) ? 'wrong' : 'open'}
+				label={t.cell}
+				ontap={(n) => game.tap(n)}
+				ariaLabel={t.boardAria}
+			/>
 
 			<!-- The moment a wrong number is tapped, say so and say why. -->
 			<div role="alert" class="min-h-12">
@@ -231,42 +209,3 @@
 		</div>
 	{/if}
 </div>
-
-<style>
-	/* Played once, when a cell first gets the class. Reduced motion zeroes these in app.css. */
-	@keyframes cell-pop {
-		0% {
-			transform: scale(1);
-		}
-		40% {
-			transform: scale(1.2);
-		}
-		100% {
-			transform: scale(1);
-		}
-	}
-	@keyframes cell-shake {
-		0%,
-		100% {
-			translate: 0;
-		}
-		20% {
-			translate: -7px;
-		}
-		40% {
-			translate: 7px;
-		}
-		60% {
-			translate: -4px;
-		}
-		80% {
-			translate: 4px;
-		}
-	}
-	:global(.cell-pop) {
-		animation: cell-pop 0.35s ease-out;
-	}
-	:global(.cell-shake) {
-		animation: cell-shake 0.4s ease-in-out;
-	}
-</style>

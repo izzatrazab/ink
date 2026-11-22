@@ -108,6 +108,11 @@ export const chapters: Chapter[] = [
 				title: 'Prime Breaker',
 				description:
 					'Break numbers down with primes — prime factors, HCF and LCM by repeated division.'
+			},
+			{
+				slug: 'multiples-hunt',
+				title: 'Multiples Hunt',
+				description: 'Tap every multiple — then every common multiple of two or three numbers.'
 			}
 		],
 		translations: {
@@ -154,6 +159,11 @@ export const chapters: Chapter[] = [
 						title: 'Pemecah Perdana',
 						description:
 							'Pecahkan nombor dengan nombor perdana — faktor perdana, FSTB dan GSTK melalui pembahagian berulang.'
+					},
+					'multiples-hunt': {
+						title: 'Buru Gandaan',
+						description:
+							'Ketik setiap gandaan — kemudian setiap gandaan sepunya bagi dua atau tiga nombor.'
 					}
 				}
 			}

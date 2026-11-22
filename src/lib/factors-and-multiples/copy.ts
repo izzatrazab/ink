@@ -208,6 +208,33 @@ export interface Copy {
 			mistakes: (n: number) => string;
 			unlocked: (kind: string) => string;
 		};
+		multiplesHunt: {
+			desc: string;
+			intro: string;
+			loading: string;
+			kindGroup: string;
+			kind: (kind: 'one' | 'two' | 'three') => string;
+			lockedKind: (kind: string, before: string) => string;
+			clean: (n: number, of: number) => string;
+			task: (kind: 'one' | 'two' | 'three', list: string) => string;
+			hintOne: (n: number) => string;
+			hintCommon: string;
+			left: (n: number) => string;
+			soundOn: string;
+			soundOff: string;
+			next: string;
+			boardAria: string;
+			cell: (n: number, state: 'open' | 'found' | 'wrong') => string;
+			headline: (stars: 1 | 2 | 3) => string;
+			stars: (stars: number) => string;
+			streak: (n: number) => string;
+			reviewHeading: string;
+			wrong: string;
+			explainMiss: (n: number, s: number, rest: number) => string;
+			explainTrap: (n: number, of: number, s: number, rest: number) => string;
+			lcmNote: (lcm: number, list: string) => string;
+			unlocked: (kind: string) => string;
+		};
 	};
 }
 
@@ -524,6 +551,48 @@ const en: Copy = {
 			stars: (stars) => `${stars} of 3 stars`,
 			streak: (n) => `${n} perfect ${n === 1 ? 'round' : 'rounds'} in a row`,
 			mistakes: (n) => (n === 1 ? '1 slip' : `${n} slips`),
+			unlocked: (kind) => `Well done! ${kind} unlocked.`
+		},
+		multiplesHunt: {
+			desc: 'Multiples Hunt: tap every multiple of a number, then every common multiple of two or three numbers.',
+			intro:
+				'Sixteen numbers, some of them the multiples you want. Tap **every one** you can spot: each tap is judged straight away. A multiple of a number is in its times table: you reach it by counting in steps of that number.',
+			loading: 'Dealing a board…',
+			kindGroup: 'What to hunt',
+			kind: (k) =>
+				({ one: 'Multiples', two: 'Common multiples of two', three: 'Common multiples of three' })[
+					k
+				],
+			lockedKind: (kind, before) => `${kind}, unlocks after 3 perfect boards of ${before}`,
+			clean: (n, of) => `${Math.min(n, of)} of ${of} perfect boards`,
+			task: (kind, list) =>
+				kind === 'one'
+					? `Tap every **multiple** of **${list}**.`
+					: `Tap every **common multiple** of **${list}**.`,
+			hintOne: (n) => `Count in steps of ${n}: ${n}, ${2 * n}, ${3 * n}, …`,
+			hintCommon: 'A common multiple is a multiple of **every** one of the numbers.',
+			left: (n) => (n === 1 ? '1 multiple left' : `${n} multiples left`),
+			soundOn: 'Sound on',
+			soundOff: 'Sound off',
+			next: 'Next board',
+			boardAria: 'Numbers on the board',
+			cell: (n, state) =>
+				({
+					open: `${n}`,
+					found: `${n}: multiple, found`,
+					wrong: `${n}: not a multiple`
+				})[state],
+			headline: (stars) =>
+				stars === 3 ? 'Perfect board!' : stars === 2 ? 'So close: one slip.' : 'Keep hunting!',
+			stars: (stars) => `${stars} of 3 stars`,
+			streak: (n) => `${n} perfect ${n === 1 ? 'board' : 'boards'} in a row`,
+			reviewHeading: 'Look again at these',
+			wrong: 'Not a multiple',
+			explainMiss: (n, s, rest) => `${n} is not a multiple of ${s}: ${n} ÷ ${s} leaves ${rest}.`,
+			explainTrap: (n, of, s, rest) =>
+				`${n} is a multiple of ${of}, but not of ${s}: ${n} ÷ ${s} leaves ${rest}.`,
+			lcmNote: (lcm, list) =>
+				`Every common multiple of ${list} is a multiple of their LCM, **${lcm}**.`,
 			unlocked: (kind) => `Well done! ${kind} unlocked.`
 		}
 	}
@@ -855,6 +924,52 @@ const ms: Copy = {
 			stars: (stars) => `${stars} daripada 3 bintang`,
 			streak: (n) => `${n} pusingan sempurna berturut-turut`,
 			mistakes: (n) => `${n} kesilapan`,
+			unlocked: (kind) => `Hebat! ${kind} dibuka.`
+		},
+		multiplesHunt: {
+			desc: 'Buru Gandaan: ketik setiap gandaan bagi satu nombor, kemudian setiap gandaan sepunya bagi dua atau tiga nombor.',
+			intro:
+				'Enam belas nombor, sebahagiannya gandaan yang anda cari. Ketik **setiap satu** yang anda nampak: setiap ketikan dinilai serta-merta. Gandaan sesuatu nombor berada dalam sifir nombor itu: anda mencapainya dengan mengira langkah demi langkah sebanyak nombor itu.',
+			loading: 'Mengedar papan…',
+			kindGroup: 'Apa yang hendak diburu',
+			kind: (k) =>
+				({ one: 'Gandaan', two: 'Gandaan sepunya bagi dua', three: 'Gandaan sepunya bagi tiga' })[
+					k
+				],
+			lockedKind: (kind, before) => `${kind}, dibuka selepas 3 papan sempurna ${before}`,
+			clean: (n, of) => `${Math.min(n, of)} daripada ${of} papan sempurna`,
+			task: (kind, list) =>
+				kind === 'one'
+					? `Ketik setiap **gandaan** bagi **${list}**.`
+					: `Ketik setiap **gandaan sepunya** bagi **${list}**.`,
+			hintOne: (n) => `Kira langkah ${n}: ${n}, ${2 * n}, ${3 * n}, …`,
+			hintCommon: 'Gandaan sepunya ialah gandaan bagi **setiap** satu nombor itu.',
+			left: (n) => `${n} gandaan lagi`,
+			soundOn: 'Bunyi hidup',
+			soundOff: 'Bunyi mati',
+			next: 'Papan seterusnya',
+			boardAria: 'Nombor pada papan',
+			cell: (n, state) =>
+				({
+					open: `${n}`,
+					found: `${n}: gandaan, dijumpai`,
+					wrong: `${n}: bukan gandaan`
+				})[state],
+			headline: (stars) =>
+				stars === 3
+					? 'Papan sempurna!'
+					: stars === 2
+						? 'Hampir: satu kesilapan.'
+						: 'Teruskan memburu!',
+			stars: (stars) => `${stars} daripada 3 bintang`,
+			streak: (n) => `${n} papan sempurna berturut-turut`,
+			reviewHeading: 'Lihat semula yang ini',
+			wrong: 'Bukan gandaan',
+			explainMiss: (n, s, rest) => `${n} bukan gandaan ${s}: ${n} ÷ ${s} berbaki ${rest}.`,
+			explainTrap: (n, of, s, rest) =>
+				`${n} ialah gandaan ${of}, tetapi bukan gandaan ${s}: ${n} ÷ ${s} berbaki ${rest}.`,
+			lcmNote: (lcm, list) =>
+				`Setiap gandaan sepunya bagi ${list} ialah gandaan bagi GSTK mereka, **${lcm}**.`,
 			unlocked: (kind) => `Hebat! ${kind} dibuka.`
 		}
 	}

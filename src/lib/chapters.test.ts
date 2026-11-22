@@ -61,8 +61,12 @@ describe('localize', () => {
 describe('mini-games', () => {
 	const fm = getChapter('factors-and-multiples');
 
-	it('lists Prime Hunt under Factors and Multiples, apart from its sections', () => {
-		expect(fm.miniGames?.map((g) => g.slug)).toEqual(['prime-hunt', 'prime-breaker']);
+	it('lists the mini-games under Factors and Multiples, apart from its sections', () => {
+		expect(fm.miniGames?.map((g) => g.slug)).toEqual([
+			'prime-hunt',
+			'prime-breaker',
+			'multiples-hunt'
+		]);
 		expect(fm.sections.map((s) => s.number)).toEqual(['2.1', '2.2', '2.3']);
 	});
 	it('gives chapters without games no hub', () => {
