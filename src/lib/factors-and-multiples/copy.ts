@@ -277,6 +277,32 @@ export interface Copy {
 			explainTrap: (n: number, of: number, s: number, rest: number) => string;
 			lcmNote: (lcm: number, list: string) => string;
 			unlocked: (kind: string) => string;
+			pattern: {
+				heading: string;
+				legendOne: (n: number) => string;
+				legendMany: string;
+				cell: (n: number, state: 'all' | 'some' | 'none') => string;
+			};
+			fizz: {
+				open: string;
+				close: string;
+				intro: string;
+				rule: (a: number, b: number) => string;
+				fizz: string;
+				buzz: string;
+				fizzbuzz: string;
+				number: string;
+				progress: (n: number, total: number) => string;
+				why: (
+					answer: 'fizz' | 'buzz' | 'fizzbuzz' | 'number',
+					n: number,
+					a: number,
+					b: number
+				) => string;
+				note: (list: string, first: number) => string;
+				choices: string;
+				nextPair: string;
+			};
 		};
 		meetAgain: {
 			desc: string;
@@ -716,7 +742,39 @@ const en: Copy = {
 				`${n} is a multiple of ${of}, but not of ${s}: ${n} ÷ ${s} leaves ${rest}.`,
 			lcmNote: (lcm, list) =>
 				`Every common multiple of ${list} is a multiple of their LCM, **${lcm}**.`,
-			unlocked: (kind) => `Well done! ${kind} unlocked.`
+			unlocked: (kind) => `Well done! ${kind} unlocked.`,
+			pattern: {
+				heading: 'See the pattern',
+				legendOne: (n) => `Dark: a multiple of ${n}. Look at how they line up.`,
+				legendMany:
+					'Dark: a multiple of every number. Light: a multiple of only some of them. The dark ones repeat at the same distance.',
+				cell: (n, state) =>
+					({ all: `${n}: a multiple`, some: `${n}: a multiple of some`, none: `${n}` })[state]
+			},
+			fizz: {
+				open: 'Fizz Buzz',
+				close: 'Back to the hunt',
+				intro:
+					'Free play: count up and say the right thing for each number. It never changes your progress.',
+				rule: (a, b) =>
+					`Say **Fizz** for a multiple of **${a}**, **Buzz** for a multiple of **${b}**, **FizzBuzz** for a multiple of both, and otherwise just the number.`,
+				fizz: 'Fizz',
+				buzz: 'Buzz',
+				fizzbuzz: 'FizzBuzz',
+				number: 'Just the number',
+				progress: (n, total) => `${Math.min(n, total)} of ${total}`,
+				why: (answer, n, a, b) =>
+					({
+						fizz: `${n} is a multiple of ${a} but not of ${b}: Fizz.`,
+						buzz: `${n} is a multiple of ${b} but not of ${a}: Buzz.`,
+						fizzbuzz: `${n} is a multiple of both ${a} and ${b}: FizzBuzz. It is a common multiple.`,
+						number: `${n} is a multiple of neither ${a} nor ${b}: just say the number.`
+					})[answer],
+				note: (list, first) =>
+					`FizzBuzz was a common multiple of ${list} every time. The first was **${first}**, their LCM.`,
+				choices: 'What do you say?',
+				nextPair: 'New numbers'
+			}
 		},
 		meetAgain: {
 			desc: 'Meet Again: lights blink at different rhythms, and you tap when they all light up together. Find the LCM by feel.',
@@ -1179,7 +1237,39 @@ const ms: Copy = {
 				`${n} ialah gandaan ${of}, tetapi bukan gandaan ${s}: ${n} ÷ ${s} berbaki ${rest}.`,
 			lcmNote: (lcm, list) =>
 				`Setiap gandaan sepunya bagi ${list} ialah gandaan bagi GSTK mereka, **${lcm}**.`,
-			unlocked: (kind) => `Hebat! ${kind} dibuka.`
+			unlocked: (kind) => `Hebat! ${kind} dibuka.`,
+			pattern: {
+				heading: 'Lihat coraknya',
+				legendOne: (n) => `Gelap: gandaan ${n}. Perhatikan bagaimana ia tersusun.`,
+				legendMany:
+					'Gelap: gandaan bagi setiap nombor. Cerah: gandaan bagi sebahagian sahaja. Yang gelap berulang pada jarak yang sama.',
+				cell: (n, state) =>
+					({ all: `${n}: gandaan`, some: `${n}: gandaan sebahagian`, none: `${n}` })[state]
+			},
+			fizz: {
+				open: 'Fizz Buzz',
+				close: 'Kembali memburu',
+				intro:
+					'Main bebas: mengira naik dan sebut perkara yang betul bagi setiap nombor. Ia tidak pernah mengubah kemajuan anda.',
+				rule: (a, b) =>
+					`Sebut **Fizz** untuk gandaan **${a}**, **Buzz** untuk gandaan **${b}**, **FizzBuzz** untuk gandaan kedua-duanya, dan selain itu sebut nombornya sahaja.`,
+				fizz: 'Fizz',
+				buzz: 'Buzz',
+				fizzbuzz: 'FizzBuzz',
+				number: 'Nombornya sahaja',
+				progress: (n, total) => `${Math.min(n, total)} daripada ${total}`,
+				why: (answer, n, a, b) =>
+					({
+						fizz: `${n} ialah gandaan ${a} tetapi bukan gandaan ${b}: Fizz.`,
+						buzz: `${n} ialah gandaan ${b} tetapi bukan gandaan ${a}: Buzz.`,
+						fizzbuzz: `${n} ialah gandaan ${a} dan ${b}: FizzBuzz. Ia gandaan sepunya.`,
+						number: `${n} bukan gandaan ${a} mahupun ${b}: sebut nombornya sahaja.`
+					})[answer],
+				note: (list, first) =>
+					`FizzBuzz sentiasa gandaan sepunya bagi ${list}. Yang pertama ialah **${first}**, GSTK mereka.`,
+				choices: 'Apa yang anda sebut?',
+				nextPair: 'Nombor baharu'
+			}
 		},
 		meetAgain: {
 			desc: 'Bertemu Lagi: lampu berkelip dengan rentak berbeza, dan anda mengetik apabila semuanya menyala serentak. Cari GSTK dengan rasa.',

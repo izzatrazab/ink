@@ -9,12 +9,17 @@
 	import Confetti from './Confetti.svelte';
 	import ShareResult from './ShareResult.svelte';
 	import NumberBoard from './NumberBoard.svelte';
+	import FizzBuzz from './FizzBuzz.svelte';
+	import MultiplesGrid from './MultiplesGrid.svelte';
 
 	// Multiples Hunt: the Mini-game's screen. The rules live in multiplesHunt.ts, the
 	// live game (Board, taps, progress, sound) in multiplesHuntStore.svelte.ts; this
 	// only draws them. Every tap is judged at once and a wrong one says why, in the
 	// numbers: "8 is a multiple of 4, but not of 6: 8 ÷ 6 leaves 2".
-	const game = startMultiplesHunt({ sounds: webAudioSounds() });
+	const sounds = webAudioSounds();
+	const game = startMultiplesHunt({ sounds });
+	// The Fizz Buzz side game replaces the board while it is open.
+	let fizz = $state(false);
 	const copy = useCopy();
 	const t = $derived(copy.t.games.multiplesHunt);
 	const c = $derived(copy.t.games.common);
@@ -84,7 +89,17 @@
 				<span class="ink-muted text-sm">{t.clean(game.clean, MASTERED_BOARDS)}</span>
 			</div>
 		{/if}
-		<div class="flex justify-end">
+		<div class="flex flex-wrap items-center justify-between gap-2">
+			<button
+				type="button"
+				class="btn btn-ghost btn-sm"
+				aria-pressed={fizz}
+				disabled={game.inPlay}
+				onclick={() => (fizz = !fizz)}
+			>
+				<span aria-hidden="true">🎲</span>
+				{fizz ? t.fizz.close : t.fizz.open}
+			</button>
 			<button
 				type="button"
 				class="btn btn-ghost btn-sm"
@@ -98,7 +113,9 @@
 	</div>
 
 	<!-- The board -->
-	{#if !ready}
+	{#if fizz}
+		<FizzBuzz {sounds} muted={game.muted} />
+	{:else if !ready}
 		<p class="ink-muted min-h-64 text-center" role="status">{t.loading}</p>
 	{:else}
 		<div class="ink-card space-y-5 p-5 sm:p-8">
@@ -196,6 +213,8 @@
 							>
 						{/if}
 					</div>
+					<!-- Why it works: the multiples laid out in a grid, so the pattern shows. -->
+					<MultiplesGrid set={game.set} />
 					<ShareResult
 						game="multiples-hunt"
 						stars={game.result.stars}
