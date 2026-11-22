@@ -34,6 +34,46 @@ _Avoid_: second, turn, step (that word belongs to **Division ladder**'s Watch).
 A **beat** on which every light in a **Meet Again** Round is lit: L, 2L, 3L, … where L is the LCM of the periods. The student catches a meeting by tapping on it.
 _Avoid_: match, hit, together (that is the button).
 
+**Replay**:
+Playing the same **Board**, **Round** or set of lights again after a finished one with fewer than three stars. The stars are the student's own, but a replay never counts toward progress, unlocks or the streak, so it cannot be used to farm a level: the finished screen offers it, and the game says "Practice run" while it is under way.
+_Avoid_: retry (the code's name for it), redo.
+
+**Run**:
+Correct taps in a row in **Prime Hunt**, **Multiples Hunt**, **Prime Breaker** and **Fizz Buzz**, shown as a badge ("×4") while it lasts. A slip ends it; the longest run on the Board is shown at the end when it is three or more.
+_Avoid_: combo, streak (that word is for perfect Boards in a row).
+
+**Prime collection**:
+The 1–100 grid under **Prime Hunt** in which a prime lights up once it is a **Known prime**. Only known primes are marked, so the grid never says which numbers are prime: Prime Hunt stays a recall test and the collection is its reward.
+_Avoid_: prime chart, sieve.
+
+**Prime Blitz**:
+Prime Hunt's optional 60-second challenge: the same **Boards**, a point for every prime found and one off for every wrong tap (never below 0), new Boards dealt as each is cleared, a personal best per **Prime tier**. It is opt-in and never touches **Known primes** or unlocks.
+_Avoid_: timed mode, speed round.
+
+**Boss round**:
+An occasional (about one in ten) prime-factors **Round** in **Prime Breaker** dealt from a short list of big numbers made only of the offered primes (1001, 1024, 2310, …). It counts like any other Round.
+_Avoid_: bonus round, hard mode.
+
+**Own number**:
+A number the student types into **Prime Breaker** to break: 2 to 9999, with every prime factor 31 or smaller, so the buttons can finish it. Free play: it earns stars but never counts toward unlocking.
+_Avoid_: custom number, free play (as a name).
+
+**Fizz Buzz**:
+**Multiples Hunt**'s side game: count up from 1 and say Fizz for a multiple of one number, Buzz for a multiple of another, FizzBuzz for both and otherwise just the number. FizzBuzz is the **common multiples** said aloud, and the game points out that the first is the LCM. A wrong choice says why and the student tries the same number again. Free play: never touches Multiples Hunt's progress.
+_Avoid_: counting game.
+
+**Pattern grid**:
+The 1–N grid shown after a finished **Multiples Hunt** Board: multiples dark, and (for two or three numbers) multiples of only some of them light. Multiples of 7 fall on a slanting line; common multiples repeat at the same distance.
+_Avoid_: number chart (that is 2.2's).
+
+**Music mode**:
+**Meet Again**'s opt-in sound: each light plays its own note when it blinks, so a **meeting** sounds as a chord. A little easier, and it is held while a Round is in play. In step-by-step mode the lights are also drawn as lanes growing beat by beat, since that mode has no clock.
+_Avoid_: sound mode.
+
+**Shared result**:
+The line a student copies from a finished round ("Prime Breaker ★★☆ ✗1", one line of detail and the page), language-neutral so it reads the same in any class chat. If the browser refuses to copy, the text is shown to select by hand.
+_Avoid_: score card, screenshot.
+
 **Reader language**). The rest of this document describes the Transformasi Isometri chapter.
 
 > The earlier PDF drill generator is superseded but its code is still in the repo, parked at `/generator`. ADR-0001–0007 describe that prior system, not this one.
@@ -119,7 +159,7 @@ A short, replayable game a chapter offers beside its **Sections**, for practisin
 _Avoid_: Section 2.4 (it has no textbook number), activity, extra, exercise.
 
 **Mini-games hub**:
-The unnumbered page that lists a chapter's **Mini-games** (e.g. `/factors-and-multiples/mini-games`), with each game on its own route beneath it.
+The unnumbered page that lists a chapter's **Mini-games** (e.g. `/factors-and-multiples/mini-games`), with each game on its own route beneath it. Each card says how far the reader has got (primes known, levels mastered), read from the progress each game keeps in their browser. The lessons link to the games that practise them from a "Practise this in a game" box at the end of a beat.
 _Avoid_: games page, arcade.
 
 **Prime Hunt**:
