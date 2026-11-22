@@ -2,7 +2,14 @@
 	import { onMount, tick } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import { motionDuration } from '$lib/motion';
-	import { DIVISORS, KINDS, MASTERED_ROUNDS } from './primeBreaker';
+	import {
+		DIVISORS,
+		KINDS,
+		MASTERED_ROUNDS,
+		OWN_DIVISORS,
+		isBoss,
+		ownNumber
+	} from './primeBreaker';
 	import { startPrimeBreaker } from './primeBreakerStore.svelte';
 	import { narrate, product, reachedOnes } from './ladder';
 	import { webAudioSounds } from './sound';
@@ -58,6 +65,18 @@
 	$effect(() => {
 		if (game.result) tick().then(() => headline?.focus());
 	});
+
+	// The student's own number: checked before it is dealt, so a ladder is never unfinishable.
+	let ownText = $state('');
+	let ownBad = $state(false);
+	function breakOwn(e: SubmitEvent) {
+		e.preventDefault();
+		const n = ownNumber(ownText);
+		ownBad = n === null;
+		if (n !== null) game.startOwn(n);
+	}
+	const buttons = $derived(game.own ? OWN_DIVISORS : DIVISORS);
+	const boss = $derived(game.kind === 'single' && !game.own && isBoss(game.startRow));
 
 	const kindName = (kind: (typeof KINDS)[number]) => t.kind(kind);
 	const firstLocked = $derived(KINDS.find((k) => !game.unlocked.includes(k)));
@@ -120,6 +139,9 @@
 		<p class="ink-muted min-h-64 text-center" role="status">{t.loading}</p>
 	{:else}
 		<div class="ink-card space-y-5 p-5 sm:p-8">
+			{#if boss}
+				<p class="text-center"><span class="badge badge-warning font-bold">{t.boss}</span></p>
+			{/if}
 			<p class="text-center text-lg font-semibold">
 				<Rich text={t.task(game.kind, game.startRow.join(', '))} />
 				{#if game.combo >= 2 && !game.result}
@@ -128,7 +150,7 @@
 					>
 				{/if}
 			</p>
-			{#if game.retrying && !game.result}
+			{#if (game.retrying || game.own) && !game.result}
 				<p class="ink-muted text-center text-sm">{c.practice}</p>
 			{/if}
 
@@ -137,7 +159,7 @@
 					{done ? lt.finished : t.primesGroup}
 				</p>
 				<div class="flex flex-wrap justify-center gap-2" role="group" aria-label={t.primesGroup}>
-					{#each DIVISORS as d (d)}
+					{#each buttons as d (d)}
 						<button
 							type="button"
 							class="btn btn-square size-11! min-h-0 {refusal?.d === d
@@ -239,6 +261,30 @@
 				</div>
 			{/if}
 		</div>
+	{/if}
+
+	<!-- Break your own number: free play, never counted toward unlocking. -->
+	{#if ready}
+		<form class="ink-card space-y-3 p-5" onsubmit={breakOwn}>
+			<h3 class="font-display text-lg font-bold">{t.ownHeading}</h3>
+			<div class="flex flex-wrap items-center gap-2">
+				<input
+					type="text"
+					inputmode="numeric"
+					maxlength="4"
+					class="input input-bordered w-36 font-mono"
+					placeholder={t.ownPlaceholder}
+					aria-label={t.ownLabel}
+					aria-invalid={ownBad}
+					bind:value={ownText}
+					oninput={() => (ownBad = false)}
+				/>
+				<button type="submit" class="btn btn-outline">{t.ownGo}</button>
+			</div>
+			{#if ownBad}
+				<p class="text-error text-sm" role="alert">{t.ownInvalid}</p>
+			{/if}
+		</form>
 	{/if}
 </div>
 

@@ -244,6 +244,12 @@ export interface Copy {
 			streak: (n: number) => string;
 			mistakes: (n: number) => string;
 			unlocked: (kind: string) => string;
+			boss: string;
+			ownHeading: string;
+			ownLabel: string;
+			ownPlaceholder: string;
+			ownGo: string;
+			ownInvalid: string;
 		};
 		multiplesHunt: {
 			desc: string;
@@ -661,7 +667,14 @@ const en: Copy = {
 			stars: (stars) => `${stars} of 3 stars`,
 			streak: (n) => `${n} perfect ${n === 1 ? 'round' : 'rounds'} in a row`,
 			mistakes: (n) => (n === 1 ? '1 slip' : `${n} slips`),
-			unlocked: (kind) => `Well done! ${kind} unlocked.`
+			unlocked: (kind) => `Well done! ${kind} unlocked.`,
+			boss: 'Boss round!',
+			ownHeading: 'Break your own number',
+			ownLabel: 'Your number',
+			ownPlaceholder: 'e.g. 2024',
+			ownGo: 'Break it',
+			ownInvalid:
+				'Use a whole number from 2 to 9999 whose prime factors are all 31 or smaller (try 360, 2024 or 1260).'
 		},
 		multiplesHunt: {
 			desc: 'Multiples Hunt: tap every multiple of a number, then every common multiple of two or three numbers.',
@@ -1113,7 +1126,14 @@ const ms: Copy = {
 			stars: (stars) => `${stars} daripada 3 bintang`,
 			streak: (n) => `${n} pusingan sempurna berturut-turut`,
 			mistakes: (n) => `${n} kesilapan`,
-			unlocked: (kind) => `Hebat! ${kind} dibuka.`
+			unlocked: (kind) => `Hebat! ${kind} dibuka.`,
+			boss: 'Pusingan bos!',
+			ownHeading: 'Pecahkan nombor anda sendiri',
+			ownLabel: 'Nombor anda',
+			ownPlaceholder: 'cth. 2024',
+			ownGo: 'Pecahkan',
+			ownInvalid:
+				'Guna nombor bulat dari 2 hingga 9999 yang semua faktor perdananya 31 atau lebih kecil (cuba 360, 2024 atau 1260).'
 		},
 		multiplesHunt: {
 			desc: 'Buru Gandaan: ketik setiap gandaan bagi satu nombor, kemudian setiap gandaan sepunya bagi dua atau tiga nombor.',

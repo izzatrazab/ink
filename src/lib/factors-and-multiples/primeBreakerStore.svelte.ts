@@ -83,6 +83,8 @@ class PrimeBreakerGame {
 	bestCombo = $state(0);
 	/** Whether this Round is a replay: it earns stars but does not count toward Progress. */
 	retrying = $state(false);
+	/** Whether this Round is the student's own number: free play, never counted toward Progress. */
+	own = $state(false);
 
 	constructor({
 		rng = Math.random,
@@ -158,6 +160,20 @@ class PrimeBreakerGame {
 		this.#deal();
 	}
 
+	/** Breaks the student's own number (already checked by `ownNumber`): prime factors, free play. */
+	startOwn(n: number) {
+		this.kind = 'single';
+		this.startRow = [n];
+		this.play = freshPlay();
+		this.result = null;
+		this.refusal = null;
+		this.justUnlocked = null;
+		this.combo = 0;
+		this.bestCombo = 0;
+		this.retrying = false;
+		this.own = true;
+	}
+
 	/** Plays the same Round again. Its stars are the student's own, but a replay does not count toward Progress or the streak. */
 	retry() {
 		this.play = freshPlay();
@@ -177,7 +193,7 @@ class PrimeBreakerGame {
 	#finish() {
 		const result = scoreRound(this.play.mistakes.length);
 		this.result = result;
-		if (!this.retrying) {
+		if (!this.retrying && !this.own) {
 			const before = unlockedKinds(this.progress);
 			this.progress = applyRound(this.progress, this.kind, result.mistakes);
 			this.streak = result.stars === 3 ? this.streak + 1 : 0;
@@ -208,6 +224,7 @@ class PrimeBreakerGame {
 		this.combo = 0;
 		this.bestCombo = 0;
 		this.retrying = false;
+		this.own = false;
 	}
 }
 

@@ -198,3 +198,32 @@ describe('combo and replay', () => {
 		expect(g.retrying).toBe(false);
 	});
 });
+
+describe('own number and boss', () => {
+	it('breaks the student own number as free play that never counts toward progress', () => {
+		const g = make();
+		g.start();
+		g.startOwn(2024);
+		expect(g.startRow).toEqual([2024]);
+		expect(g.own).toBe(true);
+		for (const d of autoDivisors([2024], 'single')) g.tap(d);
+		expect(g.result).toEqual({ mistakes: 0, stars: 3 });
+		expect(g.divisors).toEqual([2, 2, 2, 11, 23]);
+		expect(g.progress).toEqual({});
+		expect(g.streak).toBe(0);
+		g.retry();
+		expect(g.startRow).toEqual([2024]);
+		expect(g.own).toBe(true);
+		g.next();
+		expect(g.own).toBe(false);
+		expect(g.startRow).not.toEqual([2024]);
+	});
+
+	it('switches to prime factors when an own number is started from another kind', () => {
+		const g = make({ storage: memory({ [PROGRESS_KEY]: '{"single":3}' }).storage });
+		g.start();
+		g.selectKind('hcf');
+		g.startOwn(360);
+		expect(g.kind).toBe('single');
+	});
+});

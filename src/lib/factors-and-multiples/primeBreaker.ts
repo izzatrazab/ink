@@ -17,6 +17,35 @@ export type Kind = (typeof KINDS)[number];
 /** The primes offered as buttons — every divisor a dealt Round can need. */
 export const DIVISORS = [2, 3, 5, 7, 11, 13] as const;
 
+/** The primes offered when the student breaks their own number: every prime up to 31. */
+export const OWN_DIVISORS = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31] as const;
+
+/** The longest own number accepted, so a ladder stays a few rungs. */
+export const MAX_OWN = 9999;
+
+/** Big numbers made only of the offered primes, dealt now and then as a boss Round. */
+export const BOSSES = [1001, 1024, 1155, 1260, 1296, 1716, 2310, 2520, 3003, 5005] as const;
+/** How often a prime-factors Round is a boss. */
+const BOSS_CHANCE = 0.1;
+
+/** Whether a start row is one of the bosses. */
+export const isBoss = (row: number[]) =>
+	row.length === 1 && (BOSSES as readonly number[]).includes(row[0]);
+
+/**
+ * Reads the student's own number: a whole number from 2 to 9999 whose prime
+ * factors are all offered (31 or smaller), or null. Anything else cannot be
+ * broken with the buttons, so it is refused rather than left unfinishable.
+ */
+export function ownNumber(text: string): number | null {
+	const s = text.trim();
+	if (!/^\d+$/.test(s)) return null;
+	let n = Number(s);
+	if (n < 2 || n > MAX_OWN) return null;
+	for (const p of OWN_DIVISORS) while (n % p === 0) n /= p;
+	return n === 1 ? Number(s) : null;
+}
+
 /** Rounds a kind must be finished cleanly (no mistake) to count as mastered. */
 export const MASTERED_ROUNDS = 3;
 
@@ -39,6 +68,10 @@ const SMALL = [2, 3, 5, 7] as const;
 
 /** A Round's start row for a kind. `avoid` is the previous Round's row, never repeated. */
 export function makeRound(kind: Kind, rng: Random, avoid: number[] = []): number[] {
+	if (kind === 'single' && rng() < BOSS_CHANCE) {
+		const boss = pick(BOSSES, rng);
+		if (avoid.length !== 1 || avoid[0] !== boss) return [boss];
+	}
 	const same = (row: number[]) =>
 		row.length === avoid.length && row.every((n, i) => n === avoid[i]);
 	for (let attempt = 0; attempt < 200; attempt++) {

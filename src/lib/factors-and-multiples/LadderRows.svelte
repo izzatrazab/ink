@@ -28,7 +28,9 @@
 	{#each rows as row, i (i)}
 		<div class="flex min-h-12 items-center" in:fly={{ y: -14, duration: motionDuration(300) }}>
 			<span
-				class="w-14 pr-3 text-right font-bold {done ? 'text-success' : 'text-primary'}"
+				class="w-14 pr-3 text-right font-bold {divisors[i] ? 'pop' : ''} {done
+					? 'text-success'
+					: 'text-primary'}"
 				aria-label={divisors[i] ? t.divisor(divisors[i]) : undefined}
 			>
 				{divisors[i] ?? ''}
@@ -49,3 +51,23 @@
 		{/if}
 	{/each}
 </div>
+
+<style>
+	/* A new divisor pops in as its row drops: the prime that just broke the number. Reduced motion zeroes it in app.css. */
+	@keyframes pop {
+		0% {
+			transform: scale(0.4);
+			opacity: 0;
+		}
+		60% {
+			transform: scale(1.35);
+			opacity: 1;
+		}
+		100% {
+			transform: scale(1);
+		}
+	}
+	.pop {
+		animation: pop 0.4s ease-out;
+	}
+</style>

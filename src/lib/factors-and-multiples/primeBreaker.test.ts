@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
+	BOSSES,
 	DIVISORS,
+	MAX_OWN,
+	OWN_DIVISORS,
+	isBoss,
+	ownNumber,
 	KINDS,
 	MASTERED_ROUNDS,
 	applyRound,
@@ -23,7 +28,7 @@ describe('makeRound', () => {
 			const [n, ...rest] = makeRound('single', rng);
 			expect(rest).toEqual([]);
 			expect(n).toBeGreaterThanOrEqual(12);
-			expect(n).toBeLessThanOrEqual(500);
+			expect(n <= 500 || isBoss([n])).toBe(true);
 			expect(autoDivisors([n], 'single').length).toBeGreaterThanOrEqual(3);
 		}
 	});
@@ -111,5 +116,51 @@ describe('scoring and progress', () => {
 		expect(parseProgress('nope')).toEqual({});
 		expect(parseProgress('[1]')).toEqual({});
 		expect(parseProgress('{"single":2,"hcf":-1,"lcm":"x","other":4}')).toEqual({ single: 2 });
+	});
+});
+
+describe('boss Rounds', () => {
+	it('are dealt now and then, and need only the offered primes', () => {
+		const rows = Array.from({ length: 600 }, () => makeRound('single', rng));
+		const bosses = rows.filter(isBoss);
+		expect(bosses.length).toBeGreaterThan(20);
+		expect(bosses.length).toBeLessThan(120);
+		for (const [n] of bosses) {
+			expect((BOSSES as readonly number[]).includes(n)).toBe(true);
+			expect(
+				autoDivisors([n], 'single').every((d) => (DIVISORS as readonly number[]).includes(d))
+			).toBe(true);
+		}
+	});
+	it('are only for prime factors, never for HCF or LCM', () => {
+		for (const kind of ['hcf', 'lcm'] as const) {
+			for (let i = 0; i < 200; i++) expect(makeRound(kind, rng).some((n) => n > 400)).toBe(false);
+		}
+	});
+});
+
+describe('ownNumber', () => {
+	it('accepts whole numbers whose prime factors are all offered', () => {
+		expect(ownNumber('360')).toBe(360);
+		expect(ownNumber(' 2024 ')).toBe(2024); // 2 × 2 × 2 × 11 × 23
+		expect(ownNumber('2')).toBe(2);
+		expect(ownNumber(String(MAX_OWN))).toBe(null); // 9999 = 3 × 3 × 11 × 101
+		expect(ownNumber('9990')).toBe(null); // 2 × 3 × 3 × 3 × 5 × 37
+		expect(ownNumber('9801')).toBe(9801); // 3^4 × 11^2
+	});
+	it('refuses what cannot be broken with the offered primes, or is not a plain number', () => {
+		for (const bad of ['', '1', '0', '37', '2003', '10000', '12.5', '-8', 'abc', '1e3']) {
+			expect(ownNumber(bad), bad).toBeNull();
+		}
+		expect(ownNumber(' 12 ')).toBe(12);
+	});
+	it('offers a button for every prime it accepts', () => {
+		for (let n = 2; n <= 500; n++) {
+			if (ownNumber(String(n)) !== null) {
+				expect(
+					autoDivisors([n], 'single').every((d) => (OWN_DIVISORS as readonly number[]).includes(d))
+				).toBe(true);
+			}
+		}
 	});
 });
