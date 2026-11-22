@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
+	MUSIC_KEY,
 	MUTED_KEY,
 	PROGRESS_KEY,
 	TEMPO_KEY,
@@ -24,7 +25,13 @@ const memory = (initial: Record<string, string> = {}) => {
 };
 
 const spy = () =>
-	({ success: vi.fn(), wrong: vi.fn(), done: vi.fn(), tick: vi.fn() }) satisfies Sounds;
+	({
+		success: vi.fn(),
+		wrong: vi.fn(),
+		done: vi.fn(),
+		tick: vi.fn(),
+		note: vi.fn()
+	}) satisfies Sounds;
 
 let x = 0.37;
 const rng = () => (x = (x * 9301 + 0.49297) % 1);
@@ -255,5 +262,68 @@ describe('replay', () => {
 		expect(g.streak).toBe(0);
 		g.next();
 		expect(g.retrying).toBe(false);
+	});
+});
+
+describe('music mode', () => {
+	it('is off by default and plays the neutral tick', () => {
+		const sounds = spy();
+		const g = make({ sounds });
+		g.start();
+		expect(g.music).toBe(false);
+		g.begin();
+		beat();
+		expect(sounds.tick).toHaveBeenCalled();
+		expect(sounds.note).not.toHaveBeenCalled();
+		g.stop();
+	});
+
+	it('plays each light own note on the beats it is lit, and no tick', () => {
+		const sounds = spy();
+		const { box, storage } = memory();
+		const g = make({ sounds, storage });
+		g.start();
+		g.setMusic(true);
+		expect(box.get(MUSIC_KEY)).toBe('1');
+		g.begin();
+		const [a] = g.round.periods;
+		for (let i = 1; i <= a; i++) {
+			if (i < a) beat();
+		}
+		expect(g.lit[0]).toBe(true);
+		expect(sounds.note).toHaveBeenCalledWith(0);
+		expect(sounds.tick).not.toHaveBeenCalled();
+		g.stop();
+	});
+
+	it('sounds a chord on a meeting: every light plays', () => {
+		const sounds = spy();
+		const g = make({ sounds });
+		g.start();
+		g.setMusic(true);
+		g.begin();
+		const first = firstMeeting(g.round.periods);
+		for (let i = 1; i < first; i++) beat();
+		expect(g.beat).toBe(first);
+		g.round.periods.forEach((_, i) => expect(sounds.note).toHaveBeenCalledWith(i));
+		g.stop();
+	});
+
+	it('stays quiet when muted, holds while a Round is in play, and is remembered', () => {
+		const sounds = spy();
+		const { storage } = memory();
+		const g = make({ sounds, storage });
+		g.start();
+		g.setMusic(true);
+		g.toggleMute();
+		g.begin();
+		beat();
+		expect(sounds.note).not.toHaveBeenCalled();
+		g.setMusic(false);
+		expect(g.music).toBe(true);
+		g.stop();
+		const again = make({ storage });
+		again.start();
+		expect(again.music).toBe(true);
 	});
 });

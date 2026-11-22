@@ -14,6 +14,8 @@ export interface Sounds {
 	done(): void;
 	/** A beat passed, for the games that keep time. Optional: most games have none. */
 	tick?(): void;
+	/** Light number `index` blinked, for the music mode of Meet Again: each light has its own note. */
+	note?(index: number): void;
 }
 
 export const silent: Sounds = { success() {}, wrong() {}, done() {} };
@@ -99,6 +101,11 @@ export function webAudioSounds(): Sounds {
 				[C5, C5 * 1.26, C5 * 1.5, C5 * 2].forEach((f, i) =>
 					tone(c, f, 0.25 + i * 0.1, 0.26, 'triangle', 0.14)
 				);
+			}),
+		// One note per light, a major chord apart: lights lit together sound as a chord.
+		note: (index) =>
+			play((c) => {
+				tone(c, successFrequency(Math.min(index, 4) * 2), 0, 0.22, 'triangle', 0.07);
 			}),
 		// A soft, short click, the same on every beat so it never gives a meeting away.
 		tick: () =>

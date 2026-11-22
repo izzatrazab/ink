@@ -5,6 +5,7 @@
 	import { KINDS, MASTERED_ROUNDS, TEMPOS, dark, firstMeeting, meetingBeats } from './meetAgain';
 	import { startMeetAgain } from './meetAgainStore.svelte';
 	import { stageHeight } from './lanes';
+	import BeatLanes from './BeatLanes.svelte';
 	import MultipleLanes from './MultipleLanes.svelte';
 	import { webAudioSounds } from './sound';
 	import { useCopy } from './useCopy';
@@ -122,6 +123,20 @@
 				{game.muted ? t.soundOff : t.soundOn}
 			</button>
 		</div>
+		<!-- Music mode: each light plays its own note, so a meeting is a chord. Opt-in. -->
+		<div class="space-y-1">
+			<label class="flex cursor-pointer items-center gap-3">
+				<input
+					type="checkbox"
+					class="toggle toggle-secondary toggle-sm"
+					checked={game.music}
+					disabled={game.inPlay}
+					onchange={(e) => game.setMusic(e.currentTarget.checked)}
+				/>
+				<span class="text-sm font-semibold">🎵 {t.musicLabel}</span>
+			</label>
+			<p class="ink-muted text-sm">{t.musicNote}</p>
+		</div>
 		{#if game.inPlay}
 			<p class="ink-muted text-sm">{t.tempoHeld}</p>
 		{/if}
@@ -162,6 +177,16 @@
 					</div>
 				{/each}
 			</div>
+
+			{#if game.started && !game.timed && !game.result}
+				<!-- Step by step has no clock, so the whole pattern so far can be drawn. -->
+				<FigureCard aspect="200/{h}" class="max-w-md text-secondary!">
+					<Stage viewBox="0 0 200 {h}" class="h-full w-full">
+						<BeatLanes periods={game.round.periods} beat={game.beat} />
+					</Stage>
+				</FigureCard>
+				<p class="ink-muted text-center text-sm">{t.stepLanes}</p>
+			{/if}
 
 			<p class="text-center font-display text-3xl font-bold" aria-live="off">
 				{t.beat(game.beat)}

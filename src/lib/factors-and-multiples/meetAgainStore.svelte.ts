@@ -39,6 +39,7 @@ import {
 export const PROGRESS_KEY = 'meet-again-progress';
 export const MUTED_KEY = 'meet-again-muted';
 export const TEMPO_KEY = 'meet-again-tempo';
+export const MUSIC_KEY = 'meet-again-music';
 
 /** Where progress and the settings are kept. Both calls may throw (blocked storage); the game carries on. */
 export interface MeetAgainStorage {
@@ -84,6 +85,8 @@ class MeetAgainGame {
 	/** The kind this Round just unlocked, until the next Round is dealt. */
 	justUnlocked = $state<Kind | null>(null);
 	muted = $state(false);
+	/** Music mode: each light plays its own note when it blinks, so a meeting sounds as a chord. Opt-in. */
+	music = $state(false);
 	/** Whether this Round is a replay: it earns stars but does not count toward Progress. */
 	retrying = $state(false);
 
@@ -113,6 +116,7 @@ class MeetAgainGame {
 			this.progress = parseProgress(this.#storage.read(PROGRESS_KEY));
 			this.muted = this.#storage.read(MUTED_KEY) === '1';
 			this.tempo = parseTempo(this.#storage.read(TEMPO_KEY));
+			this.music = this.#storage.read(MUSIC_KEY) === '1';
 		} catch {
 			// storage blocked — progress and the settings just will not persist
 		}
@@ -193,6 +197,13 @@ class MeetAgainGame {
 		this.#save(TEMPO_KEY, tempo);
 	}
 
+	/** Switches music mode; held while a Round is in play so a Round is never half one way. */
+	setMusic(on: boolean) {
+		if (this.inPlay || on === this.music) return;
+		this.music = on;
+		this.#save(MUSIC_KEY, on ? '1' : '0');
+	}
+
 	toggleMute() {
 		this.muted = !this.muted;
 		this.#save(MUTED_KEY, this.muted ? '1' : '0');
@@ -222,7 +233,11 @@ class MeetAgainGame {
 			this.lastMistake = this.play.mistakes[this.play.mistakes.length - 1];
 			this.#sound((s) => s.wrong());
 		} else if (!this.play.done) {
-			this.#sound((s) => s.tick?.());
+			if (this.music) {
+				this.lit.forEach((on, i) => on && this.#sound((s) => s.note?.(i)));
+			} else {
+				this.#sound((s) => s.tick?.());
+			}
 		}
 		if (this.play.done) this.#finish();
 	}

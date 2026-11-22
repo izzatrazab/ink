@@ -315,6 +315,9 @@ export interface Copy {
 			tempoGroup: string;
 			tempo: (tempo: 'step' | 'slow' | 'normal') => string;
 			tempoHeld: string;
+			musicLabel: string;
+			musicNote: string;
+			stepLanes: string;
 			task: string;
 			lightsAria: string;
 			light: (period: number) => string;
@@ -788,7 +791,12 @@ const en: Copy = {
 			clean: (n, of) => `${Math.min(n, of)} of ${of} perfect rounds`,
 			tempoGroup: 'Speed',
 			tempo: (t) => ({ step: 'Step by step', slow: 'Slow', normal: 'Normal' })[t],
-			tempoHeld: 'Change the speed between rounds.',
+			tempoHeld: 'Change the speed and music between rounds.',
+			musicLabel: 'Music mode',
+			musicNote:
+				'Each light plays its own note, so a meeting sounds like a chord. A little easier, and more like a real rhythm game.',
+			stepLanes:
+				'Step by step has no clock, so every blink so far is drawn here. Spot where the lanes line up.',
 			task: 'Tap Together! on the beats when every light is lit.',
 			lightsAria: 'The blinking lights',
 			light: (p) => `every ${p}`,
@@ -1283,7 +1291,12 @@ const ms: Copy = {
 			clean: (n, of) => `${Math.min(n, of)} daripada ${of} pusingan sempurna`,
 			tempoGroup: 'Kelajuan',
 			tempo: (t) => ({ step: 'Langkah demi langkah', slow: 'Perlahan', normal: 'Biasa' })[t],
-			tempoHeld: 'Tukar kelajuan antara pusingan.',
+			tempoHeld: 'Tukar kelajuan dan muzik antara pusingan.',
+			musicLabel: 'Mod muzik',
+			musicNote:
+				'Setiap lampu memainkan notanya sendiri, jadi pertemuan berbunyi seperti kord. Sedikit lebih mudah, dan lebih seperti permainan rentak sebenar.',
+			stepLanes:
+				'Langkah demi langkah tiada jam, jadi setiap kelipan setakat ini dilukis di sini. Cari di mana lorong bertemu.',
 			task: 'Ketik Serentak! pada rentak apabila setiap lampu menyala.',
 			lightsAria: 'Lampu yang berkelip',
 			light: (p) => `setiap ${p}`,
